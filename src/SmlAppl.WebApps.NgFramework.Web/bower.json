@@ -1,0 +1,23 @@
+{
+	"name": "SmlAppl-WebApps-NgFramework",
+	"dependencies": {
+		"angular": "1.4.6",
+		"angular-bootstrap": "0.13.4",
+		"ui-router": "~0.2.15"
+	},
+	"homepage": "https://github.com/PlacidCH/SmlAppl.WebApps.NgFramework",
+	"authors": [
+		"Shahid Schmid <shahid.schmid@premotec.ch>"
+	],
+	"description": "",
+	"main": "",
+	"moduleType": [ ],
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"wwwroot/lib",
+		"test",
+		"tests"
+	]
+}
