@@ -4,7 +4,6 @@
 	"authors": [
 		"Shahid Schmid <shahid.schmid@premotec.ch>"
 	],
-	"version": "0.0.1",
 	"dependencies": {
 		"angular": "1.4.6",
 		"angular-bootstrap": "0.13.4",
