@@ -11,11 +11,12 @@
 	},
 	"homepage": "https://github.com/PlacidCH/SmlAppl.WebApps.NgFramework",
 	"main": [
-		"wwwroot/app.js"
+		"src/SmlAppl.WebApps.NgFramework.Web/wwwroot/app.js"
 	],
 	"moduleType": [ ],
 	"ignore": [
 		"**/.*",
+		"src",
 		"node_modules",
 		"bower_components",
 		"wwwroot/lib",
