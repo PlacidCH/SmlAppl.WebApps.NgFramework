@@ -16,7 +16,7 @@
 	"moduleType": [ ],
 	"ignore": [
 		"**/.*",
-		"src/",
+		"src/**",
 		"!src/SmlAppl.WebApps.NgFramework.Web/wwwroot/app.js",
 		"node_modules",
 		"bower_components",
