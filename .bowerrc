@@ -1,3 +1,4 @@
 {
-  "directory": "src/SmlAppl.WebApps.NgFramework.Web/wwwroot/lib"
+	"directory": "wwwroot/lib",
+	"proxy": "http://proxy.zhaw.ch:8080"
 }

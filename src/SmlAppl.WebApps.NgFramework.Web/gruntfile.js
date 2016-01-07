@@ -10,7 +10,10 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		uglify: {
 			my_target: {
-				files: { 'wwwroot/app.js': ['Scripts/app/app.js', 'Scripts/app/**/*.js'] }
+				files: {
+					//'wwwroot/app.js': ['Scripts/app/app.js', 'Scripts/app/**/*.js'],
+					'../../SmlAppl.WebApps.NgFramework.js': ['Scripts/app/app.js', 'Scripts/app/**/*.js']
+				}
 			}
 		},
 		watch: {
