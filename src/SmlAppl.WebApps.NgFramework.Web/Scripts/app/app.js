@@ -1,12 +1,12 @@
 ﻿(function() {
-	'use strict';
+	"use strict";
 
 	angular.module("SmlAppl.WebApps.Framework.Controllers", []);
 	angular.module("SmlAppl.WebApps.Framework.Directives", []);
 	angular.module("SmlAppl.WebApps.Framework.Filters", []);
 	angular.module("SmlAppl.WebApps.Framework.Services", []);
 
-	angular.module('SmlAppl.WebApps.Framework', [
+	angular.module("SmlAppl.WebApps.Framework", [
 		// Angular modules 
 		//'ngRoute'
 		//"ui.router",
