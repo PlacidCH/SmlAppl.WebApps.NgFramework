@@ -3,7 +3,7 @@
 */
 
 angular.module("SmlAppl.WebApps.Framework.Services")
-	.service("httpHandlerService", ["$q",
+	.service("HttpHandler", ["$q",
 		function ($q) {
 
 			// Original code from: http://www.bennadel.com/blog/2612-using-the-http-service-in-angularjs-to-make-ajax-requests.htm
