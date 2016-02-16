@@ -1,4 +1,3 @@
 {
-	"directory": "wwwroot/lib",
-	"proxy": "http://proxy.zhaw.ch:8080"
+	"directory": "wwwroot/lib"
 }
