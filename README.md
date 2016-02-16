@@ -6,5 +6,5 @@ Installing
 You can use bower to install the package:
 
 ```
-$bower install SmlAppl-WebApps-NgFramework --save
+bower install SmlAppl-WebApps-NgFramework --save
 ```
