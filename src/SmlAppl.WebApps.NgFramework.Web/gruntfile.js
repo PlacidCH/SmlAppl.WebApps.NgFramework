@@ -22,15 +22,14 @@ module.exports = function (grunt) {
 		uglify: {
 			my_target: {
 				files: {
-					//'wwwroot/app.js': ['Scripts/app/app.js', 'Scripts/app/**/*.js'],
-					'../../SmlAppl.WebApps.NgFramework.min.js': ['Scripts/app/app.js', 'Scripts/app/**/*.js']
+					'../../SmlAppl.WebApps.NgFramework.min.js': '../../SmlAppl.WebApps.NgFramework.js'
 				}
 			}
 		},
 		watch: {
 			scripts: {
 				files: ['Scripts/app/**/*.js'],
-				tasks: ['uglify']
+				tasks: ['concat', 'uglify']
 			}
 		}
 	});
