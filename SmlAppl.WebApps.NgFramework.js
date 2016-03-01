@@ -250,11 +250,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   $templateCache.put('wwwroot/FilterTable/Views/FilterTable.html',
     "<style>\r" +
     "\n" +
-    "    select[value =\"\"] {\r" +
+    "	select[value=\"\"] {\r" +
     "\n" +
-    "        color: gray;\r" +
+    "		color: gray;\r" +
     "\n" +
-    "    }\r" +
+    "	}\r" +
     "\n" +
     "</style>\r" +
     "\n" +
@@ -328,7 +328,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-repeat=\"col in Options.CurrentCols | filter: theColFilter\">\r" +
     "\n" +
-    "                            <td>{{::col.display}}</td>\r" +
+    "                            <td>{{::col.display | translate}}</td>\r" +
     "\n" +
     "                            <td><input type=\"checkbox\" ng-model=\"col.visible\" /></td>\r" +
     "\n" +
@@ -438,7 +438,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            <th ng-repeat=\"col in Options.VisibleCols\" style=\"padding-left: 10px; padding-right: 40px; vertical-align: middle;\">\r" +
     "\n" +
-    "                                <span class=\"pull-left\">{{::col.display}}</span>\r" +
+    "                                <span class=\"pull-left\">{{::col.display | translate}}</span>\r" +
     "\n" +
     "                                <span style=\"margin-right: -30px; opacity: 0.5; cursor: pointer;\" class=\"pull-right {{GetOrderIndicator(col)}}\" ng-click=\"OrderBy(col)\"></span>\r" +
     "\n" +

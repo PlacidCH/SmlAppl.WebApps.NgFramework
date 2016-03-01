@@ -1,7 +1,7 @@
 ﻿<style>
-    select[value =""] {
-        color: gray;
-    }
+	select[value=""] {
+		color: gray;
+	}
 </style>
 
 <div class="row">
@@ -38,7 +38,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="col in Options.CurrentCols | filter: theColFilter">
-                            <td>{{::col.display}}</td>
+                            <td>{{::col.display | translate}}</td>
                             <td><input type="checkbox" ng-model="col.visible" /></td>
                             <td><input type="checkbox" ng-model="col.select" ng-change="ChangeDropDown(col)" ng-disabled="Options.NoSearchSelects || !col.canSelect" /></td>
                         </tr>
@@ -93,7 +93,7 @@
                                 <span type="button" class="btn btn-default btn-sm" ng-click="open()" ng-show="Options.CanCustomize"><span class="glyphicon glyphicon-cog"></span></span>
                             </th>
                             <th ng-repeat="col in Options.VisibleCols" style="padding-left: 10px; padding-right: 40px; vertical-align: middle;">
-                                <span class="pull-left">{{::col.display}}</span>
+                                <span class="pull-left">{{::col.display | translate}}</span>
                                 <span style="margin-right: -30px; opacity: 0.5; cursor: pointer;" class="pull-right {{GetOrderIndicator(col)}}" ng-click="OrderBy(col)"></span>
                             </th>
                         </tr>

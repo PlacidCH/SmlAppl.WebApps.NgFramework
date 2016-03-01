@@ -4,7 +4,7 @@ This file in the main entry point for defining grunt tasks and using grunt plugi
 Click here to learn more. http://go.microsoft.com/fwlink/?LinkID=513275&clcid=0x409
 */
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 				dest: '../../SmlAppl.WebApps.NgFramework.js',
 			}
 		},
-		
+
 		uglify: {
 			my_target: {
 				files: {
@@ -49,7 +49,15 @@ module.exports = function (grunt) {
 			scripts: {
 				files: ['Scripts/app/**/*.js'],
 				tasks: ['concat', 'uglify']
-			}
+			},
+			templates: {
+				files: ['wwwroot/Views/**/*.html'],
+				tasks: ['ngtemplates:smlAppl.webApps.framework']
+			},
+			templatesFilterTable: {
+				files: ['wwwroot/FilterTable/Views/**/*.html'],
+				tasks: ['ngtemplates:smlAppl.webApps.framework.filterTable']
+			},
 		}
 	});
 	grunt.registerTask('default', ['concat', 'uglify', 'ngtemplates', 'watch']);
