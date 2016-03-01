@@ -2,7 +2,7 @@
 	This service will handle the response of a promise from $http-calls.
 */
 
-angular.module("SmlAppl.WebApps.Framework.Services")
+angular.module("smlAppl.webApps.framework.services")
 	.service("HttpHandler", ["$q",
 		function ($q) {
 

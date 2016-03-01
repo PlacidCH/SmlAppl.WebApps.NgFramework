@@ -1,7 +1,7 @@
 ﻿//var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
-//angular.module("SmlAppl.WebApps.Framework")
+//angular.module("smlAppl.webApps.framework")
 //	.config([
 //		"$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
 

@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-angular.module("SmlAppl.WebApps.Framework.Filters")
+angular.module("smlAppl.webApps.framework.filters")
 	.filter("chDate", ["$filter", function($filter) {
 		var angularDateFilter = $filter("date");
 		return function(theDate) {

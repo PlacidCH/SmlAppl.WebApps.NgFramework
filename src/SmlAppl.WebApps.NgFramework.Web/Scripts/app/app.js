@@ -1,22 +1,25 @@
 ﻿(function() {
 	"use strict";
 
-	angular.module("SmlAppl.WebApps.Framework.Controllers", []);
-	angular.module("SmlAppl.WebApps.Framework.Directives", []);
-	angular.module("SmlAppl.WebApps.Framework.Filters", []);
-	angular.module("SmlAppl.WebApps.Framework.Services", []);
+	angular.module("smlAppl.webApps.framework.controllers", []);
+	angular.module("smlAppl.webApps.framework.directives", []);
+	angular.module("smlAppl.webApps.framework.filters", []);
+	angular.module("smlAppl.webApps.framework.services", []);
 
-	angular.module("SmlAppl.WebApps.Framework", [
+	angular.module("smlAppl.webApps.framework", [
 		// Angular modules 
 		//'ngRoute'
 		//"ui.router",
 
 		// Custom modules 
-		"SmlAppl.WebApps.Framework.Controllers",
-		"SmlAppl.WebApps.Framework.Directives",
-		"SmlAppl.WebApps.Framework.Filters",
-		"SmlAppl.WebApps.Framework.Services",
+		"smlAppl.webApps.framework.controllers",
+		"smlAppl.webApps.framework.directives",
+		"smlAppl.webApps.framework.filters",
+		"smlAppl.webApps.framework.services",
 
+		// ng-framework Custom modules
+		"smlAppl.webApps.framework.filterTable",
+		
 		// 3rd Party Modules
 	]);
 })();

@@ -8,7 +8,7 @@
 (function() {
 	'use strict';
 
-	angular.module('SmlAppl.WebApps.Framework.Directives')
+	angular.module('smlAppl.webApps.framework.directives')
 		.directive('elastic', [
 			'$timeout',
 			function($timeout) {
