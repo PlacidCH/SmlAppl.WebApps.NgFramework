@@ -20,6 +20,9 @@ module.exports = function (grunt) {
 		concat: {
 			options: {
 				separator: grunt.util.linefeed + grunt.util.linefeed,
+				process: function (src, filepath) {
+					return '/* #### File: ' + filepath + ' */ \n' + src;
+				}
 			},
 			dist: {
 				// first load the app.js from each module
@@ -70,8 +73,8 @@ module.exports = function (grunt) {
 					cwd: '../../dist/css',
 					src: ['*.css', '!*.min.css'],
 					dest: '../../dist/css',
-					extDot: 'last',
-					ext: '.min.css'
+					ext: '.min.css',
+					extDot: 'last'
 				}]
 			}
 		},

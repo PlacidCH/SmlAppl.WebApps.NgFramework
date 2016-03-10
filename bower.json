@@ -18,11 +18,10 @@
 	],
 	"moduleType": [ ],
 	"ignore": [
-		"**/.*",
 		"src/**",
 		"node_modules",
 		"bower_components",
-		"wwwroot",
+		"wwwroot/lib",
 		"test",
 		"tests"
 	]
