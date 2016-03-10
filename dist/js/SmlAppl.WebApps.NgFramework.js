@@ -1154,6 +1154,26 @@ angular.module("smlAppl.webApps.framework.filters")
 		}
 	}]);
 
+(function() {
+
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.filters")
+		.filter("decimal", [
+			"$filter", function($filter) {
+				var angularNumberFilter = $filter("number");
+				return function(value, fraction) {
+					if (!fraction || !angular.isNumber(fraction)) {
+						fraction = 0;
+					}
+
+					return angularNumberFilter(value, fraction);
+				}
+			}
+		]);
+
+})();
+
 /*
 	This service will handle the response of a promise from $http-calls.
 */
