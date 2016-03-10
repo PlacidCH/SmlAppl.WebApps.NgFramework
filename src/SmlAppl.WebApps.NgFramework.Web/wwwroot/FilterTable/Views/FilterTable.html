@@ -5,13 +5,14 @@
 </style>
 
 <div class="row">
-    <div class="col-md-12" style="text-align: center;">
-        <span ng-hide="!loading">Loading <img src="Content/images/loader-horizontal.gif" /></span>
-    </div>
-    <div class="col-md-12" style="text-align: center;">
-        <span ng-show="error">Fehler beim Beziehen der Daten.</span>
-    </div>
+	<div class="col-md-12" style="text-align: center;">
+		<span ng-hide="!loading">Loading <img src="Content/images/loader-horizontal.gif" /></span>
+	</div>
+	<div class="col-md-12" style="text-align: center;">
+		<span ng-show="error">Fehler beim Beziehen der Daten.</span>
+	</div>
 </div>
+
 <script type="text/ng-template" id="myModalContent.html">
     <div class="modal-header">
         <h3 class="modal-title">Einstellungen</h3>
@@ -104,11 +105,9 @@
                             <th ng-repeat="col in Options.VisibleCols">
                                 <select class="select2" name="theFilter{{::col.key}}" ng-model="theFilter[col.key]" ng-if="col.select && hasDistincts(col.key)">
                                     <!-- acts as placeholder -->
-                                    <!--<option value="" disabled selected hidden>{{col.display}}</option>-->
-                                    <option ng-repeat="item in Distincts[col.key] | orderBy ">{{::item}}</option>
+                                    <option ng-repeat="item in Distincts[col.key] | orderBy " value="{{::item}}">{{ ::item | translate }}</option>
                                 </select>
                                 <input type="text" name="theFilter{{::col.key}}" ng-model="theFilter[col.key]" ng-model-options="ModelOptions" ng-if="!col.select || !hasDistincts(col.key)" />
-                                <!--<input type="text" name="theFilter{{col.key}}" ng-model="theFilter[col.key]" ng-model-options="ModelOptions" ng-if="!hasDistincts(col.key)" placeholder="{{col.display}}"/>-->
                             </th>
                         </tr>
                     </thead>

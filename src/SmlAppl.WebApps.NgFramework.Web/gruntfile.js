@@ -1,16 +1,22 @@
 ﻿/// <binding ProjectOpened='watch' />
+
 /*
 This file in the main entry point for defining grunt tasks and using grunt plugins.
 Click here to learn more. http://go.microsoft.com/fwlink/?LinkID=513275&clcid=0x409
 */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-angular-templates');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-angular-templates');
 
 	grunt.initConfig({
+
+		// javascript
 		concat: {
 			options: {
 				separator: grunt.util.linefeed + grunt.util.linefeed,
@@ -22,14 +28,14 @@ module.exports = function(grunt) {
 					'Scripts/app/FilterTable/app.js',
 					'Scripts/app/**/*.js'
 				],
-				dest: '../../SmlAppl.WebApps.NgFramework.js',
+				dest: '../../dist/js/SmlAppl.WebApps.NgFramework.js',
 			}
 		},
 
 		uglify: {
-			my_target: {
+			app: {
 				files: {
-					'../../SmlAppl.WebApps.NgFramework.min.js': '../../SmlAppl.WebApps.NgFramework.js'
+					'../../dist/js/SmlAppl.WebApps.NgFramework.min.js': '../../dist/js/SmlAppl.WebApps.NgFramework.js'
 				}
 			}
 		},
@@ -42,6 +48,40 @@ module.exports = function(grunt) {
 			'smlAppl.webApps.framework.filterTable': {
 				src: 'wwwroot/FilterTable/Views/**/*.html',
 				dest: 'Scripts/app/FilterTable/Config/templates.js'
+			}
+		},
+
+		// css
+		less: {
+			options: {
+				sourceMap: true
+			},
+			dist: {
+				files: {
+					'../../dist/css/SmlAppl.WebApps.NgFramework.css': 'Content/css/main.less' // 'destination': 'source'
+				}
+			}
+		},
+
+		cssmin: {
+			target: {
+				files: [{
+					expand: true,
+					cwd: '../../dist/css',
+					src: ['*.css', '!*.min.css'],
+					dest: '../../dist/css',
+					extDot: 'last',
+					ext: '.min.css'
+				}]
+			}
+		},
+
+		// system
+
+		copy: {
+			bower: {
+				src: 'bower.json',
+				dest: '../../'
 			}
 		},
 
@@ -58,7 +98,19 @@ module.exports = function(grunt) {
 				files: ['wwwroot/FilterTable/Views/**/*.html'],
 				tasks: ['ngtemplates:smlAppl.webApps.framework.filterTable']
 			},
+			less: {
+				files: ['Content/css/**/*.less'],
+				tasks: ['less']
+			},
+			bower: {
+				files: ['bower.json'],
+				tasks: ['copy:bower']
+			}
 		}
 	});
-	grunt.registerTask('default', ['concat', 'uglify', 'ngtemplates', 'watch']);
+
+	grunt.registerTask('js', ['ngtemplates', 'concat', 'uglify']);
+	grunt.registerTask('css', ['less', 'cssmin']);
+
+	//grunt.registerTask('default', ['concat', 'uglify', 'ngtemplates', 'less', 'cssmin', 'watch']);
 };

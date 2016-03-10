@@ -262,19 +262,21 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "<div class=\"row\">\r" +
     "\n" +
-    "    <div class=\"col-md-12\" style=\"text-align: center;\">\r" +
+    "	<div class=\"col-md-12\" style=\"text-align: center;\">\r" +
     "\n" +
-    "        <span ng-hide=\"!loading\">Loading <img src=\"Content/images/loader-horizontal.gif\" /></span>\r" +
+    "		<span ng-hide=\"!loading\">Loading <img src=\"Content/images/loader-horizontal.gif\" /></span>\r" +
     "\n" +
-    "    </div>\r" +
+    "	</div>\r" +
     "\n" +
-    "    <div class=\"col-md-12\" style=\"text-align: center;\">\r" +
+    "	<div class=\"col-md-12\" style=\"text-align: center;\">\r" +
     "\n" +
-    "        <span ng-show=\"error\">Fehler beim Beziehen der Daten.</span>\r" +
+    "		<span ng-show=\"error\">Fehler beim Beziehen der Daten.</span>\r" +
     "\n" +
-    "    </div>\r" +
+    "	</div>\r" +
     "\n" +
     "</div>\r" +
+    "\n" +
+    "\r" +
     "\n" +
     "<script type=\"text/ng-template\" id=\"myModalContent.html\">\r" +
     "\n" +
@@ -460,15 +462,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                    <!-- acts as placeholder -->\r" +
     "\n" +
-    "                                    <!--<option value=\"\" disabled selected hidden>{{col.display}}</option>-->\r" +
-    "\n" +
-    "                                    <option ng-repeat=\"item in Distincts[col.key] | orderBy \">{{::item}}</option>\r" +
+    "                                    <option ng-repeat=\"item in Distincts[col.key] | orderBy \" value=\"{{::item}}\">{{ ::item | translate }}</option>\r" +
     "\n" +
     "                                </select>\r" +
     "\n" +
     "                                <input type=\"text\" name=\"theFilter{{::col.key}}\" ng-model=\"theFilter[col.key]\" ng-model-options=\"ModelOptions\" ng-if=\"!col.select || !hasDistincts(col.key)\" />\r" +
-    "\n" +
-    "                                <!--<input type=\"text\" name=\"theFilter{{col.key}}\" ng-model=\"theFilter[col.key]\" ng-model-options=\"ModelOptions\" ng-if=\"!hasDistincts(col.key)\" placeholder=\"{{col.display}}\"/>-->\r" +
     "\n" +
     "                            </th>\r" +
     "\n" +
