@@ -14,6 +14,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
+	var rootGitFolder = "../../";
+
 	grunt.initConfig({
 
 		// javascript
@@ -31,15 +33,14 @@ module.exports = function (grunt) {
 					'Scripts/app/FilterTable/app.js',
 					'Scripts/app/**/*.js'
 				],
-				dest: '../../dist/js/SmlAppl.WebApps.NgFramework.js',
+				dest: rootGitFolder + 'dist/js/SmlAppl.WebApps.NgFramework.js',
 			}
 		},
 
 		uglify: {
 			app: {
-				files: {
-					'../../dist/js/SmlAppl.WebApps.NgFramework.min.js': '../../dist/js/SmlAppl.WebApps.NgFramework.js'
-				}
+				src: rootGitFolder + 'dist/js/SmlAppl.WebApps.NgFramework.js',
+				dest: rootGitFolder + 'dist/js/SmlAppl.WebApps.NgFramework.min.js'
 			}
 		},
 
@@ -59,10 +60,9 @@ module.exports = function (grunt) {
 			options: {
 				sourceMap: true
 			},
-			dist: {
-				files: {
-					'../../dist/css/SmlAppl.WebApps.NgFramework.css': 'Content/css/main.less' // 'destination': 'source'
-				}
+			app: {
+				src: 'Content/css/main.less',
+				dest: rootGitFolder + 'dist/css/SmlAppl.WebApps.NgFramework.css'
 			}
 		},
 
@@ -70,9 +70,9 @@ module.exports = function (grunt) {
 			target: {
 				files: [{
 					expand: true,
-					cwd: '../../dist/css',
+					cwd: rootGitFolder + 'dist/css',
 					src: ['*.css', '!*.min.css'],
-					dest: '../../dist/css',
+					dest: rootGitFolder + 'dist/css',
 					ext: '.min.css',
 					extDot: 'last'
 				}]
@@ -84,8 +84,17 @@ module.exports = function (grunt) {
 		copy: {
 			bower: {
 				src: 'bower.json',
-				dest: '../../'
-			}
+				dest: rootGitFolder
+			},
+			less: {
+				files: [{
+					expand: true,
+					cwd: 'Content/css',
+					//src: ['*.less'],
+					src: '**',
+					dest: rootGitFolder + 'less/'
+				}]
+			},
 		},
 
 		watch: {
