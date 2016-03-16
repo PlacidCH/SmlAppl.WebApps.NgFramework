@@ -21,5 +21,7 @@
 		"smlAppl.webApps.framework.filterTable",
 		
 		// 3rd Party Modules
+		"ngNotify"
 	]);
+
 })();

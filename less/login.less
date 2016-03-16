@@ -1,0 +1,86 @@
+﻿// @componentsDir must be declard in the WebApp or in loginLocal.less for the compilation in the framework
+
+// This is special for the login screen as this is a fullpage and has some special styles
+
+@import "variables.less";
+
+@import "bootstrap-custom/bootstrap.less";
+@import "@{componentsDir}/Font-Awesome/less/font-awesome.less";
+
+
+// custom
+@import "awesome-bootstrap-checkbox.less";
+
+// variables for login
+@font-size-base:          14px;
+@login-bg-color:          #0164a7;
+
+
+
+html {
+	overflow-y:auto;
+}
+
+body {
+  background-color: @login-bg-color;
+}
+
+.login {
+    align-self:center;
+    padding: 10px 10px;
+}
+
+.logo {
+    height: 100px;
+	max-height: 100px;
+    margin: 0 0 20px 0;
+}
+
+.loginbox {
+    background-color:white;
+    border-radius: 2px;
+    padding: 20px 25px 20px 25px;
+}
+
+.banner {
+    background-color: @login-bg-color;
+    height: 100px;
+	max-height: 100px;
+	width: 100%;
+    padding: 5px 5px;
+	border-radius: 7px;
+    margin-top:20px;
+}
+
+.fit {
+    display:block;
+    max-height:100%;
+    max-width:100%;
+    margin: auto auto;
+}
+
+.appname {
+    text-align:center;
+    margin-top:30px;
+    margin-bottom:25px;
+    font-size:20px;
+    font-weight:bold !important;
+}
+
+.bigmargin {
+    margin-top: 15px;
+    margin-bottom: 2px;
+}
+
+.btn-login {
+    font-size:16px;
+    background-color: @login-bg-color;
+}
+
+.field-validation-error {
+	color: @brand-danger;
+}
+
+input.bigInput {
+    font-size: @font-size-base;
+}

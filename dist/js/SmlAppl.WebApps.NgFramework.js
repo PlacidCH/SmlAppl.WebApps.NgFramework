@@ -1,3 +1,4 @@
+/* #### File: Scripts/app/app.js */ 
 (function() {
 	"use strict";
 
@@ -21,9 +22,12 @@
 		"smlAppl.webApps.framework.filterTable",
 		
 		// 3rd Party Modules
+		"ngNotify"
 	]);
+
 })();
 
+/* #### File: Scripts/app/FilterTable/app.js */ 
 (function() {
 	"use strict";
 
@@ -43,6 +47,24 @@
 
 })();
 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/"
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -209,8 +231,28 @@
 
 //;
 
+/* #### File: Scripts/app/Config/templates.js */ 
+angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
+    "<div class=\"input-group\">\r" +
+    "\n" +
+    "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +
+    "\n" +
+    "	<span class=\"input-group-btn\">\r" +
+    "\n" +
+    "		<button type=\"button\" class=\"btn btn-default\" ng-click=\"openCal($event)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\r" +
+    "\n" +
+    "	</span>\r" +
+    "\n" +
+    "</div>"
+  );
+
+}]);
 
 
+/* #### File: Scripts/app/Directives/elastic.js */ 
 /*
 	Gives a textarea the ability to autogrowth
 	From: http://stackoverflow.com/questions/17772260/textarea-auto-height
@@ -244,6 +286,52 @@
 		]);
 })();
 
+/* #### File: Scripts/app/Directives/popupDatepicker.js */ 
+(function() {
+	"use strict";
+
+	/*
+		The normal datepicker from uib displays the calendar. We need an input-box as it will be much smaller.
+		To choose a date, the calendar will be popup.
+	*/
+
+	angular.module('smlAppl.webApps.framework.directives')
+		.directive("popupDatepicker", [
+			"appConfigFw", function (appConfigFw) {
+				return {
+					restrict: "E",
+					scope: {
+						data: "=ngModel",
+						//required: "="
+					},
+					templateUrl: appConfigFw.uriBaseViews + "PopupDatepicker.tpl.html",
+
+					link: function(scope, element, attrs) {
+
+						scope.required = attrs["ng-required"];
+
+
+						scope.states = {
+							opened: false,
+							showValidation: false,
+						};
+
+						scope.dateOptions = {
+							startingDay: 1
+						};
+
+						scope.openCal = function($event) {
+							scope.states.opened = true;
+						};
+
+					},
+				}
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/FilterTable/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -554,6 +642,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 }]);
 
 
+/* #### File: Scripts/app/FilterTable/Controllers/FilterTableModalInstanceCtrl.js */ 
 (function() {
 	"use strict";
 
@@ -598,6 +687,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 })();
 
+/* #### File: Scripts/app/FilterTable/Directives/filterTable.js */ 
 (function() {
 	"use strict";
 
@@ -1138,22 +1228,32 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 })();
 
-"use strict";
+/* #### File: Scripts/app/Filters/ChDate.js */ 
+(function() {
 
-angular.module("smlAppl.webApps.framework.filters")
-	.filter("chDate", ["$filter", function($filter) {
-		var angularDateFilter = $filter("date");
-		return function(theDate) {
-			return angularDateFilter(theDate, "dd.MM.yyyy");
-		}
-	}])
-	.filter("chDateTime", ["$filter", function($filter) {
-		var angularDateFilter = $filter("date");
-		return function(theDate) {
-			return angularDateFilter(theDate, "dd.MM.yyyy HH:mm:ss");
-		}
-	}]);
+	"use strict";
 
+	angular.module("smlAppl.webApps.framework.filters")
+		.filter("chDate", [
+			"$filter", function($filter) {
+				var angularDateFilter = $filter("date");
+				return function(theDate) {
+					return angularDateFilter(theDate, "dd.MM.yyyy");
+				}
+			}
+		])
+		.filter("chDateTime", [
+			"$filter", function($filter) {
+				var angularDateFilter = $filter("date");
+				return function(theDate) {
+					return angularDateFilter(theDate, "dd.MM.yyyy HH:mm:ss");
+				}
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/Filters/decimal.js */ 
 (function() {
 
 	"use strict";
@@ -1174,36 +1274,120 @@ angular.module("smlAppl.webApps.framework.filters")
 
 })();
 
+/* #### File: Scripts/app/Services/HttpHandler.js */ 
 /*
 	This service will handle the response of a promise from $http-calls.
+	Usage: return request.then(HttpHandler.handleSuccess, HttpHandler.handleError);
+	Usage: return request.then(HttpHandler.handleSuccess, HttpHandler.handleSaveErrorWithNotify);
 */
 
-angular.module("smlAppl.webApps.framework.services")
-	.service("HttpHandler", ["$q",
-		function ($q) {
+(function() {
+	"use strict";
 
-			// Original code from: http://www.bennadel.com/blog/2612-using-the-http-service-in-angularjs-to-make-ajax-requests.htm
+	angular.module("smlAppl.webApps.framework.services")
+		.service("HttpHandler", [
+			"$q", "Notify",
+			function ($q, Notify) {
 
-			// I transform the error response, unwrapping the application dta from
-			// the API response payload.
-			this.handleError = function (response) {
-				console.log(response);
-				// The API response from the server should be returned in a
-				// nomralized format. However, if the request was not handled by the
-				// server (or what not handles properly - ex. server error), then we
-				// may have to normalize it on our end, as best we can.
-				if (!angular.isObject(response.data) && !response.statusText) {
-					response.statusText = "An unknown error occurred.";
+				var self = this;
+
+				// Original code from: http://www.bennadel.com/blog/2612-using-the-http-service-in-angularjs-to-make-ajax-requests.htm
+
+				// transform the error response, unwrapping the application data from the API response payload.
+				this.handleError = function(response) {
+					console.log(response);
+					// The API response from the server should be returned in a
+					// nomralized format. However, if the request was not handled by the
+					// server (or what not handles properly - ex. server error), then we
+					// may have to normalize it on our end, as best we can.
+					if (!angular.isObject(response.data) && !response.statusText) {
+						response.statusText = "An unknown error occurred.";
+					}
+
+					// Otherwise, use expected error message.
+					return ($q.reject(response));
 				}
 
-				// Otherwise, use expected error message.
-				return ($q.reject(response));
-			}
+				// calls handleError and then shows a get error-notification
+				this.handleGetErrorWithNotify = function (response) {
+					var handleResponse = self.handleError(response);
 
-			// I transform the successful response, unwrapping the application data
-			// from the API response payload.
-			this.handleSuccess = function (response) {
-				return (response.data);
+					Notify.alertGetError(handleResponse);
+				}
+
+				// calls handleError and then shows a save error-notification
+				this.handleSaveErrorWithNotify = function (response) {
+					var handleResponse = self.handleError(response);
+
+					Notify.alertSaveError(handleResponse);
+				}
+
+				// transform the successful response, unwrapping the application data from the API response payload.
+				this.handleSuccess = function(response) {
+					return (response.data);
+				}
 			}
-		}
-	]);
+		]);
+
+})();
+
+/* #### File: Scripts/app/Services/Notify.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("Notify", [
+			"ngNotify", "$filter",
+			function(ngNotify, $filter) {
+
+				this.alertInfo = function(text) {
+					setTranslateText(text, "info");
+				}
+
+				this.alertSuccess = function(text) {
+					setTranslateText(text, "success");
+				}
+
+				this.alertError = function(text) {
+					alertErrorInternal(text);
+				}
+
+				// for http actions
+
+				this.alertGetError = function (response) {
+					var message = response.statusText;
+
+					if (!message) {
+						// no message text, show general error
+						message = "Message_DataGet_Error";
+					}
+
+					alertErrorInternal(message);
+				}
+
+				this.alertSaveError = function (response) {
+					var message = response.statusText;
+
+					if (!message) {
+						// no message text, show general error
+						message = "Message_Save_Error";
+					}
+
+					alertErrorInternal(message);
+				}
+
+				// helper methods
+				
+				function alertErrorInternal(text) {
+					setTranslateText(text, "error");
+				}
+
+				function setTranslateText(text, type) {
+					// translate text. If text is not found then it will be returned as is. This is important when not sending any translation-key
+					text = $filter("translate")(text);
+					ngNotify.set(text, type);
+				}
+			}
+		]);
+
+})();

@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-angular-templates');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-sync');
 
 	var rootGitFolder = "../../";
 
@@ -61,8 +62,12 @@ module.exports = function (grunt) {
 				sourceMap: true
 			},
 			app: {
-				src: 'Content/css/main.less',
-				dest: rootGitFolder + 'dist/css/SmlAppl.WebApps.NgFramework.css'
+				src: 'Content/css/mainLocal.less',
+				dest: rootGitFolder + 'dist/css/main.css'
+			},
+			login: {
+				src: 'Content/css/loginLocal.less',
+				dest: rootGitFolder + 'dist/css/login.css'
 			}
 		},
 
@@ -81,20 +86,36 @@ module.exports = function (grunt) {
 
 		// system
 
+		sync: {
+			less: {
+				files: [{
+					//expand: true,
+					cwd: 'Content/css',
+					//src: ['*.less'],
+					src: ['**', '!mainLocal.less', '!loginLocal.less'],
+					dest: rootGitFolder + 'less/'
+				}],
+				verbose: true, // Default: false 
+				//pretend: true, // Don't do any disk operations - just write log. Default: false 
+				failOnError: true, // Fail the task when copying is not possible. Default: false 
+				updateAndDelete: true,
+			},
+		},
+
 		copy: {
 			bower: {
 				src: 'bower.json',
 				dest: rootGitFolder
 			},
-			less: {
-				files: [{
-					expand: true,
-					cwd: 'Content/css',
-					//src: ['*.less'],
-					src: '**',
-					dest: rootGitFolder + 'less/'
-				}]
-			},
+			//less: {
+			//	files: [{
+			//		expand: true,
+			//		cwd: 'Content/css',
+			//		//src: ['*.less'],
+			//		src: ['**', '!mainLocal.less', '!loginLocal.less'],
+			//		dest: rootGitFolder + 'less/'
+			//	}]
+			//},
 		},
 
 		watch: {
@@ -123,6 +144,8 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('js', ['ngtemplates', 'concat', 'uglify']);
 	grunt.registerTask('css', ['less', 'cssmin']);
+
+	grunt.registerTask('publish', ['concat', 'uglify', 'ngtemplates', 'less', 'cssmin', 'copy', 'sync']);
 
 	//grunt.registerTask('default', ['concat', 'uglify', 'ngtemplates', 'less', 'cssmin', 'watch']);
 };

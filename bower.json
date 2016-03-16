@@ -1,29 +1,30 @@
 {
-	"name": "SmlAppl-WebApps-NgFramework",
-	"description": "",
-	"authors": [
-		"Shahid Schmid <shahid.schmid@premotec.ch>"
-	],
-	"dependencies": {
-		"angular": "~1.4.8",
-		"angular-bootstrap": "0.14.3",
-		"angular-ui-router": "~0.2.15",
-		"bootstrap": "^3.3.6",
-		"font-awesome": "^4.5.0"
-	},
-	"homepage": "https://github.com/PlacidCH/SmlAppl.WebApps.NgFramework",
-	"main": [
-		"dist/js/SmlAppl.WebApps.NgFramework.js",
-		"dist/css/SmlAppl.WebApps.NgFramework.css"
-	],
-	"moduleType": [ ],
-	"ignore": [
-		"**/.*",
-		"src/**",
-		"node_modules",
-		"bower_components",
-		"wwwroot/lib",
-		"test",
-		"tests"
-	]
+  "name": "SmlAppl-WebApps-NgFramework",
+  "description": "",
+  "authors": [
+    "Shahid Schmid <shahid.schmid@premotec.ch>"
+  ],
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-bootstrap": "0.14.3",
+    "angular-ui-router": "~0.2.15",
+    "bootstrap": "^3.3.6",
+    "font-awesome": "^4.5.0",
+    "ng-notify": "^0.7.2"
+  },
+  "homepage": "https://github.com/PlacidCH/SmlAppl.WebApps.NgFramework",
+  "main": [
+    "dist/js/SmlAppl.WebApps.NgFramework.js",
+    "dist/css/SmlAppl.WebApps.NgFramework.css"
+  ],
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "src/**",
+    "node_modules",
+    "bower_components",
+    "wwwroot/lib",
+    "test",
+    "tests"
+  ]
 }
