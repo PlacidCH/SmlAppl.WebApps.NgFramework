@@ -6730,6 +6730,70 @@ button.close {
     display: none !important;
   }
 }
+/* That each control automatically gets the style of the form-control class */
+select,
+input:not([type='checkbox']) {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+select:focus,
+input:not([type='checkbox']):focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+select::-moz-placeholder,
+input:not([type='checkbox'])::-moz-placeholder {
+  color: #999;
+  opacity: 1;
+}
+select:-ms-input-placeholder,
+input:not([type='checkbox']):-ms-input-placeholder {
+  color: #999;
+}
+select::-webkit-input-placeholder,
+input:not([type='checkbox'])::-webkit-input-placeholder {
+  color: #999;
+}
+select::-ms-expand,
+input:not([type='checkbox'])::-ms-expand {
+  border: 0;
+  background-color: transparent;
+}
+select[disabled],
+input:not([type='checkbox'])[disabled],
+select[readonly],
+input:not([type='checkbox'])[readonly],
+fieldset[disabled] select,
+fieldset[disabled] input:not([type='checkbox']) {
+  background-color: #eeeeee;
+  opacity: 1;
+}
+select[disabled],
+input:not([type='checkbox'])[disabled],
+fieldset[disabled] select,
+fieldset[disabled] input:not([type='checkbox']) {
+  cursor: not-allowed;
+}
+textareaselect,
+textareainput:not([type='checkbox']) {
+  height: auto;
+}
 .panel-heading .accordion-toggle:after {
   /* symbol for "open" panels */
   font-family: 'FontAwesome';
