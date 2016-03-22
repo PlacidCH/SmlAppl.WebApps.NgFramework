@@ -6832,6 +6832,27 @@ h6,
 .h6 {
   font-size: 12px;
 }
+/*
+	Customization for Angular-Bootstrap components
+*/
+.collapse-icon:after {
+  /* symbol for "open" panels */
+  font-family: 'FontAwesome';
+  float: right;
+  content: "\f0d7";
+  color: grey;
+}
+.collapse-icon.collapsed:after {
+  /* symbol for "collapsed" panels */
+  font-family: 'FontAwesome';
+  float: right;
+  content: "\f0da";
+  color: grey;
+}
+.panel-heading-badge-right {
+  position: absolute;
+  right: 30px;
+}
 /*!
  *  Font Awesome 4.5.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

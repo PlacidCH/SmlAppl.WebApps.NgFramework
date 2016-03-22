@@ -1,0 +1,23 @@
+﻿@import (less) "@{componentsDir}/ui-select/dist/select.css";
+
+.select2-container {
+     width: 100%;
+ 
+     .select2-choice {
+         border: 1px solid @input-border;
+         height: @input-height-base;
+         padding: @padding-base-vertical @padding-base-horizontal;
+         font-size: @font-size-base;
+         line-height: @line-height-base;
+         background-color: #fff;
+         background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(0.5, #fff));
+         background-image: -webkit-linear-gradient(center bottom, #fff 0, #fff 50%);
+         background-image: -moz-linear-gradient(center bottom, #fff 0, #fff 50%);
+         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
+         background-image: linear-gradient(#fff 0, #fff 50%);
+     }
+ }
+ 
+ .input-validation-error .select2-choice {
+     border: 1px solid @brand-danger;
+ }

@@ -1,0 +1,32 @@
+﻿//
+// Icon addon for textbox (http://stackoverflow.com/a/18839305)
+// With glyphicons and font-awesome
+// -----------------------------------------------
+
+/* enable absolute positioning */
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon,
+.inner-addon .fa {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon,
+.left-addon .fa { 
+	left:  0;
+}
+
+.right-addon .glyphicon,
+.right-addon .fa { 
+	right: 0;
+}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }

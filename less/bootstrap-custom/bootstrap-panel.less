@@ -1,0 +1,27 @@
+﻿/*
+	Customization for Angular-Bootstrap components
+*/
+
+.collapse-icon {
+
+	&:after{
+		/* symbol for "open" panels */
+		font-family: 'FontAwesome';
+		float: right;
+		content: "\f0d7";
+		color: grey;
+	}
+
+	&.collapsed:after {
+		/* symbol for "collapsed" panels */
+		font-family: 'FontAwesome';
+		float: right;
+		content: "\f0da";
+		color: grey;
+	}
+}
+
+.panel-heading-badge-right {
+	position: absolute;
+	right: 30px;
+}
