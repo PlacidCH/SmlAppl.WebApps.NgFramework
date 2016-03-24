@@ -9550,4 +9550,33 @@ body > .ui-select-bootstrap.open {
 .input-validation-error .select2-choice {
   border: 1px solid #d9534f;
 }
+.filtertable-container {
+  background-color: transparent;
+}
+.filtertable-table {
+  background-color: transparent;
+}
+.filtertable-table-header {
+  background-color: transparent;
+}
+.filtertable-table-body {
+  background-color: transparent;
+}
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(odd) th,
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(odd) td {
+  background-color: #f9f9f9;
+}
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(even) th,
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(even) td {
+  background-color: transparent;
+}
+.filtertable-table-footer {
+  background-color: transparent;
+}
+.filtertable-footer {
+  background-color: transparent;
+}
+.filtertable-cell-clickable {
+  cursor: pointer;
+}
 /*# sourceMappingURL=../../dist/css/main.css.map */

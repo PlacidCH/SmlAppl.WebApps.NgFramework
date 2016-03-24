@@ -1,151 +1,78 @@
-﻿<style>
-	select[value=""] {
-		color: gray;
-	}
-</style>
-
-<div class="row">
-	<div class="col-md-12" style="text-align: center;">
-		<span ng-hide="!loading">Loading <img src="Content/images/loader-horizontal.gif" /></span>
-	</div>
-	<div class="col-md-12" style="text-align: center;">
-		<span ng-show="error">Fehler beim Beziehen der Daten.</span>
-	</div>
-</div>
-
-<script type="text/ng-template" id="myModalContent.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Einstellungen</h3>
-    </div>
-    <div class="modal-body">
-        <uib-tabset>
-            <uib-tab heading="Spalten" ng-if="Options.CanSelectCols">
-                <table class="table table-bordered table-condensed table-responsive table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Sichtbar</th>
-                            <th>Dropdown</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input name="theColFilter.display" ng-model="theColFilter.display" placeholder="Name" />
-                            </td>
-                            <td>
-                                <input type="checkbox" ng-model="visible.all" ng-change="ChangeVisible(visible.all)" /> Alle
-                            </td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="col in Options.CurrentCols | filter: theColFilter">
-                            <td>{{::col.display | translate}}</td>
-                            <td><input type="checkbox" ng-model="col.visible" /></td>
-                            <td><input type="checkbox" ng-model="col.select" ng-change="ChangeDropDown(col)" ng-disabled="Options.NoSearchSelects || !col.canSelect" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </uib-tab>
-            <uib-tab heading="Tabelle" ng-if="true">
-                <table class="table table-bordered table-condensed table-responsive table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Setting</th>
-                            <th>Wert</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Suche aktiv</td>
-                            <td><input type="checkbox" ng-model="Options.SearchActive" /></td>
-                        </tr>
-                        <tr>
-                            <td>Keine Dropdowns</td>
-                            <td><input type="checkbox" ng-model="Options.NoSearchSelects" /></td>
-                        </tr>
-                        <tr>
-                            <td>Dropdowns einschränken</td>
-                            <td><input type="checkbox" ng-model="Options.ReduceSelects" /></td>
-                        </tr>
-                        <tr>
-                            <td>Datensätze pro Seite</td>
-                            <td><input type="number" ng-model="Options.PageSize" ng-model-options="ModelOptions" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </uib-tab>
-        </uib-tabset>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-        <!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
-    </div>
-
-</script>
-
-<div ng-hide="loading || error">
+﻿<div ng-switch="filterTable.Status" class="filtertable-container">
     <div class="row">
+        <div ng-switch-when="Loading" class="col-md-12" style="text-align: center;">
+            <span>Loading <img src="Content/images/loader-horizontal.gif" /></span>
+        </div>
+        <div ng-switch-when="Error" class="col-md-12" style="text-align: center;">
+            <span>Fehler beim Beziehen der Daten.</span>
+        </div>
+
+    </div>
+    <div class="row" ng-switch-when="Structure">
         <div class="col-md-12">
             <div style="overflow: auto;">
-                <table class="table table-bordered table-condensed table-responsive table-striped table-hover">
-                    <thead>
+                <table class="table table-bordered table-condensed table-responsive table-striped table-hover filtertable-table">
+                    <thead class="filtertable-table-header">
                         <tr>
                             <th>
-                                <span type="button" class="btn btn-default btn-sm" ng-click="open()" ng-show="Options.CanCustomize"><span class="glyphicon glyphicon-cog"></span></span>
+                                <span type="button" class="btn btn-default btn-sm" ng-click="open()" ng-show="filterTable.CanCustomize"><span class="glyphicon glyphicon-cog"></span></span>
                             </th>
-                            <th ng-repeat="col in Options.VisibleCols" style="padding-left: 10px; padding-right: 40px; vertical-align: middle;">
-                                <span class="pull-left">{{::col.display | translate}}</span>
-                                <span style="margin-right: -30px; opacity: 0.5; cursor: pointer;" class="pull-right {{GetOrderIndicator(col)}}" ng-click="OrderBy(col)"></span>
+                            <th ng-repeat="col in filterTable.VisibleCols" style="padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;" ng-click="filterTable.UpdateOrderBy(col, $event)">
+                                <span class="pull-left">{{::col.Display}}</span>
+                                <span style="margin-right: -30px; opacity: 0.5;" class="pull-right {{col.OrderIndicator}}"></span>
                             </th>
                         </tr>
-                        <tr ng-show="Options.SearchActive">
+                        <tr ng-show="filterTable.SearchActive">
                             <th>
-                                <span type="button" class="btn btn-default btn-sm" ng-click="clearFilter()"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span type="button" class="btn btn-default btn-sm" ng-click="filterTable.ClearFilter()"><span class="glyphicon glyphicon-remove"></span></span>
                             </th>
-                            <th ng-repeat="col in Options.VisibleCols">
-                                <select class="select2" name="theFilter{{::col.key}}" ng-model="theFilter[col.key]" ng-if="col.select && hasDistincts(col.key)">
-                                    <!-- acts as placeholder -->
-                                    <option ng-repeat="item in Distincts[col.key] | orderBy " value="{{::item}}">{{ ::item | translate }}</option>
+                            <th ng-repeat="col in filterTable.VisibleCols" ng-switch="col.HasDistincts">
+                                <select ng-switch-when="true" class="select2" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]">
+                                    <option ng-repeat="item in col.Distincts">{{::item}}</option>
                                 </select>
-                                <input type="text" name="theFilter{{::col.key}}" ng-model="theFilter[col.key]" ng-model-options="ModelOptions" ng-if="!col.select || !hasDistincts(col.key)" />
+                                <input ng-switch-when="false" type="text" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]" ng-model-options="ModelOptions" />
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr ng-if="PassedData.length === 0 && !Options.InitialEmpty">
-                            <td colspan="100%" class="warning">Keine Daten gefunden.</td>
-                        </tr>
-                        <tr ng-if="Options.VisibleCols.length > 0" ng-repeat="item in DisplayedData">
-                            <td></td>
-                            <!--<td ng-repeat="col in Options.VisibleCols">{{::GetVal(item, col)}}</td>-->
-                            <td ng-
-                            <td ng-repeat="col in Options.VisibleCols"><span ng-bind-html="::GetVal(item, col)"></span></td>
-                        </tr>
-                        <tr ng-if="PassedData.length > 0 && (FilteredData.length == 0)">
-                            <td colspan="100%" class="warning">Filter enthält keine Daten.</td>
+                    <tbody class="filtertable-table-body" ng-if="filterTable.VisibleCols.length > 0">
+                        <tr ng-repeat="item in filterTable.DataDisplayed">
+                            <td ng-class="::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}" ng-click="filterTable.ExecuteClickAction(filterTable.ActionCol, item)">
+                                <span ng-bind-html="::item[filterTable.ActionCol.Key]"></span>
+                            </td>
+                            <td ng-repeat="col in filterTable.VisibleCols" ng-class="::{'filtertable-cell-clickable' : col.HasClickAction}" ng-click="filterTable.ExecuteClickAction(col, item)">
+                                <span ng-bind-html="::item[col.Key]"></span>
+                            </td>
                         </tr>
                     </tbody>
-
+                    <tfoot class="filtertable-table-footer">
+                        <tr ng-if="filterTable.Loading">
+                            <td colspan="100%" class="none" style="text-align: center;">Loading <img src="Content/images/loader-horizontal.gif" /></td>
+                        </tr>
+                        <tr ng-if="filterTable.ShowNoDataMsg">
+                            <td colspan="100%" class="warning" style="text-align: center;">Keine Daten gefunden.</td>
+                        </tr>
+                        <tr ng-if="filterTable.ShowDataFilteredOutMsg">
+                            <td colspan="100%" class="warning" style="text-align: center;">Filter enthält keine Daten.</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="pull-right">
-                <button class="btn btn-default" style="float: left;" ng-click="SetCurrentPage(1)" ng-disabled="settings.backwardDisabled"><i class="fa fa-fast-backward"></i></button>
-                <button class="btn btn-default" style="float: left;" ng-click="SetCurrentPage(settings.currentPage-1)" ng-disabled="settings.backwardDisabled"><i class="fa fa-step-backward"></i></button>
-                <div style="float: left; text-align: right;">
-                    <select ng-model="settings.currentPage" ng-change="SetCurrentPage(settings.currentPage)"
-                            ng-options="item as item for item in settings.filterPageArray"></select>
-                    Seite {{ settings.currentPage }} von {{ settings.filterPageCount }} ({{settings.totalPageCount}} Total)
-
+            <div class="row filtertable-footer">
+                <div class="col-md-12" ng-if="!filterTable.Loading && filterTable.HasData">
+                    <div class="pull-right">
+                        <button class="btn btn-default" style="float: left;" ng-click="filterTable.CurrentPage = 1" ng-disabled="filterTable.BackwardDisabled"><i class="fa fa-fast-backward"></i></button>
+                        <button class="btn btn-default" style="float: left;" ng-click="filterTable.CurrentPage = (filterTable.CurrentPage - 1)" ng-disabled="filterTable.BackwardDisabled"><i class="fa fa-step-backward"></i></button>
+                        <div style="float: left; text-align: right;">
+                            <select ng-model="filterTable.CurrentPage"
+                                    ng-options="item as item for item in filterTable.FilterPageArray"></select>
+                            Seite {{ filterTable.CurrentPage }} von {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} Total)
+                        </div>
+                        <button class="btn btn-default" style="float: right;" ng-click="filterTable.CurrentPage = filterTable.FilterDataPageCount" ng-disabled="filterTable.ForwardDisabled"><i class="fa fa-fast-forward"></i></button>
+                        <button class="btn btn-default" style="float: right;" ng-click="filterTable.CurrentPage = (filterTable.CurrentPage + 1)" ng-disabled="filterTable.ForwardDisabled"><i class="fa fa-step-forward"></i></button>
+                    </div>
+                    <div style="float: left;">Datensätze: {{filterTable.DataFiltered.length}} von {{filterTable.PassedData.length}}</div>
                 </div>
-                <button class="btn btn-default" style="float: right;" ng-click="SetCurrentPage(settings.filterPageCount)" ng-disabled="settings.forwardDisabled"><i class="fa fa-fast-forward"></i></button>
-                <button class="btn btn-default" style="float: right;" ng-click="SetCurrentPage(settings.currentPage+1)" ng-disabled="settings.forwardDisabled"><i class="fa fa-step-forward"></i></button>
             </div>
-            <div style="float: left;">Datensätze: {{FilteredData.length}} von {{PassedData.length}}</div>
         </div>
-
     </div>
 </div>

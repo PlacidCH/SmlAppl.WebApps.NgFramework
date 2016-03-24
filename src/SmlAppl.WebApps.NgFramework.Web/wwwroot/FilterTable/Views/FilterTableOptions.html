@@ -1,0 +1,70 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Einstellungen</h3>
+</div>
+<div class="modal-body">
+    <uib-tabset>
+        <uib-tab heading="Spalten" ng-if="FilterTable.CanSelectCols">
+            <table class="table table-bordered table-condensed table-responsive table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Sichtbar</th>
+                        <th>Dropdown</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name="theColFilter.Display" ng-model="theColFilter.Display" placeholder="Name" />
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="visible.all" ng-change="ChangeVisible(visible.all)" /> Alle
+                        </td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="col in FilterTable.CurrentCols | filter: theColFilter">
+                        <td>{{::col.Display}}</td>
+                        <td><input type="checkbox" ng-model="col.Visible" /></td>
+                        <td ng-switch="FilterTable.NoSearchSelects">
+                            <input ng-switch-when="true" type="checkbox" ng-model="noSelect" ng-disabled="true" />
+                            <input ng-switch-when="false" type="checkbox" ng-model="col.BuildSelect" ng-disabled="!col.CanBuildSelect" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </uib-tab>
+        <uib-tab heading="Tabelle" ng-if="true">
+            <table class="table table-bordered table-condensed table-responsive table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Setting</th>
+                        <th>Wert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Suche aktiv</td>
+                        <td><input type="checkbox" ng-model="FilterTable.SearchActive" /></td>
+                    </tr>
+                    <tr>
+                        <td>Keine Dropdowns</td>
+                        <td><input type="checkbox" ng-model="FilterTable.NoSearchSelects" /></td>
+                    </tr>
+                    <tr>
+                        <td>Dropdowns einschränken</td>
+                        <td><input type="checkbox" ng-model="FilterTable.ReduceSelects" /></td>
+                    </tr>
+                    <tr>
+                        <td>Datensätze pro Seite</td>
+                        <td><input type="number" ng-model="FilterTable.PageSize" ng-model-options="ModelOptions" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </uib-tab>
+    </uib-tabset>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+    <!--<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>-->
+</div>
+
