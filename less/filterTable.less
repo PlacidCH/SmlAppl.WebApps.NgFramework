@@ -1,0 +1,43 @@
+﻿//@import "variables.less";
+
+.filtertable {
+    &-container {
+        background-color: @filtertable-background-container;
+    }
+    
+    &-table {
+        background-color: @filtertable-background-table;
+    }
+
+    &-table-header {
+        background-color: @filtertable-background-table-header;
+    }
+
+    &-table-body {
+        background-color: @filtertable-background-table-body;
+    }
+
+    & > &-table.table-striped > tbody > tr:nth-child(odd) {
+         th, td {
+            background-color: @filtertable-background-table-row-odd;
+         }
+    }
+    
+    & > &-table.table-striped > tbody > tr:nth-child(even) {
+         th, td {
+            background-color: @filtertable-background-table-row-even;
+         }
+    }
+
+    &-table-footer {
+        background-color: @filtertable-background-table-footer;
+    }
+
+    &-footer {
+        background-color: @filtertable-background-footer;
+    }
+
+    &-cell-clickable {
+        cursor: pointer;
+    }
+}
