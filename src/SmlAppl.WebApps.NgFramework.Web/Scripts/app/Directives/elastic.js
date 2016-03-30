@@ -15,13 +15,22 @@
 				return {
 					restrict: 'A',
 					link: function ($scope, element) {
-						// scroll-bar ist not needed because we have auto-height now
+						// scroll-bar is not needed because we have auto-height now
 						element[0].style.overflowY = "hidden";
+
+						$scope.initialHeight = 30;
 
 						$scope.initialHeight = $scope.initialHeight || element[0].style.height;
 						var resize = function() {
 							element[0].style.height = $scope.initialHeight;
-							element[0].style.height = "" + element[0].scrollHeight + "px";
+
+							var scrollHeight = element[0].scrollHeight;
+							if (scrollHeight === 0) {
+								// when input is not visible, scrollHeight is 0
+								scrollHeight = 30;
+							}
+
+							element[0].style.height = "" + scrollHeight + "px";
 						};
 						element.on("input change", resize);
 						$timeout(resize, 0);

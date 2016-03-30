@@ -47,7 +47,26 @@
 
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -214,23 +233,6 @@
 
 //;
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/"
-		}
-	}
-
-})();
-
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
@@ -252,6 +254,46 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 }]);
 
 
+/* #### File: Scripts/app/Directives/displayEmployee.js */ 
+/*
+	Displays the employees name from its id.
+*/
+
+(function() {
+	'use strict';
+
+	angular.module('smlAppl.webApps.framework.directives')
+		.directive('displayEmployee', [
+			"HttpHandler", "Employee",
+			function (HttpHandler, Employee) {
+				return {
+					restrict: "E",
+					require: "?ngModel",
+					scope: {
+						placeholder: "="
+					},
+					template: "{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})",
+					link: function(scope, element, attrs, ctrl) {
+
+						var ngModel = ctrl;
+						scope.item = {};
+
+						// Initialize value
+						ngModel.$render = function() {
+							if (ngModel.$viewValue) {
+
+								Employee.getById(ngModel.$viewValue)
+									.then(function(response) {
+										scope.item = response;
+									}, HttpHandler.handleGetErrorWithNotify);
+							}
+						}
+					}
+				}
+			}
+		]);
+})();
+
 /* #### File: Scripts/app/Directives/elastic.js */ 
 /*
 	Gives a textarea the ability to autogrowth
@@ -270,13 +312,22 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 				return {
 					restrict: 'A',
 					link: function ($scope, element) {
-						// scroll-bar ist not needed because we have auto-height now
+						// scroll-bar is not needed because we have auto-height now
 						element[0].style.overflowY = "hidden";
+
+						$scope.initialHeight = 30;
 
 						$scope.initialHeight = $scope.initialHeight || element[0].style.height;
 						var resize = function() {
 							element[0].style.height = $scope.initialHeight;
-							element[0].style.height = "" + element[0].scrollHeight + "px";
+
+							var scrollHeight = element[0].scrollHeight;
+							if (scrollHeight === 0) {
+								// when input is not visible, scrollHeight is 0
+								scrollHeight = 30;
+							}
+
+							element[0].style.height = "" + scrollHeight + "px";
 						};
 						element.on("input change", resize);
 						$timeout(resize, 0);
@@ -1719,6 +1770,45 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 					return angularNumberFilter(value, fraction);
 				}
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/Services/DataResource/Employee.js */ 
+/*
+	Needs the EmployeesController from the Api-Framework.
+*/
+
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("Employee", [
+			"$http", "appConfigFw", "HttpHandler",
+			function ($http, appConfigFw, HttpHandler) {
+
+
+				var baseUri = appConfigFw.uriFwBaseApi + "Employees/";
+
+				this.getAll = function () {
+					var request = $http.get(baseUri);
+					return request.then(HttpHandler.handleSuccess, HttpHandler.handleGetErrorWithNotify);
+				};
+
+				this.getById = function (id) {
+					var request = $http.get(baseUri + id);
+					return request.then(HttpHandler.handleSuccess, HttpHandler.handleGetErrorWithNotify);
+				};
+
+				this.getByFilter = function (filter) {
+					var params = {
+						filter: filter
+					};
+
+					var request = $http.get(baseUri + "GetByFilter", { params: params });
+					return request.then(HttpHandler.handleSuccess, HttpHandler.handleGetErrorWithNotify);
+				};
 			}
 		]);
 
