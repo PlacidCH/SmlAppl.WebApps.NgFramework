@@ -36,7 +36,7 @@
                     </thead>
                     <tbody class="filtertable-table-body" ng-if="filterTable.VisibleCols.length > 0">
                         <tr ng-repeat="item in filterTable.DataDisplayed">
-                            <td ng-class="::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}" ng-click="filterTable.ExecuteClickAction(filterTable.ActionCol, item)">
+                            <td class="text-center" ng-class="::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}" ng-click="filterTable.ExecuteClickAction(filterTable.ActionCol, item)">
                                 <span ng-bind-html="::item[filterTable.ActionCol.Key]"></span>
                             </td>
                             <td ng-repeat="col in filterTable.VisibleCols" ng-class="::{'filtertable-cell-clickable' : col.HasClickAction}" ng-click="filterTable.ExecuteClickAction(col, item)">
