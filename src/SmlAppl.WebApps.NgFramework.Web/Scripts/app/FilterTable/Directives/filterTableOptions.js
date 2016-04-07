@@ -2,7 +2,7 @@
 	"use strict";
 
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
-        .controller('FilterTableOptionsCtrl', function ($scope, $uibModalInstance, $filter, filterTable) {
+        .controller('FilterTableOptionsCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", function ($scope, $uibModalInstance, $filter, filterTable) {
 
         $scope.FilterTable = filterTable;
 
@@ -50,5 +50,5 @@
             }
             checkAllButtonStati();
         }
-    });
+    }]);
 })();

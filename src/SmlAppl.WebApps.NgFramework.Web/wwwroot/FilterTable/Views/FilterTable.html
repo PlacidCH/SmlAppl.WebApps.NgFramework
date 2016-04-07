@@ -22,6 +22,14 @@
                                 <span style="margin-right: -30px; opacity: 0.5;" class="pull-right {{col.OrderIndicator}}"></span>
                             </th>
                         </tr>
+                        <tr ng-repeat="headerRow in filterTable.HeaderRows">
+                            <th>
+                                <span ng-bind-html="::headerRow.Title"></span>
+                            </th>
+                            <th ng-repeat="col in filterTable.VisibleCols">
+                                <span ng-bind-html="headerRow.GetValue(col)"></span>
+                            </th>
+                        </tr>
                         <tr ng-show="filterTable.SearchActive">
                             <th>
                                 <span type="button" class="btn btn-default btn-sm" ng-click="filterTable.ClearFilter()"><span class="glyphicon glyphicon-remove"></span></span>
@@ -53,6 +61,14 @@
                         </tr>
                         <tr ng-if="filterTable.ShowDataFilteredOutMsg">
                             <td colspan="100%" class="warning" style="text-align: center;">Filter enthält keine Daten.</td>
+                        </tr>
+                        <tr ng-repeat="footerRow in filterTable.FooterRows">
+                            <th>
+                                <span ng-bind-html="::footerRow.Title"></span>
+                            </th>
+                            <th ng-repeat="col in filterTable.VisibleCols">
+                                <span ng-bind-html="footerRow.GetValue(col)"></span>
+                            </th>
                         </tr>
                     </tfoot>
                 </table>

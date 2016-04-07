@@ -2,7 +2,82 @@
 	"use strict";
 
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
-	    .factory('filterTableConstructor', function ($filter, $timeout, $parse) {
+	    .factory('filterTableConstructor', ["$filter", "$timeout", "$parse", "$sce", function ($filter, $timeout, $parse, $sce) {
+	        function HeaderDef(title, calculator, showPageValues) {
+                this.Title = title || "";
+                this._calculator = calculator || null;
+                this.Values = {};
+                this.ShowPageValues = showPageValues || false;
+            }
+
+            HeaderDef.prototype = {
+                get CanCalculate() {
+                    return ((this._calculator || null) != null);
+                },
+                GetValue: function (column) {
+                    if (angular.isUndefined(this.Values[column.Key])) {
+                        var val = this.Calculate(column);
+                        if ((val || null) !== null && angular.isString(val)) {
+                            val = $sce.trustAsHtml(val);
+                        }
+                        this.Values[column.Key] = val;
+                    }
+                    return this.Values[column.Key] || null;
+                },
+                ResetVal: function(onlyPageChange) {
+                    onlyPageChange = onlyPageChange || false;
+                    if (!onlyPageChange || this.ShowPageValues) {
+                        this.Values = {};
+                    }
+                },
+                ColumnData: function(col, data) {
+                    return (data || []).map(function (item) { return item[col.Key] });
+                },
+                Sum: function (col, data) {
+                    var total = 0;
+                    var array = this.ColumnData(col, data);
+                    var l = array.length;
+                    if (l === 0) {
+                        return null;
+                    }
+                    for (var i = l; i> 0; i--) {
+                        total += array[i-1];
+                    }
+                    return total;
+                },
+                Avg: function (col, data) {
+                    var l = data.length;
+                    if (l === 0) {
+                        return null;
+                    }
+                    return this.Sum(col, data) / l;
+                },
+                Max: function (col, data) {
+                    var array = this.ColumnData(col, data);;
+                    var l = array.length;
+                    if (l === 0) {
+                        return null;
+                    }
+                    return Math.max.apply(null, array);
+                },
+                Min: function (col, data) {
+                    var array = this.ColumnData(col, data);
+                    var l = array.length;
+                    if (l === 0) {
+                        return null;
+                    }
+                    return Math.min.apply(null, array);
+                },
+                Calculate: function (column) {
+                    if (this.CanCalculate) {
+                        var data = column.GetFilterTable().DataFiltered || [];
+                        var dataDisplayed = column.GetFilterTable().DataDisplayed ||[];
+                        return this._calculator.call(this, column, data, dataDisplayed);
+                    }
+                    return null;
+                }
+            }
+
 	        function ColumnDef() {
 	            this._key = null;
 
@@ -184,17 +259,23 @@
 	                }
 	                return this._applyFilter;
 	            },
+                TrustIt: function(val) {
+                    if ((val || null) !== null && angular.isString(val)) {
+                        return $sce.trustAsHtml(val);
+                    }
+                    return val;
+                },
 	            GetValue: function (item) {
 	                if (this.CalculateColumn) {
-	                    return this.ValueFunction.call(this, item);
+	                    return this.TrustIt(this.ValueFunction.call(this, item));
 	                }
 	                if (this.ActionCol) {
 	                    return ''; // needs to be handled with ValueFunction
 	                }
 	                if (this.ApplyFilter) {
-	                    return $parse("item[col.Key] | " + this.Filter)(this, { item: item, col: this });
+	                    return this.TrustIt($parse("item[col.Key] | " + this.Filter)(this, { item: item, col: this }));
 	                }
-	                return item[this.Key];
+	                return this.TrustIt(item[this.Key]);
 	            },
 	            get HasClickAction() {
 	                return (angular.isDefined(this.ClickAction) && angular.isFunction(this.ClickAction) && this.ClickAction !== null);
@@ -252,7 +333,8 @@
 
 	            this.Status = "Loading";
 	            this._actionCol = null;
-
+	            this.HeaderRows = [];
+	            this.FooterRows = [];
 	            this.Initialised = false;
 	        }
 
@@ -327,9 +409,11 @@
 	                    me.ResetDistincts(true);
 	                } else {
 	                    me._dataCalc = this.GetOrdered(me._dataCalc);
+	                    me.ResetHeaders(true);
+	                    me.ResetFooters(true);
 	                }
 	                me._hasData = me._dataCalc.length > 0;
-	                me.UpdateFilter();
+	                me.UpdateFilter(!resetting);
 	                $timeout.cancel(me._loadTimeout);
 	                //if (!me._hasData && me._dataCounter > 1) {
 	                if (!me._hasData) {
@@ -341,7 +425,17 @@
 	                    me.Loading = false;
 	                }
 	            },
-	            GetOrdered: function (data) {
+                ResetHeaders: function(onlyPageChange) {
+                    for (var i = 0; i < this.HeaderRows.length; i++) {
+                        this.HeaderRows[i].ResetVal(onlyPageChange);
+                    }
+                },
+                ResetFooters: function (onlyPageChange) {
+                    for (var i = 0; i < this.FooterRows.length; i++) {
+                        this.FooterRows[i].ResetVal(onlyPageChange);
+                    }
+                },
+                GetOrdered: function (data) {
 	                return $filter('orderBy')(data, this.OrderBy);
 	            },
 	            get CurrentPage() {
@@ -364,6 +458,8 @@
 	                } else {
 	                    this.DataDisplayed = this.DataFiltered.slice(startIndex, startIndex + this.PageSizeCalc);
 	                }
+	                this.ResetHeaders(true);
+	                this.ResetFooters(true);
 	            },
 	            get BackwardDisabled() {
 	                return this.CurrentPage <= 1;
@@ -562,10 +658,11 @@
 	                    Object.defineProperty(f, name, {
 	                        get: function () { return f.backingfields[name]; },
 	                        set: function (newValue) {
+	                            var changed = f.backingfields[name] !== newValue;
 	                            f.backingfields[name] = newValue;
 	                            $timeout.cancel(f.delayFilter);
 	                            f.delayFilter = $timeout(function () {
-	                                me.UpdateFilter();
+	                                me.UpdateFilter(changed);
 	                            }, 200);
 	                        },
 	                    });
@@ -599,10 +696,14 @@
 	                }
 	                return term;
 	            },
-	            UpdateFilter: function () {
+	            UpdateFilter: function (resetHeaderAndFooter) {
 	                this.DataFiltered = $filter('filter')(this._dataCalc, this.CleanTableFilter(this.TableFilter.backingfields));
 	                this.ResetDistincts(this.ReduceSelects);
 	                this.CurrentPage = 1;
+	                if (resetHeaderAndFooter || false) {
+	                    this.ResetHeaders();
+	                    this.ResetFooters();
+	                }
 	            },
 	            ResetDistincts: function (reset) {
 	                if (reset) {
@@ -691,9 +792,13 @@
 	            return c;
 	        }
 
-	        return FilterTable;
-	    })
-	    .directive("filterTable", function (filterFilter, $uibModal, $timeout, $filter, $sanitize, filterTableConstructor) {
+            return {
+                FilterTable: FilterTable,
+                HeaderDef: HeaderDef, 
+                GetDefined: getDefined,
+            }
+	    }])
+	    .directive("filterTable", ["filterFilter", "$uibModal", "$timeout", "$filter", "$sanitize", "filterTableConstructor", function (filterFilter, $uibModal, $timeout, $filter, $sanitize, filterTableConstructor) {
 	        return {
 	            restrict: 'E',
 	            scope: {
@@ -726,7 +831,7 @@
 	                    }
 	                };
 
-	                scope.filterTable = new filterTableConstructor();
+	                scope.filterTable = new filterTableConstructor.FilterTable();
 
 	                //function mappedField_old(onObject, name, definition) {
 	                //    var defaultVal = angular.isDefined(definition.value) ? definition.value : null;
@@ -876,6 +981,23 @@
 	                    return scope.filterTable.PageSize;
 	                }
 
+                    function createInfoRows(array) {
+                        var a = array || [];
+                        var l = [];
+                        for (var i = 0; i < a.length; i++) {
+                            var entry = a[i];
+                            var h = new filterTableConstructor.HeaderDef(
+                                filterTableConstructor.GetDefined(entry.title, entry.Title, ""),
+                                filterTableConstructor.GetDefined(entry.calculate, entry.Calculate, null),
+                                filterTableConstructor.GetDefined(entry.showPageValues, entry.ShowPageValues, false)
+                            );
+                            if (h.CanCalculate) {
+                                l.push(h);
+                            }
+                        }
+                        return l;
+                    }
+
 	                function initFilterTable() {
 
 	                    var filterTableDefinition = {
@@ -898,6 +1020,10 @@
 	                        InitialEmpty: { syncIn: true, syncOut: true, value: false },
 
 	                        Columns: { syncIn: true, syncOut: true, value: [], changeFunc: scope.filterTable.UpdateColumnsDefs },
+
+	                        HeaderRows: { syncIn: true, syncOut: true, value: [], changeFunc: createInfoRows },
+	                        FooterRows: { syncIn: true, syncOut: true, value: [], changeFunc: createInfoRows },
+
 	                        Data: { syncIn: true, syncOut: false, value: [], afterChangeFunc: function (newValue) { scope.filterTable.PassedData = newValue; } },
 
 	                    }
@@ -930,6 +1056,6 @@
 	                }
 	            }
 	        };
-	    });
+	    }]);
 
 })();
