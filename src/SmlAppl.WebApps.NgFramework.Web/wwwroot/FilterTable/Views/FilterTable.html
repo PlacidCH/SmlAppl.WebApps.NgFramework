@@ -4,7 +4,7 @@
             <span>Loading <img src="Content/images/loader-horizontal.gif" /></span>
         </div>
         <div ng-switch-when="Error" class="col-md-12" style="text-align: center;">
-            <span>Fehler beim Beziehen der Daten.</span>
+            <span>{{::Translations.FilterTable_Error_Getting_Data}}</span>
         </div>
 
     </div>
@@ -31,15 +31,15 @@
                             </th>
                         </tr>
                         <tr ng-show="filterTable.SearchActive">
-                            <th>
+                            <td>
                                 <span type="button" class="btn btn-default btn-sm" ng-click="filterTable.ClearFilter()"><span class="glyphicon glyphicon-remove"></span></span>
-                            </th>
-                            <th ng-repeat="col in filterTable.VisibleCols" ng-switch="col.HasDistincts">
+                            </td>
+                            <td ng-repeat="col in filterTable.VisibleCols" ng-switch="col.HasDistincts">
                                 <select ng-switch-when="true" class="select2" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]">
                                     <option ng-repeat="item in col.Distincts">{{::item}}</option>
                                 </select>
                                 <input ng-switch-when="false" type="text" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]" ng-model-options="ModelOptions" />
-                            </th>
+                            </td>
                         </tr>
                     </thead>
                     <tbody class="filtertable-table-body" ng-if="filterTable.VisibleCols.length > 0">
@@ -57,10 +57,14 @@
                             <td colspan="100%" class="none" style="text-align: center;">Loading <img src="Content/images/loader-horizontal.gif" /></td>
                         </tr>
                         <tr ng-if="filterTable.ShowNoDataMsg">
-                            <td colspan="100%" class="warning" style="text-align: center;">Keine Daten gefunden.</td>
+                            <td colspan="100%" class="warning" style="text-align: center;">
+                                {{::Translations.FilterTable_Error_No_Data}}
+                            </td>
                         </tr>
                         <tr ng-if="filterTable.ShowDataFilteredOutMsg">
-                            <td colspan="100%" class="warning" style="text-align: center;">Filter enthält keine Daten.</td>
+                            <td colspan="100%" class="warning" style="text-align: center;">
+                                {{::Translations.FilterTable_Error_Filter_No_Data}}
+                            </td>
                         </tr>
                         <tr ng-repeat="footerRow in filterTable.FooterRows">
                             <th>
@@ -81,12 +85,14 @@
                         <div style="float: left; text-align: right;">
                             <select ng-model="filterTable.CurrentPage"
                                     ng-options="item as item for item in filterTable.FilterPageArray"></select>
-                            Seite {{ filterTable.CurrentPage }} von {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} Total)
+                            {{::Translations.FilterTable_Page}} {{ filterTable.CurrentPage }} {{::Translations.FilterTable_Of}} {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} {{::Translations.FilterTable_Total}})
                         </div>
                         <button class="btn btn-default" style="float: right;" ng-click="filterTable.CurrentPage = filterTable.FilterDataPageCount" ng-disabled="filterTable.ForwardDisabled"><i class="fa fa-fast-forward"></i></button>
                         <button class="btn btn-default" style="float: right;" ng-click="filterTable.CurrentPage = (filterTable.CurrentPage + 1)" ng-disabled="filterTable.ForwardDisabled"><i class="fa fa-step-forward"></i></button>
                     </div>
-                    <div style="float: left;">Datensätze: {{filterTable.DataFiltered.length}} von {{filterTable.PassedData.length}}</div>
+                    <div style="float: left;">
+                        {{::Translations.FilterTable_Records}}: {{filterTable.DataFiltered.length}} {{::Translations.FilterTable_Of}} {{filterTable.PassedData.length}}
+                    </div>
                 </div>
             </div>
         </div>

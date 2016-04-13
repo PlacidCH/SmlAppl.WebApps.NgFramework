@@ -14,7 +14,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div ng-switch-when=\"Error\" class=\"col-md-12\" style=\"text-align: center;\">\r" +
     "\n" +
-    "            <span>Fehler beim Beziehen der Daten.</span>\r" +
+    "            <span>{{::Translations.FilterTable_Error_Getting_Data}}</span>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -68,13 +68,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-show=\"filterTable.SearchActive\">\r" +
     "\n" +
-    "                            <th>\r" +
+    "                            <td>\r" +
     "\n" +
     "                                <span type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"filterTable.ClearFilter()\"><span class=\"glyphicon glyphicon-remove\"></span></span>\r" +
     "\n" +
-    "                            </th>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                            <th ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.HasDistincts\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.HasDistincts\">\r" +
     "\n" +
     "                                <select ng-switch-when=\"true\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
@@ -84,7 +84,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <input ng-switch-when=\"false\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\" />\r" +
     "\n" +
-    "                            </th>\r" +
+    "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
@@ -120,13 +120,21 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-if=\"filterTable.ShowNoDataMsg\">\r" +
     "\n" +
-    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">Keine Daten gefunden.</td>\r" +
+    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">\r" +
+    "\n" +
+    "                                {{::Translations.FilterTable_Error_No_Data}}\r" +
+    "\n" +
+    "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
     "                        <tr ng-if=\"filterTable.ShowDataFilteredOutMsg\">\r" +
     "\n" +
-    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">Filter enthält keine Daten.</td>\r" +
+    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">\r" +
+    "\n" +
+    "                                {{::Translations.FilterTable_Error_Filter_No_Data}}\r" +
+    "\n" +
+    "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
@@ -168,7 +176,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                    ng-options=\"item as item for item in filterTable.FilterPageArray\"></select>\r" +
     "\n" +
-    "                            Seite {{ filterTable.CurrentPage }} von {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} Total)\r" +
+    "                            {{::Translations.FilterTable_Page}} {{ filterTable.CurrentPage }} {{::Translations.FilterTable_Of}} {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} {{::Translations.FilterTable_Total}})\r" +
     "\n" +
     "                        </div>\r" +
     "\n" +
@@ -178,7 +186,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                    </div>\r" +
     "\n" +
-    "                    <div style=\"float: left;\">Datensätze: {{filterTable.DataFiltered.length}} von {{filterTable.PassedData.length}}</div>\r" +
+    "                    <div style=\"float: left;\">\r" +
+    "\n" +
+    "                        {{::Translations.FilterTable_Records}}: {{filterTable.DataFiltered.length}} {{::Translations.FilterTable_Of}} {{filterTable.PassedData.length}}\r" +
+    "\n" +
+    "                    </div>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +

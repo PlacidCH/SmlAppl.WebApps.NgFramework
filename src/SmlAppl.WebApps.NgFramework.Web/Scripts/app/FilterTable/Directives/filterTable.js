@@ -84,6 +84,7 @@
 	            this._ignore = false;
 	            this._visible = false;
 	            this._display = undefined;
+                this.DisplayKey = undefined;
 	            this._canBuildSelect = true;
 	            this._buildSelect = false;
 	            this.orderAsc = undefined;
@@ -109,20 +110,25 @@
 	            set Key(val) {
 	                if ((val || null) === null) { return; }
 	                this._key = val;
-	                if (angular.isUndefined(this._display)) {
-	                    this._display = this._key;
-	                }
 	            },
 	            get Display() {
 	                if (angular.isUndefined(this._display)) {
-	                    this._display = this._display || this.Key;
+	                    //this._display = this.DisplayKey || this.Key;
+                        //var x = $parse('"' + col.DisplayKey + '" | translate') ();
+	                    //var y = $parse('"' + col.DisplayKey + '" | translate')(this);
+	                    this._display = $parse('(col.DisplayKey || col.Key) | translate') (this, { col: this });
 	                }
+                    if (angular.isDefined(this._display) && angular.isString(this._display)) {
+                        this._display = $sce.trustAsHtml(this._display);
+                    }
 	                return this._display;
 	            },
 	            set Display(val) {
-	                if ((val || null) === null) { return; }
 	                this._display = val;
 	            },
+                ResetDisplay: function() {
+                    this._display = undefined;
+                },
 	            CallOnFilterTable: function (func) {
 	                var ret = {
 	                    called: false,
@@ -366,7 +372,7 @@
 	                return this._dataCalc;
 	            },
 	            RecalculateData: function () {
-	                this.UpdateData(this.PassedData, false);
+	                this.UpdateData(this._data, false);
 	            },
 	            set PassedData(val) {
 	                this.UpdateData(val, false);
@@ -733,7 +739,23 @@
 	                if (col.HasClickAction) {
 	                    col.Clicked(item);
 	                }
-	            }
+	            },
+                Refresh: function() {
+                    var me = this;
+                    me.Loading = true;
+                    for (var i = 0; i < me.Columns.length; i++) {
+                        var col = me.Columns[i];
+                        col.ResetDisplay();
+                    }
+
+                    var x = me.Columns;
+                    me._currentCols =[];
+                    me._visibleCols =[];
+                    $timeout(function() {
+                        me.UpdateColumnLists(x);
+                        me.RecalculateData();
+                    });
+                }
 	        }
 
 	        function getDefined() {
@@ -764,8 +786,9 @@
 	            c.Ignore = getDefined(checkOverwrite(filterTable.IgnoreColumns, c.Key), basedOn.ignore, basedOn.Ignore, false);
 
 	            c.Visible = getDefined(basedOn.visible, basedOn.Visible, false);
-	            c.Display = getDefined(basedOn.display, basedOn.Display);
-
+	            c.DisplayKey = getDefined(basedOn.displayKey, basedOn.DisplayKey, basedOn.display, basedOn.Display, c.Key);
+                //c.Display = getDefined(basedOn.display, basedOn.Display);
+                
 	            c.CanBuildSelect = getDefined((filterTable.NoSearchSelects === true ? false : undefined), checkOverwrite(filterTable.NoSelectsOnColumns, c.Key), basedOn.canSelect, basedOn.CanBuildSelect, true);
 	            c.BuildSelect = getDefined(checkOverwrite(filterTable.SelectsOnColumns, c.Key), basedOn.select, basedOn.BuildSelect, false);
 	            c.orderAsc = getDefined(checkOverwrite(filterTable.Order, c.Key), basedOn.orderAsc || basedOn.orderAsc);
@@ -798,7 +821,7 @@
                 GetDefined: getDefined,
             }
 	    }])
-	    .directive("filterTable", ["filterFilter", "$uibModal", "$timeout", "$filter", "$sanitize", "filterTableConstructor", function (filterFilter, $uibModal, $timeout, $filter, $sanitize, filterTableConstructor) {
+	    .directive("filterTable", ["$rootScope", "$uibModal", "$timeout", "$filter", "$sanitize", "filterTableConstructor", "$translate", function ($rootScope, $uibModal, $timeout, $filter, $sanitize, filterTableConstructor, $translate) {
 	        return {
 	            restrict: 'E',
 	            scope: {
@@ -1034,6 +1057,45 @@
 	                }
 
 	                initFilterTable();
+
+                    $rootScope.$on("$translateChangeEnd", function () {
+                        //console.log("$translateChangeEnd");
+                        updateTranslations();
+                        scope.filterTable.Refresh();
+                    });
+
+                    function updateTranslations() {
+                        var arr =[];
+                        for (var x in scope.Translations.fallback) {
+                            if (scope.Translations.fallback.hasOwnProperty(x)) {
+                                arr.push(x);
+                            }
+                        }
+                        $translate(arr).then(function(translations) {
+                            for (var i = 0; i < arr.length; i++) {
+                                var key = arr[i];
+                                var same = (key === translations[key]);
+                                if (same) {
+                                    scope.Translations[key]= scope.Translations.fallback[key];
+                                } else {
+                                    scope.Translations[key]= translations[key];
+                                }
+                            }
+                        });
+                    }
+                    //TODO: move to filtertable (prototype)? (watch for change only once though)
+                    scope.Translations = {
+                        fallback: {
+                            FilterTable_Error_Getting_Data: "Fehler beim Beziehen der Daten.",
+                            FilterTable_Error_No_Data: "Keine Daten gefunden.",
+                            FilterTable_Error_Filter_No_Data: "Filter enthält keine Daten.",
+                            FilterTable_Page: "Seite",
+                            FilterTable_Of: "von",
+                            FilterTable_Total: "Total",
+                            FilterTable_Records: "Datensätze"
+                        }
+                    }
+	                updateTranslations();
 
 	                scope.animationsEnabled = true;
 

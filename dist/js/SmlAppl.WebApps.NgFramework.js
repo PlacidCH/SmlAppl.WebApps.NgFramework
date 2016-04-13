@@ -399,7 +399,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div ng-switch-when=\"Error\" class=\"col-md-12\" style=\"text-align: center;\">\r" +
     "\n" +
-    "            <span>Fehler beim Beziehen der Daten.</span>\r" +
+    "            <span>{{::Translations.FilterTable_Error_Getting_Data}}</span>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -453,13 +453,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-show=\"filterTable.SearchActive\">\r" +
     "\n" +
-    "                            <th>\r" +
+    "                            <td>\r" +
     "\n" +
     "                                <span type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"filterTable.ClearFilter()\"><span class=\"glyphicon glyphicon-remove\"></span></span>\r" +
     "\n" +
-    "                            </th>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                            <th ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.HasDistincts\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.HasDistincts\">\r" +
     "\n" +
     "                                <select ng-switch-when=\"true\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
@@ -469,7 +469,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <input ng-switch-when=\"false\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\" />\r" +
     "\n" +
-    "                            </th>\r" +
+    "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
@@ -505,13 +505,21 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-if=\"filterTable.ShowNoDataMsg\">\r" +
     "\n" +
-    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">Keine Daten gefunden.</td>\r" +
+    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">\r" +
+    "\n" +
+    "                                {{::Translations.FilterTable_Error_No_Data}}\r" +
+    "\n" +
+    "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
     "                        <tr ng-if=\"filterTable.ShowDataFilteredOutMsg\">\r" +
     "\n" +
-    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">Filter enthält keine Daten.</td>\r" +
+    "                            <td colspan=\"100%\" class=\"warning\" style=\"text-align: center;\">\r" +
+    "\n" +
+    "                                {{::Translations.FilterTable_Error_Filter_No_Data}}\r" +
+    "\n" +
+    "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
@@ -553,7 +561,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                    ng-options=\"item as item for item in filterTable.FilterPageArray\"></select>\r" +
     "\n" +
-    "                            Seite {{ filterTable.CurrentPage }} von {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} Total)\r" +
+    "                            {{::Translations.FilterTable_Page}} {{ filterTable.CurrentPage }} {{::Translations.FilterTable_Of}} {{ filterTable.FilterDataPageCount }} ({{filterTable.PassedDataPageCount}} {{::Translations.FilterTable_Total}})\r" +
     "\n" +
     "                        </div>\r" +
     "\n" +
@@ -563,7 +571,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                    </div>\r" +
     "\n" +
-    "                    <div style=\"float: left;\">Datensätze: {{filterTable.DataFiltered.length}} von {{filterTable.PassedData.length}}</div>\r" +
+    "                    <div style=\"float: left;\">\r" +
+    "\n" +
+    "                        {{::Translations.FilterTable_Records}}: {{filterTable.DataFiltered.length}} {{::Translations.FilterTable_Of}} {{filterTable.PassedData.length}}\r" +
+    "\n" +
+    "                    </div>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
@@ -855,6 +867,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	            this._ignore = false;
 	            this._visible = false;
 	            this._display = undefined;
+                this.DisplayKey = undefined;
 	            this._canBuildSelect = true;
 	            this._buildSelect = false;
 	            this.orderAsc = undefined;
@@ -880,20 +893,25 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	            set Key(val) {
 	                if ((val || null) === null) { return; }
 	                this._key = val;
-	                if (angular.isUndefined(this._display)) {
-	                    this._display = this._key;
-	                }
 	            },
 	            get Display() {
 	                if (angular.isUndefined(this._display)) {
-	                    this._display = this._display || this.Key;
+	                    //this._display = this.DisplayKey || this.Key;
+                        //var x = $parse('"' + col.DisplayKey + '" | translate') ();
+	                    //var y = $parse('"' + col.DisplayKey + '" | translate')(this);
+	                    this._display = $parse('(col.DisplayKey || col.Key) | translate') (this, { col: this });
 	                }
+                    if (angular.isDefined(this._display) && angular.isString(this._display)) {
+                        this._display = $sce.trustAsHtml(this._display);
+                    }
 	                return this._display;
 	            },
 	            set Display(val) {
-	                if ((val || null) === null) { return; }
 	                this._display = val;
 	            },
+                ResetDisplay: function() {
+                    this._display = undefined;
+                },
 	            CallOnFilterTable: function (func) {
 	                var ret = {
 	                    called: false,
@@ -1137,7 +1155,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                return this._dataCalc;
 	            },
 	            RecalculateData: function () {
-	                this.UpdateData(this.PassedData, false);
+	                this.UpdateData(this._data, false);
 	            },
 	            set PassedData(val) {
 	                this.UpdateData(val, false);
@@ -1504,7 +1522,23 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                if (col.HasClickAction) {
 	                    col.Clicked(item);
 	                }
-	            }
+	            },
+                Refresh: function() {
+                    var me = this;
+                    me.Loading = true;
+                    for (var i = 0; i < me.Columns.length; i++) {
+                        var col = me.Columns[i];
+                        col.ResetDisplay();
+                    }
+
+                    var x = me.Columns;
+                    me._currentCols =[];
+                    me._visibleCols =[];
+                    $timeout(function() {
+                        me.UpdateColumnLists(x);
+                        me.RecalculateData();
+                    });
+                }
 	        }
 
 	        function getDefined() {
@@ -1535,8 +1569,9 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	            c.Ignore = getDefined(checkOverwrite(filterTable.IgnoreColumns, c.Key), basedOn.ignore, basedOn.Ignore, false);
 
 	            c.Visible = getDefined(basedOn.visible, basedOn.Visible, false);
-	            c.Display = getDefined(basedOn.display, basedOn.Display);
-
+	            c.DisplayKey = getDefined(basedOn.displayKey, basedOn.DisplayKey, basedOn.display, basedOn.Display, c.Key);
+                //c.Display = getDefined(basedOn.display, basedOn.Display);
+                
 	            c.CanBuildSelect = getDefined((filterTable.NoSearchSelects === true ? false : undefined), checkOverwrite(filterTable.NoSelectsOnColumns, c.Key), basedOn.canSelect, basedOn.CanBuildSelect, true);
 	            c.BuildSelect = getDefined(checkOverwrite(filterTable.SelectsOnColumns, c.Key), basedOn.select, basedOn.BuildSelect, false);
 	            c.orderAsc = getDefined(checkOverwrite(filterTable.Order, c.Key), basedOn.orderAsc || basedOn.orderAsc);
@@ -1569,7 +1604,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                 GetDefined: getDefined,
             }
 	    }])
-	    .directive("filterTable", ["filterFilter", "$uibModal", "$timeout", "$filter", "$sanitize", "filterTableConstructor", function (filterFilter, $uibModal, $timeout, $filter, $sanitize, filterTableConstructor) {
+	    .directive("filterTable", ["$rootScope", "$uibModal", "$timeout", "$filter", "$sanitize", "filterTableConstructor", "$translate", function ($rootScope, $uibModal, $timeout, $filter, $sanitize, filterTableConstructor, $translate) {
 	        return {
 	            restrict: 'E',
 	            scope: {
@@ -1805,6 +1840,45 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                }
 
 	                initFilterTable();
+
+                    $rootScope.$on("$translateChangeEnd", function () {
+                        //console.log("$translateChangeEnd");
+                        updateTranslations();
+                        scope.filterTable.Refresh();
+                    });
+
+                    function updateTranslations() {
+                        var arr =[];
+                        for (var x in scope.Translations.fallback) {
+                            if (scope.Translations.fallback.hasOwnProperty(x)) {
+                                arr.push(x);
+                            }
+                        }
+                        $translate(arr).then(function(translations) {
+                            for (var i = 0; i < arr.length; i++) {
+                                var key = arr[i];
+                                var same = (key === translations[key]);
+                                if (same) {
+                                    scope.Translations[key]= scope.Translations.fallback[key];
+                                } else {
+                                    scope.Translations[key]= translations[key];
+                                }
+                            }
+                        });
+                    }
+                    //TODO: move to filtertable (prototype)? (watch for change only once though)
+                    scope.Translations = {
+                        fallback: {
+                            FilterTable_Error_Getting_Data: "Fehler beim Beziehen der Daten.",
+                            FilterTable_Error_No_Data: "Keine Daten gefunden.",
+                            FilterTable_Error_Filter_No_Data: "Filter enthält keine Daten.",
+                            FilterTable_Page: "Seite",
+                            FilterTable_Of: "von",
+                            FilterTable_Total: "Total",
+                            FilterTable_Records: "Datensätze"
+                        }
+                    }
+	                updateTranslations();
 
 	                scope.animationsEnabled = true;
 
