@@ -47,7 +47,26 @@
 
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -214,25 +233,6 @@
 
 //;
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
-
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
-})();
-
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
@@ -393,7 +393,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div ng-switch-when=\"Loading\" class=\"col-md-12\" style=\"text-align: center;\">\r" +
     "\n" +
-    "            <span>Loading <img src=\"Content/images/loader-horizontal.gif\" /></span>\r" +
+    "            <span>Loading <img src=\"bower_components/SmlAppl-WebApps-NgFramework/dist/images/loader-horizontal.gif\" /></span>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -499,7 +499,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-if=\"filterTable.Loading\">\r" +
     "\n" +
-    "                            <td colspan=\"100%\" class=\"none\" style=\"text-align: center;\">Loading <img src=\"Content/images/loader-horizontal.gif\" /></td>\r" +
+    "                            <td colspan=\"100%\" class=\"none\" style=\"text-align: center;\">Loading <img src=\"bower_components/SmlAppl-WebApps-NgFramework/dist/images/loader-horizontal.gif\" /></td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +

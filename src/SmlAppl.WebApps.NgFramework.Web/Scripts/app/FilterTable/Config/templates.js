@@ -8,7 +8,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div ng-switch-when=\"Loading\" class=\"col-md-12\" style=\"text-align: center;\">\r" +
     "\n" +
-    "            <span>Loading <img src=\"Content/images/loader-horizontal.gif\" /></span>\r" +
+    "            <span>Loading <img src=\"bower_components/SmlAppl-WebApps-NgFramework/dist/images/loader-horizontal.gif\" /></span>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -114,7 +114,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-if=\"filterTable.Loading\">\r" +
     "\n" +
-    "                            <td colspan=\"100%\" class=\"none\" style=\"text-align: center;\">Loading <img src=\"Content/images/loader-horizontal.gif\" /></td>\r" +
+    "                            <td colspan=\"100%\" class=\"none\" style=\"text-align: center;\">Loading <img src=\"bower_components/SmlAppl-WebApps-NgFramework/dist/images/loader-horizontal.gif\" /></td>\r" +
     "\n" +
     "                        </tr>\r" +
     "\n" +
