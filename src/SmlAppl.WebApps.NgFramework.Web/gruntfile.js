@@ -100,6 +100,20 @@ module.exports = function (grunt) {
 				failOnError: true, // Fail the task when copying is not possible. Default: false 
 				updateAndDelete: true,
 			},
+
+			images: {
+				files: [{
+					//expand: true,
+					cwd: 'Content/images',
+					//src: ['*.less'],
+					src: ['**'],
+					dest: rootGitFolder + 'dist/images/'
+				}],
+				verbose: true, // Default: false 
+				//pretend: true, // Don't do any disk operations - just write log. Default: false 
+				failOnError: true, // Fail the task when copying is not possible. Default: false 
+				updateAndDelete: true,
+			},
 		},
 
 		copy: {
