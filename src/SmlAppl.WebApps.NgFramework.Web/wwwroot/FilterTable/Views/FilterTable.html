@@ -1,7 +1,7 @@
 ﻿<div ng-switch="filterTable.Status" class="filtertable-container">
     <div class="row">
         <div ng-switch-when="Loading" class="col-md-12" style="text-align: center;">
-            <span>Loading <img src="Content/images/loader-horizontal.gif" /></span>
+            <span>Loading <img src="bower_components/SmlAppl-WebApps-NgFramework/dist/images/loader-horizontal.gif" /></span>
         </div>
         <div ng-switch-when="Error" class="col-md-12" style="text-align: center;">
             <span>{{::Translations.FilterTable_Error_Getting_Data}}</span>
@@ -64,7 +64,7 @@
                     </tbody>
                     <tfoot class="filtertable-table-footer">
                         <tr ng-if="filterTable.Loading">
-                            <td colspan="100%" class="none" style="text-align: center;">Loading <img src="Content/images/loader-horizontal.gif" /></td>
+                            <td colspan="100%" class="none" style="text-align: center;">Loading <img src="bower_components/SmlAppl-WebApps-NgFramework/dist/images/loader-horizontal.gif" /></td>
                         </tr>
                         <tr ng-if="filterTable.ShowNoDataMsg">
                             <td colspan="100%" class="warning" style="text-align: center;">
