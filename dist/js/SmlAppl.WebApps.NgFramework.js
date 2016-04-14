@@ -272,7 +272,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 					scope: {
 						placeholder: "="
 					},
-					template: "{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})",
+					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>",
 					link: function(scope, element, attrs, ctrl) {
 
 						var ngModel = ctrl;
@@ -2082,16 +2082,22 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 				// calls handleError and then shows a get error-notification
 				this.handleGetErrorWithNotify = function (response) {
-					var handleResponse = self.handleError(response);
+					var handledResponse = self.handleError(response);
 
-					Notify.alertGetError(handleResponse);
+					Notify.alertGetError(handledResponse);
+
+					// return new promise which could be handled
+					return $q.reject(handledResponse)
 				}
 
 				// calls handleError and then shows a save error-notification
 				this.handleSaveErrorWithNotify = function (response) {
-					var handleResponse = self.handleError(response);
+					var handledResponse = self.handleError(response);
 
-					Notify.alertSaveError(handleResponse);
+					Notify.alertSaveError(handledResponse);
+
+					// return new promise which could be handled
+					return $q.reject(handledResponse)
 				}
 
 				// transform the successful response, unwrapping the application data from the API response payload.
@@ -2124,17 +2130,10 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 					alertErrorInternal(text);
 				}
 
-				// for http actions
+				// save
 
-				this.alertGetError = function (response) {
-					var message = response.statusText;
-
-					if (!message) {
-						// no message text, show general error
-						message = "Message_DataGet_Error";
-					}
-
-					alertErrorInternal(message);
+				this.alertSaveSuccess = function () {
+					setTranslateText("Msg_Save_Successful", "success");
 				}
 
 				this.alertSaveError = function (response) {
@@ -2143,6 +2142,19 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 					if (!message) {
 						// no message text, show general error
 						message = "Message_Save_Error";
+					}
+
+					alertErrorInternal(message);
+				}
+
+				// for http actions
+
+				this.alertGetError = function (response) {
+					var message = response.statusText;
+
+					if (!message) {
+						// no message text, show general error
+						message = "Message_DataGet_Error";
 					}
 
 					alertErrorInternal(message);
