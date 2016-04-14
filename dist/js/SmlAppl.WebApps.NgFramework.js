@@ -47,7 +47,26 @@
 
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -213,25 +232,6 @@
 ////])
 
 //;
-
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
-
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
-})();
 
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
@@ -2008,16 +2008,22 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 				// calls handleError and then shows a get error-notification
 				this.handleGetErrorWithNotify = function (response) {
-					var handleResponse = self.handleError(response);
+					var handledResponse = self.handleError(response);
 
-					Notify.alertGetError(handleResponse);
+					Notify.alertGetError(handledResponse);
+
+					// return new promise which could be handled
+					return $q.reject(handledResponse)
 				}
 
 				// calls handleError and then shows a save error-notification
 				this.handleSaveErrorWithNotify = function (response) {
-					var handleResponse = self.handleError(response);
+					var handledResponse = self.handleError(response);
 
-					Notify.alertSaveError(handleResponse);
+					Notify.alertSaveError(handledResponse);
+
+					// return new promise which could be handled
+					return $q.reject(handledResponse)
 				}
 
 				// transform the successful response, unwrapping the application data from the API response payload.
