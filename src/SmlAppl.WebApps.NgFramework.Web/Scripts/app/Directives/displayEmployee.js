@@ -15,7 +15,7 @@
 					scope: {
 						placeholder: "="
 					},
-					template: "{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})",
+					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>",
 					link: function(scope, element, attrs, ctrl) {
 
 						var ngModel = ctrl;

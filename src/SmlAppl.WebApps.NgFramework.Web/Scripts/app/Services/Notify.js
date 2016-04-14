@@ -18,17 +18,10 @@
 					alertErrorInternal(text);
 				}
 
-				// for http actions
+				// save
 
-				this.alertGetError = function (response) {
-					var message = response.statusText;
-
-					if (!message) {
-						// no message text, show general error
-						message = "Message_DataGet_Error";
-					}
-
-					alertErrorInternal(message);
+				this.alertSaveSuccess = function () {
+					setTranslateText("Msg_Save_Successful", "success");
 				}
 
 				this.alertSaveError = function (response) {
@@ -37,6 +30,19 @@
 					if (!message) {
 						// no message text, show general error
 						message = "Message_Save_Error";
+					}
+
+					alertErrorInternal(message);
+				}
+
+				// for http actions
+
+				this.alertGetError = function (response) {
+					var message = response.statusText;
+
+					if (!message) {
+						// no message text, show general error
+						message = "Message_DataGet_Error";
 					}
 
 					alertErrorInternal(message);

@@ -47,7 +47,26 @@
 
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -214,25 +233,6 @@
 
 //;
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
-
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
-})();
-
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
@@ -272,7 +272,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 					scope: {
 						placeholder: "="
 					},
-					template: "{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})",
+					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>",
 					link: function(scope, element, attrs, ctrl) {
 
 						var ngModel = ctrl;
@@ -2050,17 +2050,10 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 					alertErrorInternal(text);
 				}
 
-				// for http actions
+				// save
 
-				this.alertGetError = function (response) {
-					var message = response.statusText;
-
-					if (!message) {
-						// no message text, show general error
-						message = "Message_DataGet_Error";
-					}
-
-					alertErrorInternal(message);
+				this.alertSaveSuccess = function () {
+					setTranslateText("Msg_Save_Successful", "success");
 				}
 
 				this.alertSaveError = function (response) {
@@ -2069,6 +2062,19 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 					if (!message) {
 						// no message text, show general error
 						message = "Message_Save_Error";
+					}
+
+					alertErrorInternal(message);
+				}
+
+				// for http actions
+
+				this.alertGetError = function (response) {
+					var message = response.statusText;
+
+					if (!message) {
+						// no message text, show general error
+						message = "Message_DataGet_Error";
 					}
 
 					alertErrorInternal(message);
