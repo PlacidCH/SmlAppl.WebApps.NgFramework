@@ -101,6 +101,7 @@
 	            this.AlternateSortCol = null;
 	            this._calculateColumn = null;
 	            this._applyFilter = null;
+	            this.CustomFilter = null;
 	        }
 
 	        ColumnDef.prototype = {
@@ -265,6 +266,21 @@
 	                }
 	                return this._applyFilter;
 	            },
+                get HasCustomFilter() {
+                    return this.CustomFilter !== null;
+                },
+                get FilterType() {
+                    if (this.HasCustomFilter) {
+                        if (angular.isDefined(this.CustomFilter.InputHtml)) {
+                            return "CustomHtml";
+                        }
+                        return "Custom";
+                    }
+                    if (this.HasDistincts) {
+                        return "Select";
+                    }
+                    return "Input";
+                },
                 TrustIt: function(val) {
                     if ((val || null) !== null && angular.isString(val)) {
                         return $sce.trustAsHtml(val);
@@ -673,8 +689,10 @@
 	                        },
 	                    });
 	                }
-	                for (var i = 0; i < this.CurrentCols.length; i++) {
-	                    var col = this.CurrentCols[i];
+
+	                var defaultfilters = this.CurrentCols.filter(function(item) { return !item.HasCustomFilter; });
+	                for (var i = 0; i < defaultfilters.length; i++) {
+	                    var col = defaultfilters[i];
 	                    var val = x[col.Key];
 	                    var name = col.Key;
 	                    defineFilterProp(name);
@@ -703,7 +721,18 @@
 	                return term;
 	            },
 	            UpdateFilter: function (resetHeaderAndFooter) {
-	                this.DataFiltered = $filter('filter')(this._dataCalc, this.CleanTableFilter(this.TableFilter.backingfields));
+	                var dataFiltered = $filter('filter')(this._dataCalc, this.CleanTableFilter(this.TableFilter.backingfields));
+	                var customFilters = this.CurrentCols.filter(function (item) { return item.HasCustomFilter; });
+	                for (var i = 0; i < customFilters.length; i++) {
+	                    var cfCol = customFilters[i];
+	                    try {
+	                        var nextFilter = dataFiltered.filter(function (item) { return cfCol.CustomFilter.FnFilter.call(cfCol.CustomFilter, item, cfCol); });
+	                        dataFiltered = nextFilter;
+	                    } catch (ex) {
+	                        console.log("Filter didn't compute.");
+	                    }
+	                }
+	                this.DataFiltered = dataFiltered;
 	                this.ResetDistincts(this.ReduceSelects);
 	                this.CurrentPage = 1;
 	                if (resetHeaderAndFooter || false) {
@@ -791,9 +820,10 @@
                 
 	            c.CanBuildSelect = getDefined((filterTable.NoSearchSelects === true ? false : undefined), checkOverwrite(filterTable.NoSelectsOnColumns, c.Key), basedOn.canSelect, basedOn.CanBuildSelect, true);
 	            c.BuildSelect = getDefined(checkOverwrite(filterTable.SelectsOnColumns, c.Key), basedOn.select, basedOn.BuildSelect, false);
-	            c.orderAsc = getDefined(checkOverwrite(filterTable.Order, c.Key), basedOn.orderAsc || basedOn.orderAsc);
+	            c.orderAsc = getDefined(checkOverwrite(filterTable.Order, c.Key), basedOn.orderAsc, basedOn.orderAsc);
 	            c.Filter = getDefined(basedOn.filter, basedOn.Filter);
-	            c.AlternateSortCol = getDefined(basedOn.alternateSortCol, basedOn.AlternateSortCol || null);
+	            c.AlternateSortCol = getDefined(basedOn.alternateSortCol, basedOn.AlternateSortCol,  null);
+	            c.CustomFilter = getDefined(basedOn.customFilter, basedOn.CustomFilter, null);
 
 	            var isDate = getDefined(basedOn.isDate, basedOn.IsDate, false);
 	            if (isDate && c.AlternateSortCol === null) {
@@ -1100,20 +1130,38 @@
 	                scope.animationsEnabled = true;
 
 	                scope.open = function (size) {
+	                    scope.openThis(size, "wwwroot/FilterTable/Views/FilterTableOptions.html", "FilterTableOptionsCtrl");
+	                }
+
+                    scope.defineFilter = function(col) {
+                        scope.openThis(undefined, col.CustomFilter.TemplateUrl, col.CustomFilter.Controller, col
+                            , undefined
+                            , function (newColDef) {
+                                col.CustomFilter = newColDef.CustomFilter;
+                                scope.filterTable.UpdateFilter(true);
+                            }
+                        );
+                    }
+
+	                scope.openThis = function (size, templateUrl, controller, column, cancel, ok) {
+	                    column = column || null,
+	                    cancel = cancel || function () { };
+	                    ok = ok || function () { };
 	                    var modalInstance = $uibModal.open({
 	                        animation: scope.animationsEnabled,
-	                        templateUrl: "wwwroot/FilterTable/Views/FilterTableOptions.html",
-	                        controller: 'FilterTableOptionsCtrl',
+	                        templateUrl: templateUrl,
+	                        controller: controller,
 	                        size: size,
 	                        resolve: {
-	                            filterTable: function () { return scope.filterTable; }
+	                            filterTable: function () { return scope.filterTable; },
+                                column: column
 	                        }
 	                    });
 
-	                    modalInstance.result.then(function () {
-
+	                    modalInstance.result.then(function (retVal) {
+	                        ok(retVal);
 	                    }, function () {
-
+	                        cancel();
 	                    });
 	                }
 	            }

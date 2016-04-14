@@ -74,15 +74,35 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            </td>\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.HasDistincts\">\r" +
+    "\r" +
     "\n" +
-    "                                <select ng-switch-when=\"true\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.FilterType\">\r" +
+    "\n" +
+    "                                <div ng-switch-when=\"CustomHtml\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; min-height: 28px;\" ng-click=\"defineFilter(col)\">\r" +
+    "\n" +
+    "                                    <span ng-bind-html=\"col.CustomFilter.InputHtml\"></span>\r" +
+    "\n" +
+    "                                </div>\r" +
+    "\n" +
+    "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer;\" ng-click=\"defineFilter(col)\">\r" +
+    "\n" +
+    "                                    <input type=\"text\" class=\"form-control\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
+    "\n" +
+    "                                    <span class=\"input-group-addon\" >...</span>\r" +
+    "\n" +
+    "                                </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "                                <select ng-switch-when=\"Select\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
     "                                    <option ng-repeat=\"item in col.Distincts\">{{::item}}</option>\r" +
     "\n" +
     "                                </select>\r" +
     "\n" +
-    "                                <input ng-switch-when=\"false\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\" />\r" +
+    "                                <input ng-switch-when=\"Input\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\"/>\r" +
+    "\n" +
+    "\r" +
     "\n" +
     "                            </td>\r" +
     "\n" +
