@@ -325,7 +325,8 @@
 	        }
 
 	        function FilterTable() {
-	            this._loading = true;
+	            var ft = this;
+	            ft._loading = true;
 	            this._error = false;
 	            defineProp(this, 'test1', {
 	                get: function () { return "foo"; },
@@ -358,6 +359,29 @@
 	            this.HeaderRows = [];
 	            this.FooterRows = [];
 	            this.Initialised = false;
+	            this.FilterUpdateHandler = {
+	                _pending: false,
+	                get Pending() { return this._pending; },
+	                set Pending(val) {
+	                    var me = this;
+	                    if (!me._pending && val) {
+	                        me._pending = val;
+	                        $timeout.cancel(me._delay);
+                            this._delay = $timeout(function () {
+                                ft.UpdateFilter(me.ResetHeaderAndFooter);
+                                me._resetHeaderAndFooter = false;
+                                me._pending = false;
+                            }, 200);
+                        }
+                    },
+                    _delay: null,
+	                _resetHeaderAndFooter: false,
+	                get ResetHeaderAndFooter() { return this._resetHeaderAndFooter; },
+	                set ResetHeaderAndFooter(val) {
+	                    this._resetHeaderAndFooter = this._resetHeaderAndFooter || val;
+	                    this.Pending = true;
+	                },
+	            };
 	        }
 
 	        FilterTable.prototype = {
@@ -435,7 +459,7 @@
 	                    me.ResetFooters(true);
 	                }
 	                me._hasData = me._dataCalc.length > 0;
-	                me.UpdateFilter(!resetting);
+	                me.FilterUpdateHandler.ResetHeaderAndFooter = !resetting;
 	                $timeout.cancel(me._loadTimeout);
 	                //if (!me._hasData && me._dataCounter > 1) {
 	                if (!me._hasData) {
@@ -673,7 +697,6 @@
 	                var me = this;
 	                var x = me.TableFilter;
 	                var f = {
-	                    delayFilter: {},
 	                    backingfields: {},
 	                };
 	                function defineFilterProp(name) {
@@ -682,10 +705,7 @@
 	                        set: function (newValue) {
 	                            var changed = f.backingfields[name] !== newValue;
 	                            f.backingfields[name] = newValue;
-	                            $timeout.cancel(f.delayFilter);
-	                            f.delayFilter = $timeout(function () {
-	                                me.UpdateFilter(changed);
-	                            }, 200);
+	                            me.FilterUpdateHandler.ResetHeaderAndFooter = changed;
 	                        },
 	                    });
 	                }
@@ -702,13 +722,21 @@
 	            },
 	            ClearFilter: function () {
 	                //this.TableFilter = {}; //new: clear only visible filters
-	                //var x = this.TableFilter;
 	                for (var i = 0; i < this.VisibleCols.length; i++) {
 	                    var col = this.VisibleCols[i];
-	                    this.TableFilter[col.Key] = null;
+	                    this.ResetFilter(col);
 	                }
-	                //this.TableFilter = x;
 	            },
+                ResetFilter: function(col) {
+                  if (col.HasCustomFilter) {
+                      if (angular.isDefined(col.CustomFilter.FnReset) && angular.isFunction(col.CustomFilter.FnReset)) {
+                          col.CustomFilter.FnReset.call(col.CustomFilter, col);
+                          this.FilterUpdateHandler.ResetHeaderAndFooter = true;
+                      }
+                  } else {
+                      this.TableFilter[col.Key] = null;
+                  }
+                },
 	            CleanTableFilter: function (filter) {
 	                var term = angular.copy(filter || {});
 	                for (var x in term) {
@@ -835,8 +863,59 @@
 	                console.log(basedOn);
 	                return null;
 	            }
-
+	            
 	            filterTable = ft || null;
+
+	            if (c.CustomFilter !== null) {
+                    if (angular.isString(c.CustomFilter)) {
+                        if (c.CustomFilter === "MultiSelect") {
+                            //TODO: localisation
+                            c.CanBuildSelect = true;
+                            c.BuildSelect = true;
+                            //Replace it
+                            c.CustomFilter = {
+                                    Text: c.Display + " filtern",
+                                    TemplateUrl: "wwwroot/FilterTable/Views/FilterTableMultiSelect.html",
+                                    Controller: "FilterTableModalMultiSelectCtrl",
+                                    Tooltip: "Klicken zum auswählen.",
+                                    Selected: {},
+                                    FnFilter: function (item, col) {
+                                        if (Object.keys(this.Selected).length === 0) {
+                                            return true;
+                                        }
+                                        return angular.isDefined(this.Selected[item[c.Key]]);
+                                    },
+                                    FnReset: function() {
+                                        this.Tooltip = "Klicken zum auswählen.",
+                                        this.Text = c.Display + " filtern",
+                                        this.Selected = {};
+                                    }
+                            } 
+                        }
+                    }
+
+	                if (angular.isUndefined(c.CustomFilter.FnFilter) || !angular.isFunction(c.CustomFilter.FnFilter)) {
+	                    console.log("invalid filter function for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	                if (angular.isUndefined(c.CustomFilter.FnReset) || !angular.isFunction(c.CustomFilter.FnReset)) {
+	                    console.log("invalid reset function for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	                if (angular.isUndefined(c.CustomFilter.TemplateUrl) || c.CustomFilter.TemplateUrl == null || c.CustomFilter.TemplateUrl.trim() === "") {
+	                    console.log("invalid TemplateUrl for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	                if (angular.isUndefined(c.CustomFilter.Controller) || c.CustomFilter.Controller == null || c.CustomFilter.Controller.trim() === "") {
+	                    console.log("invalid Controller for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	            } 
+
 	            c.GetFilterTable = function () { return filterTable; };
 
 	            if (angular.isDefined(c.orderAsc) && filterTable !== null) {
@@ -1138,7 +1217,7 @@
                             , undefined
                             , function (newColDef) {
                                 col.CustomFilter = newColDef.CustomFilter;
-                                scope.filterTable.UpdateFilter(true);
+                                scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = false;
                             }
                         );
                     }

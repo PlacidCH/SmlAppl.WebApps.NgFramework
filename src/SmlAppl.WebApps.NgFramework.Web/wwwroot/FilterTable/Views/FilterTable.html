@@ -39,11 +39,10 @@
                                 <div ng-switch-when="CustomHtml" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; min-height: 28px;" ng-click="defineFilter(col)">
                                     <span ng-bind-html="col.CustomFilter.InputHtml"></span>
                                 </div>
-                                <div class="input-group" ng-switch-when="Custom" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer;" ng-click="defineFilter(col)">
-                                    <input type="text" class="form-control" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions"/>
-                                    <span class="input-group-addon" >...</span>
+                                <div class="input-group" ng-switch-when="Custom" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; width: 1px;" ng-click="defineFilter(col)">
+                                    <input type="text" class="form-control" style="cursor: pointer; width: auto;" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions" />
+                                    <span class="input-group-addon">...</span>
                                 </div>
-
                                 <select ng-switch-when="Select" class="select2" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]">
                                     <option ng-repeat="item in col.Distincts">{{::item}}</option>
                                 </select>

@@ -469,15 +469,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                </div>\r" +
     "\n" +
-    "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer;\" ng-click=\"defineFilter(col)\">\r" +
+    "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
-    "                                    <input type=\"text\" class=\"form-control\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\" />\r" +
     "\n" +
-    "                                    <span class=\"input-group-addon\" >...</span>\r" +
+    "                                    <span class=\"input-group-addon\">...</span>\r" +
     "\n" +
     "                                </div>\r" +
-    "\n" +
-    "\r" +
     "\n" +
     "                                <select ng-switch-when=\"Select\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
@@ -606,6 +604,60 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "    </div>\r" +
     "\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('wwwroot/FilterTable/Views/FilterTableMultiSelect.html',
+    "<div class=\"modal-header\">\r" +
+    "\n" +
+    "    <h3 class=\"modal-title\">Filter {{column.Display}}</h3>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div class=\"modal-body\">\r" +
+    "\n" +
+    "    <div class=\"row\">\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <!--<button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Alle</button>-->\r" +
+    "\n" +
+    "            <!--/\r" +
+    "\n" +
+    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Keine</button>-->\r" +
+    "\n" +
+    "            <br/>\r" +
+    "\n" +
+    "            <div ng-repeat=\"item in Distincts\">\r" +
+    "\n" +
+    "                <label>\r" +
+    "\n" +
+    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\" />\r" +
+    "\n" +
+    "                    {{item}}\r" +
+    "\n" +
+    "                </label>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div class=\"modal-footer\">\r" +
+    "\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"Reset()\">Kein Filter</button>\r" +
+    "\n" +
+    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">OK</button>\r" +
+    "\n" +
+    "    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "\r" +
+    "\n"
   );
 
 
@@ -799,6 +851,74 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	});
 
 })();
+
+/* #### File: Scripts/app/FilterTable/Controllers/FilterTableModalMultiSelectCtrl.js */ 
+	angular.module("smlAppl.webApps.framework.filterTable.directives")
+        .controller('FilterTableModalMultiSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", function ($scope, $uibModalInstance, $filter, filterTable, column) {
+
+        $scope.FilterTable = filterTable;
+        $scope.column = angular.copy(column);
+
+        function getdistincts(excludeEmpty) {
+            var distincts = $filter('orderBy')($scope.column.Distincts);
+            if (excludeEmpty) {
+                var l = distincts.length;
+                for (var i = l; i > 0; i--) {
+                    var val = distincts[i-1];
+                    if (val === null || val === undefined || val.trim() === "") {
+                        distincts.splice(i-1, 1);
+                    }
+                }
+            }
+            return distincts;
+        }
+        $scope.Distincts = getdistincts(true);
+
+        $scope.ModelOptions = {
+            debounce: {
+                default: 500,
+                blur: 0
+            }
+        };
+
+        $scope.Reset = function() {
+            $scope.column.CustomFilter.FnReset();
+            $uibModalInstance.close($scope.column);
+        }
+
+        $scope.All = function () {
+            for (var i=0; i < $scope.Distincts.length; i++) {
+                var x = $scope.Distincts[i];
+                $scope.column.CustomFilter.Selected[x] = true;
+            }
+        }
+        $scope.None = function () {
+            $scope.column.CustomFilter.FnReset();
+        }
+
+        $scope.ok = function () {
+            var selected = Object.keys($scope.column.CustomFilter.Selected);
+            for (var i = 0; i < selected.length; i++) {
+                var key = selected[i];
+                if (!$scope.column.CustomFilter.Selected[key]) {
+                    delete $scope.column.CustomFilter.Selected[key];
+                }
+            }
+            selected = Object.keys($scope.column.CustomFilter.Selected);
+            if (selected.length === 0) {
+                $scope.column.CustomFilter.FnReset();
+            } else {
+                $scope.column.CustomFilter.Text = selected.length + " gewählt";
+                $scope.column.CustomFilter.Tooltip = selected.join(', ');
+            }
+            $uibModalInstance.close($scope.column);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+}]);
 
 /* #### File: Scripts/app/FilterTable/Directives/filterTable.js */ 
 (function() {
@@ -1128,7 +1248,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	        }
 
 	        function FilterTable() {
-	            this._loading = true;
+	            var ft = this;
+	            ft._loading = true;
 	            this._error = false;
 	            defineProp(this, 'test1', {
 	                get: function () { return "foo"; },
@@ -1161,6 +1282,29 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	            this.HeaderRows = [];
 	            this.FooterRows = [];
 	            this.Initialised = false;
+	            this.FilterUpdateHandler = {
+	                _pending: false,
+	                get Pending() { return this._pending; },
+	                set Pending(val) {
+	                    var me = this;
+	                    if (!me._pending && val) {
+	                        me._pending = val;
+	                        $timeout.cancel(me._delay);
+                            this._delay = $timeout(function () {
+                                ft.UpdateFilter(me.ResetHeaderAndFooter);
+                                me._resetHeaderAndFooter = false;
+                                me._pending = false;
+                            }, 200);
+                        }
+                    },
+                    _delay: null,
+	                _resetHeaderAndFooter: false,
+	                get ResetHeaderAndFooter() { return this._resetHeaderAndFooter; },
+	                set ResetHeaderAndFooter(val) {
+	                    this._resetHeaderAndFooter = this._resetHeaderAndFooter || val;
+	                    this.Pending = true;
+	                },
+	            };
 	        }
 
 	        FilterTable.prototype = {
@@ -1238,7 +1382,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                    me.ResetFooters(true);
 	                }
 	                me._hasData = me._dataCalc.length > 0;
-	                me.UpdateFilter(!resetting);
+	                me.FilterUpdateHandler.ResetHeaderAndFooter = !resetting;
 	                $timeout.cancel(me._loadTimeout);
 	                //if (!me._hasData && me._dataCounter > 1) {
 	                if (!me._hasData) {
@@ -1476,7 +1620,6 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                var me = this;
 	                var x = me.TableFilter;
 	                var f = {
-	                    delayFilter: {},
 	                    backingfields: {},
 	                };
 	                function defineFilterProp(name) {
@@ -1485,10 +1628,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                        set: function (newValue) {
 	                            var changed = f.backingfields[name] !== newValue;
 	                            f.backingfields[name] = newValue;
-	                            $timeout.cancel(f.delayFilter);
-	                            f.delayFilter = $timeout(function () {
-	                                me.UpdateFilter(changed);
-	                            }, 200);
+	                            me.FilterUpdateHandler.ResetHeaderAndFooter = changed;
 	                        },
 	                    });
 	                }
@@ -1505,13 +1645,21 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	            },
 	            ClearFilter: function () {
 	                //this.TableFilter = {}; //new: clear only visible filters
-	                //var x = this.TableFilter;
 	                for (var i = 0; i < this.VisibleCols.length; i++) {
 	                    var col = this.VisibleCols[i];
-	                    this.TableFilter[col.Key] = null;
+	                    this.ResetFilter(col);
 	                }
-	                //this.TableFilter = x;
 	            },
+                ResetFilter: function(col) {
+                  if (col.HasCustomFilter) {
+                      if (angular.isDefined(col.CustomFilter.FnReset) && angular.isFunction(col.CustomFilter.FnReset)) {
+                          col.CustomFilter.FnReset.call(col.CustomFilter, col);
+                          this.FilterUpdateHandler.ResetHeaderAndFooter = true;
+                      }
+                  } else {
+                      this.TableFilter[col.Key] = null;
+                  }
+                },
 	            CleanTableFilter: function (filter) {
 	                var term = angular.copy(filter || {});
 	                for (var x in term) {
@@ -1638,8 +1786,59 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                console.log(basedOn);
 	                return null;
 	            }
-
+	            
 	            filterTable = ft || null;
+
+	            if (c.CustomFilter !== null) {
+                    if (angular.isString(c.CustomFilter)) {
+                        if (c.CustomFilter === "MultiSelect") {
+                            //TODO: localisation
+                            c.CanBuildSelect = true;
+                            c.BuildSelect = true;
+                            //Replace it
+                            c.CustomFilter = {
+                                    Text: c.Display + " filtern",
+                                    TemplateUrl: "wwwroot/FilterTable/Views/FilterTableMultiSelect.html",
+                                    Controller: "FilterTableModalMultiSelectCtrl",
+                                    Tooltip: "Klicken zum auswählen.",
+                                    Selected: {},
+                                    FnFilter: function (item, col) {
+                                        if (Object.keys(this.Selected).length === 0) {
+                                            return true;
+                                        }
+                                        return angular.isDefined(this.Selected[item[c.Key]]);
+                                    },
+                                    FnReset: function() {
+                                        this.Tooltip = "Klicken zum auswählen.",
+                                        this.Text = c.Display + " filtern",
+                                        this.Selected = {};
+                                    }
+                            } 
+                        }
+                    }
+
+	                if (angular.isUndefined(c.CustomFilter.FnFilter) || !angular.isFunction(c.CustomFilter.FnFilter)) {
+	                    console.log("invalid filter function for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	                if (angular.isUndefined(c.CustomFilter.FnReset) || !angular.isFunction(c.CustomFilter.FnReset)) {
+	                    console.log("invalid reset function for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	                if (angular.isUndefined(c.CustomFilter.TemplateUrl) || c.CustomFilter.TemplateUrl == null || c.CustomFilter.TemplateUrl.trim() === "") {
+	                    console.log("invalid TemplateUrl for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	                if (angular.isUndefined(c.CustomFilter.Controller) || c.CustomFilter.Controller == null || c.CustomFilter.Controller.trim() === "") {
+	                    console.log("invalid Controller for customfilter on column '" + c.Key + "'");
+	                    console.log(basedOn);
+	                    return null;
+	                }
+	            } 
+
 	            c.GetFilterTable = function () { return filterTable; };
 
 	            if (angular.isDefined(c.orderAsc) && filterTable !== null) {
@@ -1941,7 +2140,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                             , undefined
                             , function (newColDef) {
                                 col.CustomFilter = newColDef.CustomFilter;
-                                scope.filterTable.UpdateFilter(true);
+                                scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = false;
                             }
                         );
                     }
