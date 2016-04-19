@@ -15,7 +15,8 @@
 					scope: {
 						placeholder: "="
 					},
-					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>",
+					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>" +
+						"<span ng-if='!item.Id'>-</span>",
 					link: function(scope, element, attrs, ctrl) {
 
 						var ngModel = ctrl;
@@ -23,9 +24,10 @@
 
 						// Initialize value
 						ngModel.$render = function() {
-							if (ngModel.$viewValue) {
+							var value = ngModel.$viewValue;
+							if (value && value !== "00000000-0000-0000-0000-000000000000") {
 
-								Employee.getById(ngModel.$viewValue)
+								Employee.getById(value)
 									.then(function(response) {
 										scope.item = response;
 									}, HttpHandler.handleGetErrorWithNotify);
