@@ -193,26 +193,47 @@
 	                    this.ResetDistincts();
 	                };
 	            },
-	            ResetDistincts: function () {
-	                //TODO: hold 2 distinct lists ?
-	                this._distincts = null;
-	            },
-	            _buildDistincts: function (ft, c) {
-	                return ft.CreateDistincts(c);
-	            },
-	            BuildDistincts: function () {
-	                var ret = this.CallOnFilterTable(this._buildDistincts);
-	                return ret.called ? ret.result : null;
-	            },
-	            get Distincts() {
-	                if (!this.BuildSelect) {
-	                    return null;
-	                } else {
-	                    if (this._distincts == null) {
-	                        this._distincts = this.BuildDistincts();
-	                    }
-	                    return this._distincts;
+	            ResetDistincts: function (all) {
+	                all = angular.isUndefined(all) ? true : all;
+	                if (all) {
+	                    this._distincts = null;
 	                }
+	                this._distinctsReduced = null;
+	            },
+	            _buildDistincts: function (ft, c, all, reduced) {
+	                return ft.CreateDistincts(c, all, reduced);
+	            },
+	            BuildDistincts: function (all, reduced) {
+	                var me = this;
+	                var ret = this.CallOnFilterTable(function(ft, c) { return me._buildDistincts(ft, c, all, reduced); });
+	                return ret.called ? ret.result : { All: null, Reduced:null };
+	            },
+	            get DistinctHolder() {
+	                if (this.BuildSelect) {
+	                    var distincts = this.BuildDistincts(this._distincts == null, this._distinctsReduced == null);
+	                    if (this._distincts == null) {
+	                        this._distincts = distincts.All;
+	                    }
+	                    if (this._distinctsReduced == null) {
+	                        this._distinctsReduced = distincts.Reduced;
+	                    }
+	                }
+	                return {
+	                    All: this._distincts,
+	                    Reduced: this._distinctsReduced,
+	                };
+	            },
+                GetDistincts: function(reduced) {
+                  if ((reduced || false) === true) {
+                      return this.DistinctsReduced;
+                  }
+                    return this.Distincts;
+                },
+	            get Distincts() {
+	                return this.DistinctHolder.All;
+	            },
+	            get DistinctsReduced() {
+	                return this.DistinctHolder.Reduced;
 	            },
 	            get HasDistincts() {
 	                return (this.Distincts || []).length > 0;
@@ -385,28 +406,34 @@
 	        }
 
 	        FilterTable.prototype = {
-	            CreateDistincts: function (colDef) {
+	            CreateDistincts: function (colDef, all, reduced) {
+	                var distinctHolder = {
+	                    All: null,
+	                    Reduced: null,
+	                };
 	                if (colDef.BuildSelect) {
-	                    //if (this.ReduceSelects) {
-	                    //    return ["", "I", "am", "reduced"];
-	                    //} else {
-	                    //    return ["", "I", "will", "do", "selects", "once", "implemented"];
-	                    //}
-	                    var distincts = {};
-	                    var distinctList = [""];
-	                    var onData = (this.ReduceSelects ? this.DataFiltered : this.PassedData).map(function (item) { return item[colDef.Key] });
-
-	                    for (var i = 0; i < onData.length; i++) {
-	                        var entry = (onData[i] || null);
-	                        if (entry !== null && angular.isUndefined(distincts[entry])) {
-	                            distincts[entry] = "";
-	                            distinctList.push(entry.toString());
-	                        }
-	                    }
-	                    distinctList = $filter("orderBy")(distinctList);
-	                    return distinctList;
-	                }
-	                return null;
+	                    var fetchDistincts = function (data) {
+	                        var onData = (data || []).map(function(item) { return item[colDef.Key] });
+                            var distincts = {};
+                            var distinctList = [""];
+                            for (var i = 0; i < onData.length; i++) {
+                                var entry = (onData[i] || null);
+                                if (entry !== null && angular.isUndefined(distincts[entry])) {
+                                    distincts[entry] = "";
+                                    distinctList.push(entry.toString());
+                                }
+                            }
+                            distinctList = $filter("orderBy")(distinctList);
+                            return distinctList;
+                        }
+                        if (all) {
+                            distinctHolder.All = fetchDistincts(this.PassedData);
+                        }
+                        if (reduced) {
+                            distinctHolder.Reduced = fetchDistincts(this.DataFiltered);
+                        }
+                    }
+	                return distinctHolder;
 	            },
 	            get PassedData() {
 	                return this._dataCalc;
@@ -773,7 +800,7 @@
 	                    for (var i = 0; i < this.Columns.length; i++) {
 	                        var col = this.Columns[i];
 	                        if (Object.getPrototypeOf(col) === ColumnDef.prototype) {
-	                            col.ResetDistincts();
+	                            col.ResetDistincts(true);
 	                        }
 	                    }
 	                }

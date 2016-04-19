@@ -94,7 +94,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <select ng-switch-when=\"Select\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
-    "                                    <option ng-repeat=\"item in col.Distincts\">{{::item}}</option>\r" +
+    "                                    <option ng-repeat=\"item in col.GetDistincts(filterTable.ReduceSelects)\">{{::item}}</option>\r" +
     "\n" +
     "                                </select>\r" +
     "\n" +

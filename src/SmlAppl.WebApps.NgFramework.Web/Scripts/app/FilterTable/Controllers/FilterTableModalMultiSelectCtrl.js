@@ -5,7 +5,7 @@
         $scope.column = angular.copy(column);
 
         function getdistincts(excludeEmpty) {
-            var distincts = $filter('orderBy')($scope.column.Distincts);
+            var distincts = $filter('orderBy')($scope.column.Distincts) || [];
             if (excludeEmpty) {
                 var l = distincts.length;
                 for (var i = l; i > 0; i--) {
