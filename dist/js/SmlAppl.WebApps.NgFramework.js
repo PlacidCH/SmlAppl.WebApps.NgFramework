@@ -47,7 +47,26 @@
 
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -214,25 +233,6 @@
 
 //;
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
-
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
-})();
-
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
@@ -272,7 +272,8 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 					scope: {
 						placeholder: "="
 					},
-					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>",
+					template: "<span ng-if='item.Id'>{{ item.FirstName }} {{ item.LastName }} ({{ item.Pid }})</span>" +
+						"<span ng-if='!item.Id'>-</span>",
 					link: function(scope, element, attrs, ctrl) {
 
 						var ngModel = ctrl;
@@ -280,9 +281,10 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 
 						// Initialize value
 						ngModel.$render = function() {
-							if (ngModel.$viewValue) {
+							var value = ngModel.$viewValue;
+							if (value && value !== "00000000-0000-0000-0000-000000000000") {
 
-								Employee.getById(ngModel.$viewValue)
+								Employee.getById(value)
 									.then(function(response) {
 										scope.item = response;
 									}, HttpHandler.handleGetErrorWithNotify);
