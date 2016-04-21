@@ -7,10 +7,6 @@
 	angular.module("smlAppl.webApps.framework.services", []);
 
 	angular.module("smlAppl.webApps.framework", [
-		// Angular modules 
-		//'ngRoute'
-		//"ui.router",
-
 		// Custom modules 
 		"smlAppl.webApps.framework.controllers",
 		"smlAppl.webApps.framework.directives",
@@ -19,9 +15,15 @@
 
 		// ng-framework Custom modules
 		"smlAppl.webApps.framework.filterTable",
-		
-		// 3rd Party Modules
-		"ngNotify"
+
+		// 3rd Party Modules (in the order of the lib folder names)
+		"ngCookies",
+		"angular-jwt",
+		"ngMessages",
+		"ngSanitize",
+		"pascalprecht.translate",
+		"ui.router",
+		"ngNotify",
 	]);
 
 })();

@@ -8,10 +8,6 @@
 	angular.module("smlAppl.webApps.framework.services", []);
 
 	angular.module("smlAppl.webApps.framework", [
-		// Angular modules 
-		//'ngRoute'
-		//"ui.router",
-
 		// Custom modules 
 		"smlAppl.webApps.framework.controllers",
 		"smlAppl.webApps.framework.directives",
@@ -20,9 +16,15 @@
 
 		// ng-framework Custom modules
 		"smlAppl.webApps.framework.filterTable",
-		
-		// 3rd Party Modules
-		"ngNotify"
+
+		// 3rd Party Modules (in the order of the lib folder names)
+		"ngCookies",
+		"angular-jwt",
+		"ngMessages",
+		"ngSanitize",
+		"pascalprecht.translate",
+		"ui.router",
+		"ngNotify",
 	]);
 
 })();
@@ -47,7 +49,26 @@
 
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
+/* #### File: Scripts/app/Config/routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -214,28 +235,106 @@
 
 //;
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
-
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
-})();
-
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
+
+  $templateCache.put('wwwroot/Views/Login.html',
+    "<!-- Paths to Content and bower_components are according to the WebApp-paths, not the paths from the ng-framework -->\r" +
+    "\n" +
+    "<link href=\"Content/css/login.css\" rel=\"stylesheet\" />\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "<div class=\"container-fluid\" ng-controller=\"LoginCtrl\">\r" +
+    "\n" +
+    "	<div class=\"login\">\r" +
+    "\n" +
+    "		<div class=\"row\">\r" +
+    "\n" +
+    "			<div class=\"\r" +
+    "\n" +
+    "				 col-lg-4 col-lg-offset-4\r" +
+    "\n" +
+    "				 col-md-6 col-md-offset-3\r" +
+    "\n" +
+    "				 col-sm-8 col-sm-offset-2\r" +
+    "\n" +
+    "				 col-xs-10 col-xs-offset-1 \">\r" +
+    "\n" +
+    "				<div style=\"max-width: 440px; max-height: 550px; margin: auto auto;\">\r" +
+    "\n" +
+    "					<div class=\"col-md-12\">\r" +
+    "\n" +
+    "						<div class=\"logo\">\r" +
+    "\n" +
+    "							<img class=\"fit\" src=\"bower_components/SmlAppl-WebApps-NgFramework/dist/images/zhaw_logo_white.png\" />\r" +
+    "\n" +
+    "						</div>\r" +
+    "\n" +
+    "					</div>\r" +
+    "\n" +
+    "					<div class=\"col-md-12 loginbox\">\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "						<div class=\"banner\">\r" +
+    "\n" +
+    "							<img class=\"fit\" src=\"bower_components/SmlAppl-WebApps-NgFramework/dist/images/zhaw_banner_leaf.png\" />\r" +
+    "\n" +
+    "						</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "						<div class=\"appname\">\r" +
+    "\n" +
+    "							{{ appName }}\r" +
+    "\n" +
+    "						</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "						<form name=\"loginForm\" ng-submit=\"login()\" novalidate>\r" +
+    "\n" +
+    "							<p class=\"text-danger\">\r" +
+    "\n" +
+    "								{{ errMessage | translate }}\r" +
+    "\n" +
+    "							</p>\r" +
+    "\n" +
+    "							<div class=\"form-group\">\r" +
+    "\n" +
+    "								<input name=\"userName\" ng-model=\"loginData.userName\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
+    "\n" +
+    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
+    "\n" +
+    "							</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "							<div class=\"form-group\">\r" +
+    "\n" +
+    "								<button class=\"btn btn-primary btn-block btn-login\" style=\"height: 40px;\" type=\"submit\">{{ \"View_Account_Login_Submit\" | translate }}</button>\r" +
+    "\n" +
+    "							</div>\r" +
+    "\n" +
+    "						</form>\r" +
+    "\n" +
+    "					</div>\r" +
+    "\n" +
+    "				</div>\r" +
+    "\n" +
+    "			</div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "		</div>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div> <!-- /container -->"
+  );
+
 
   $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
@@ -253,6 +352,35 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 
 }]);
 
+
+/* #### File: Scripts/app/Controllers/LoginCtrl.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.controllers")
+		.controller("LoginCtrl", [
+			"$scope", "$state", "Authentication", function($scope, $state, Authentication) {
+				$scope.loginData = {
+					userName: "",
+					password: ""
+				};
+
+				$scope.errMessage = "";
+
+				$scope.login = function() {
+
+					Authentication.login($scope.loginData).then(function(response) {
+							// login successful, forward to home
+							$state.go("home");
+						},
+						function(err) {
+							$scope.errMessage = err.error_description;
+						});
+				};
+			}
+		]);
+
+})();
 
 /* #### File: Scripts/app/Directives/displayEmployee.js */ 
 /*
@@ -2470,4 +2598,336 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 			}
 		]);
 
+})();
+
+/* #### File: Scripts/app/Services/Security/AuthInterceptor.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("AuthInterceptor", [
+			"$q", "$injector", "Principal", function($q, $injector, Principal) {
+
+				this.request = function(config) {
+
+
+					config.headers = config.headers || {};
+
+					//var authData = $cookies.getObject(webAppName + "_token");
+					var authData = Principal.getTokenCookie();
+					if (authData) {
+						config.headers.Authorization = "Bearer " + authData.token;
+					}
+
+					return config;
+				};
+
+				this.responseError = function(rejection) {
+
+					var isAuthenticated = Principal.isAuthenticated();
+
+					// show login page when user is not authenticated
+					if (rejection.status === 401 && !isAuthenticated) {
+						// Used injector because of circular reference. See http://stackoverflow.com/a/20230786
+						$injector.get("$state").transitionTo("login");
+					} else if (rejection.status === 401) {
+						// user is authenticated so show forbidden page
+						$injector.get("$state").transitionTo("forbidden");
+					}
+
+					return $q.reject(rejection);
+				};
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/Services/Security/Authentication.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("Authentication", [
+			"$http", "$q", "appConfig", "HttpHandler", "Principal", "jwtHelper", "$cookies", function
+			($http, $q, appConfig, HttpHandler, Principal, jwtHelper, $cookies) {
+
+				var self = this;
+
+				var serviceBase = "oauth/";
+
+				// service functions
+
+				this.login = function(loginData) {
+
+					var data = "grant_type=password&username=" + loginData.userName + "&password=" + loginData.password;
+
+					var deferred = $q.defer();
+
+					$http.post(serviceBase + "token", data, { headers: { 'Content-Type': "application/x-www-form-urlencoded" } }).success(function(response) {
+
+						Principal.authenticate(response.access_token);
+
+						deferred.resolve(response);
+
+					}).error(function(response) {
+						self.logOut();
+						deferred.reject(response);
+					});
+
+					return deferred.promise;
+
+				};
+
+				this.logOut = function() {
+					Principal.logOut();
+				};
+
+				this.fillAuthData = function() {
+
+					var authData = Principal.getTokenCookie();
+					if (authData) {
+						Principal.authenticate(authData.token);
+					}
+
+				}
+
+				this.claims = function() {
+					var request = $http.get(appConfig.uriBaseApi + "Claims");
+					return request.then(HttpHandler.handleSuccess, HttpHandler.handleGetErrorWithNotify);
+				};
+
+				this.roles = function() {
+					var request = $http.get(appConfig.uriBaseApi + "Claims/GetRoles");
+					return request.then(HttpHandler.handleSuccess, HttpHandler.handleGetErrorWithNotify);
+				}
+			}
+		]);
+})();
+
+/* #### File: Scripts/app/Services/Security/Authorization.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.factory("Authorization", [
+			"$rootScope", "$state", "Principal",
+			function($rootScope, $state, Principal) {
+				return {
+					authorize: function() {
+						return Principal.identity()
+							.then(function() {
+								var isAuthenticated = Principal.isAuthenticated();
+								var isExpired = Principal.isExpired();
+
+								if (isAuthenticated && isExpired && $rootScope.toState.name !== "login") {
+									// user-token is expired so go to login-page (check toState != "login" because of circular reference)
+									$state.go("login");
+								}
+
+								if ($rootScope.toState.data && $rootScope.toState.data.roles && $rootScope.toState.data.roles.length > 0 && !Principal.isInAnyRole($rootScope.toState.data.roles)) {
+
+									console.log("Is in any role: " + Principal.isInAnyRole($rootScope.toState.data.roles));
+
+									if (isAuthenticated) {
+										$state.go("forbidden"); // user is signed in but not authorized for desired state
+									} else {
+										// user is not authenticated. stow the state they wanted before you
+										// send them to the signin state, so you can return them when you're done
+										$rootScope.returnToState = $rootScope.toState;
+										$rootScope.returnToStateParams = $rootScope.toStateParams;
+
+										// now, send them to the signin state so they can log in
+										$state.go("login");
+									}
+								}
+							});
+					}
+				};
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/Services/Security/Principal.js */ 
+// http://stackoverflow.com/questions/22537311/angular-ui-router-login-authentication/22540482#22540482
+
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("Principal", [
+			"$q", "$timeout", "appConfig", "$rootScope", "jwtHelper", "$cookies",
+			function($q, $timeout, appConfig, $rootScope, jwtHelper, $cookies) {
+
+				var cookieTokenName = webAppName + "_token";
+
+				var self = this;
+
+				var _identity = {
+					userName: "",
+					roles: [],
+					//expiration: null, // epoch / unix timestamp
+					//employeeId: null
+				};
+				var _authenticated = false;
+
+
+				// service functions
+
+				this.isIdentityResolved = function() {
+					return angular.isDefined(_identity);
+				};
+
+				this.roles = function() {
+					return _identity.roles;
+				};
+
+				this.userName = function() {
+					if (!_identity) {
+						return null;
+					}
+
+					return _identity.userName;
+				};
+
+				this.isAuthenticated = function() {
+					// cookie will automatically be deleted once it's expired
+					if (self.getTokenCookie()) {
+						_authenticated = true;
+						return true;
+					} else {
+						_authenticated = false;
+						return false;
+					}
+				};
+
+				this.isExpired = function() {
+					//var token = $cookies.getObject(cookieTokenName);
+
+					//if (token) {
+					//	return true;
+					//}
+					//var tokenDecoded = jwtHelper.decodeToken(getTokenCookie());
+
+					//if (!_identity.expiration) {
+					//	return false;
+					//}
+
+					//return _identity.expiration <= moment().unix();
+
+					// should be possible to deleted as isAuthenticated returns false when token is expired!
+					return false;
+				};
+
+				this.isAdmin = function() {
+					if (!_authenticated) return false;
+
+					return _identity.roles.indexOf(appConfig.rights.admin) !== -1;
+				};
+
+				this.isInRole = function(role) {
+					if (!_authenticated || !_identity.roles) return false;
+
+					if (this.isAdmin()) {
+						return true;
+					}
+
+					return _identity.roles.indexOf(role) !== -1;
+				};
+
+				this.isInAnyRole = function(roles) {
+					if (!_authenticated || !_identity.roles) return false;
+
+					for (var i = 0; i < roles.length; i++) {
+						if (this.isInRole(roles[i])) return true;
+					}
+
+					return false;
+				};
+
+				this.authenticate = function(token) {
+					var tokenDecoded = jwtHelper.decodeToken(token);
+
+					var userName = tokenGetUserName(tokenDecoded);
+
+					self.setTokenCookie(token);
+
+					// lower-case the rights
+					var roles = [];
+					angular.forEach(tokenDecoded.role, function(item) {
+						roles.push(item.toLowerCase());
+					});
+
+					var identity = {
+						userName: userName,
+						roles: roles,
+						//expiration: tokenDecoded.exp,
+						//employeeId: employeeId
+					}
+
+					_identity = identity;
+					_authenticated = true;
+
+					$rootScope.$broadcast("onPrincipalChanged");
+				};
+
+				this.logOut = function () {
+					$cookies.remove(cookieTokenName, { path: "/" });
+
+					_identity = {
+						userName: "",
+						roles: []
+					};
+					_authenticated = false;
+
+					$rootScope.$broadcast("onPrincipalChanged");
+				};
+
+				this.identity = function(force) {
+					var deferred = $q.defer();
+
+					console.log("force: " + force);
+					if (force === true) {
+						console.log("Forced!");
+						_identity = undefined;
+					}
+
+					// check and see if we have retrieved the identity data from the server. if we have, reuse it by immediately resolving
+					if (angular.isDefined(_identity)) {
+						deferred.resolve(_identity);
+
+						return deferred.promise;
+					}
+
+					return deferred.promise;
+				};
+
+				this.setTokenCookie = function(token) {
+
+					var tokenDecoded = jwtHelper.decodeToken(token);
+
+					var userName = tokenGetUserName(tokenDecoded);
+					var employeeId = tokenGetEmployeeId(tokenDecoded);
+
+					$cookies.putObject(cookieTokenName,
+						{ token: token, userName: userName, expiration: tokenDecoded.exp, employeeId: employeeId },
+						{ path: "/", expires: moment.unix(tokenDecoded.exp).format() }
+					);
+				};
+
+				this.getTokenCookie = function() {
+					return $cookies.getObject(cookieTokenName);
+				};
+
+
+				// Helper functions
+				function tokenGetEmployeeId(tokenDecoded) {
+					return tokenDecoded["http://sml.zhaw.ch/2013/07/identity/claims/employeeid"];
+				}
+
+				function tokenGetUserName(tokenDecoded) {
+					return tokenDecoded["unique_name"];
+				}
+			}
+		]);
 })();
