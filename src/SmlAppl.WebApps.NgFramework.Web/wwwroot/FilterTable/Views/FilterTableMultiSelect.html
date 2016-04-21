@@ -4,22 +4,40 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            <!--<button class="btn btn-default" type="button" ng-click="All()">Alle</button>-->
-            <!--/
-            <button class="btn btn-default" type="button" ng-click="None()">Keine</button>-->
-            <br/>
-            <div ng-repeat="item in Distincts">
-                <label>
-                    <input type="checkbox" ng-model="column.CustomFilter.Selected[item]" />
-                    {{item}}
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                <input type="text" name="Search" lass="form-control" ng-model="Search" ng-model-options="ModelOptions" />
+                <div class="input-group-btn">
+                    <button class="btn btn-default" ng-click="ResetSearch()"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button class="btn btn-default" ng-click="All()" title="Wählen"><span class="glyphicon glyphicon-plus"></span></button>
+                    <button class="btn btn-default" ng-click="None()" title="Abwählen"><span class="glyphicon glyphicon-minus"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="display: none;">
+        <div class="col-md-4 col-md-offset-1">
+            <button class="btn btn-default" type="button" ng-click="All()">Wählen</button>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            <button class="btn btn-default" type="button" ng-click="None()">Abwählen</button>
+        </div>
+    </div>
+    <div class="row" style="max-height: 400px; overflow-y: auto; margin-top: 20px;">
+        <div class="col-md-12">
+            <div ng-repeat="item in Distincts | filter: Search">
+
+                <label ng-class="{'margin-bottom-sm': $first && HasEmpty}">
+                    <input type="checkbox" ng-model="column.CustomFilter.Selected[item]"/>
+                    {{item == "" ? FilterTable.Translations.FilterTable_Empty_Value : item}}
                 </label>
             </div>
         </div>
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="Reset()">Kein Filter</button>
-    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="Reset()">{{FilterTable.Translations.FilterTable_Reset_Filter}}</button>
+    <button class="btn btn-primary" type="button" ng-click="ok()">{{FilterTable.Translations.FilterTable_Accept}}</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">{{FilterTable.Translations.FilterTable_Cancel}}</button>
 </div>
 

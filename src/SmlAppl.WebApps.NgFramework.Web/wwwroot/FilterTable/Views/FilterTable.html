@@ -40,11 +40,18 @@
                                     <span ng-bind-html="col.CustomFilter.InputHtml"></span>
                                 </div>
                                 <div class="input-group" ng-switch-when="Custom" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; width: 1px;" ng-click="defineFilter(col)">
-                                    <input type="text" class="form-control" style="cursor: pointer; width: auto;" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions" />
+                                    <input type="text" class="form-control" style="cursor: pointer; width: auto;" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions"/>
                                     <span class="input-group-addon">...</span>
                                 </div>
+                                <!--<div class="input-group" ng-switch-when="Custom" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; width: 1px;" ng-click="defineFilter(col)">
+                                    <input type="text" class="form-control" style="cursor: pointer; width: auto;" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions" />
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default">...</button>
+                                        <button type="button" class="btn btn-default" title="reset" ng-click="resetFilter(col, $event)"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </div>
+                                </div>-->
                                 <select ng-switch-when="Select" class="select2" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]">
-                                    <option ng-repeat="item in col.GetDistincts(filterTable.ReduceSelects)">{{::item}}</option>
+                                    <option ng-repeat="item in col.GetDistincts(filterTable.ReduceSelects, true)">{{::item}}</option>
                                 </select>
                                 <input ng-switch-when="Input" type="text" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]" ng-model-options="ModelOptions"/>
 

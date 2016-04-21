@@ -601,15 +601,29 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
-    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\" />\r" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
     "\n" +
     "                                    <span class=\"input-group-addon\">...</span>\r" +
     "\n" +
     "                                </div>\r" +
     "\n" +
+    "                                <!--<div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
+    "\n" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\" />\r" +
+    "\n" +
+    "                                    <div class=\"input-group-btn\">\r" +
+    "\n" +
+    "                                        <button type=\"button\" class=\"btn btn-default\">...</button>\r" +
+    "\n" +
+    "                                        <button type=\"button\" class=\"btn btn-default\" title=\"reset\" ng-click=\"resetFilter(col, $event)\"><span class=\"glyphicon glyphicon-remove\"></span></button>\r" +
+    "\n" +
+    "                                    </div>\r" +
+    "\n" +
+    "                                </div>-->\r" +
+    "\n" +
     "                                <select ng-switch-when=\"Select\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
-    "                                    <option ng-repeat=\"item in col.GetDistincts(filterTable.ReduceSelects)\">{{::item}}</option>\r" +
+    "                                    <option ng-repeat=\"item in col.GetDistincts(filterTable.ReduceSelects, true)\">{{::item}}</option>\r" +
     "\n" +
     "                                </select>\r" +
     "\n" +
@@ -750,21 +764,57 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-12\">\r" +
     "\n" +
-    "            <!--<button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Alle</button>-->\r" +
+    "            <div class=\"input-group\">\r" +
     "\n" +
-    "            <!--/\r" +
+    "                <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-search\"></i></span>\r" +
     "\n" +
-    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Keine</button>-->\r" +
+    "                <input type=\"text\" name=\"Search\" lass=\"form-control\" ng-model=\"Search\" ng-model-options=\"ModelOptions\" />\r" +
     "\n" +
-    "            <br/>\r" +
+    "                <div class=\"input-group-btn\">\r" +
     "\n" +
-    "            <div ng-repeat=\"item in Distincts\">\r" +
+    "                    <button class=\"btn btn-default\" ng-click=\"ResetSearch()\"><span class=\"glyphicon glyphicon-remove\"></span></button>\r" +
     "\n" +
-    "                <label>\r" +
+    "                    <button class=\"btn btn-default\" ng-click=\"All()\" title=\"Wählen\"><span class=\"glyphicon glyphicon-plus\"></span></button>\r" +
     "\n" +
-    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\" />\r" +
+    "                    <button class=\"btn btn-default\" ng-click=\"None()\" title=\"Abwählen\"><span class=\"glyphicon glyphicon-minus\"></span></button>\r" +
     "\n" +
-    "                    {{item}}\r" +
+    "                </div>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"row\" style=\"display: none;\">\r" +
+    "\n" +
+    "        <div class=\"col-md-4 col-md-offset-1\">\r" +
+    "\n" +
+    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Wählen</button>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-4 col-md-offset-2\">\r" +
+    "\n" +
+    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Abwählen</button>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"row\" style=\"max-height: 400px; overflow-y: auto; margin-top: 20px;\">\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <div ng-repeat=\"item in Distincts | filter: Search\">\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "                <label ng-class=\"{'margin-bottom-sm': $first && HasEmpty}\">\r" +
+    "\n" +
+    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\"/>\r" +
+    "\n" +
+    "                    {{item == \"\" ? FilterTable.Translations.FilterTable_Empty_Value : item}}\r" +
     "\n" +
     "                </label>\r" +
     "\n" +
@@ -778,11 +828,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "<div class=\"modal-footer\">\r" +
     "\n" +
-    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"Reset()\">Kein Filter</button>\r" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"Reset()\">{{FilterTable.Translations.FilterTable_Reset_Filter}}</button>\r" +
     "\n" +
-    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">OK</button>\r" +
+    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{FilterTable.Translations.FilterTable_Accept}}</button>\r" +
     "\n" +
-    "    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\r" +
+    "    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\">{{FilterTable.Translations.FilterTable_Cancel}}</button>\r" +
     "\n" +
     "</div>\r" +
     "\n" +
@@ -804,69 +854,75 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <uib-tab heading=\"Spalten\" ng-if=\"FilterTable.CanSelectCols\">\r" +
     "\n" +
-    "            <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
+    "            <div style=\"max-height: 400px; overflow-y: auto;\">\r" +
     "\n" +
-    "                <thead>\r" +
+    "                <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
     "\n" +
-    "                    <tr>\r" +
+    "                    <thead>\r" +
     "\n" +
-    "                        <th>Name</th>\r" +
+    "                        <tr>\r" +
     "\n" +
-    "                        <th>Sichtbar</th>\r" +
+    "                            <th>Name</th>\r" +
     "\n" +
-    "                        <th>Dropdown</th>\r" +
+    "                            <th>Sichtbar</th>\r" +
     "\n" +
-    "                    </tr>\r" +
+    "                            <th>Dropdown</th>\r" +
     "\n" +
-    "                    <tr>\r" +
+    "                        </tr>\r" +
     "\n" +
-    "                        <td>\r" +
+    "                        <tr>\r" +
     "\n" +
-    "                            <input name=\"theColFilter.Display\" ng-model=\"theColFilter.Display\" placeholder=\"Name\" />\r" +
+    "                            <td>\r" +
     "\n" +
-    "                        </td>\r" +
+    "                                <input name=\"theColFilter.Display\" ng-model=\"theColFilter.Display\" placeholder=\"Name\" />\r" +
     "\n" +
-    "                        <td>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                            <input type=\"checkbox\" ng-model=\"visible.all\" ng-change=\"ChangeVisible(visible.all)\" /> Alle\r" +
+    "                            <td>\r" +
     "\n" +
-    "                        </td>\r" +
+    "                                <input type=\"checkbox\" ng-model=\"visible.all\" ng-change=\"ChangeVisible(visible.all)\" /> Alle\r" +
     "\n" +
-    "                        <td></td>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                    </tr>\r" +
+    "                            <td></td>\r" +
     "\n" +
-    "                </thead>\r" +
+    "                        </tr>\r" +
     "\n" +
-    "                <tbody>\r" +
+    "                    </thead>\r" +
     "\n" +
-    "                    <tr ng-repeat=\"col in FilterTable.CurrentCols | filter: theColFilter\">\r" +
+    "                    <tbody>\r" +
     "\n" +
-    "                        <td>{{::col.Display}}</td>\r" +
+    "                        <tr ng-repeat=\"col in FilterTable.CurrentCols | filter: theColFilter\">\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"col.Visible\" /></td>\r" +
+    "                            <td>{{::col.Display}}</td>\r" +
     "\n" +
-    "                        <td ng-switch=\"FilterTable.NoSearchSelects\">\r" +
+    "                            <td><input type=\"checkbox\" ng-model=\"col.Visible\" /></td>\r" +
     "\n" +
-    "                            <input ng-switch-when=\"true\" type=\"checkbox\" ng-model=\"noSelect\" ng-disabled=\"true\" />\r" +
+    "                            <td ng-switch=\"FilterTable.NoSearchSelects\">\r" +
     "\n" +
-    "                            <input ng-switch-when=\"false\" type=\"checkbox\" ng-model=\"col.BuildSelect\" ng-disabled=\"!col.CanBuildSelect\" />\r" +
+    "                                <input ng-switch-when=\"true\" type=\"checkbox\" ng-model=\"noSelect\" ng-disabled=\"true\" />\r" +
     "\n" +
-    "                        </td>\r" +
+    "                                <input ng-switch-when=\"false\" type=\"checkbox\" ng-model=\"col.BuildSelect\" ng-disabled=\"!col.CanBuildSelect\" />\r" +
     "\n" +
-    "                    </tr>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                </tbody>\r" +
+    "                        </tr>\r" +
     "\n" +
-    "            </table>\r" +
+    "                    </tbody>\r" +
+    "\n" +
+    "                </table>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </uib-tab>\r" +
     "\n" +
     "        <uib-tab heading=\"Tabelle\" ng-if=\"true\">\r" +
     "\n" +
-    "            <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
+    "            <div style=\"max-height: 400px; overflow-y: auto;\">\r" +
     "\n" +
-    "                <thead>\r" +
+    "                <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
+    "\n" +
+    "                    <thead>\r" +
     "\n" +
     "                    <tr>\r" +
     "\n" +
@@ -876,15 +932,15 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                    </tr>\r" +
     "\n" +
-    "                </thead>\r" +
+    "                    </thead>\r" +
     "\n" +
-    "                <tbody>\r" +
+    "                    <tbody>\r" +
     "\n" +
     "                    <tr>\r" +
     "\n" +
     "                        <td>Suche aktiv</td>\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.SearchActive\" /></td>\r" +
+    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.SearchActive\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -892,7 +948,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Keine Dropdowns</td>\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.NoSearchSelects\" /></td>\r" +
+    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.NoSearchSelects\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -900,7 +956,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Dropdowns einschränken</td>\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.ReduceSelects\" /></td>\r" +
+    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.ReduceSelects\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -908,13 +964,15 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Datensätze pro Seite</td>\r" +
     "\n" +
-    "                        <td><input type=\"number\" ng-model=\"FilterTable.PageSize\" ng-model-options=\"ModelOptions\" /></td>\r" +
+    "                        <td><input type=\"number\" ng-model=\"FilterTable.PageSize\" ng-model-options=\"ModelOptions\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
-    "                </tbody>\r" +
+    "                    </tbody>\r" +
     "\n" +
-    "            </table>\r" +
+    "                </table>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </uib-tab>\r" +
     "\n" +
@@ -984,12 +1042,16 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 /* #### File: Scripts/app/FilterTable/Controllers/FilterTableModalMultiSelectCtrl.js */ 
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
-        .controller('FilterTableModalMultiSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", function ($scope, $uibModalInstance, $filter, filterTable, column) {
+        .controller('FilterTableModalMultiSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", "$translate", function ($scope, $uibModalInstance, $filter, filterTable, column, $translate) {
 
         $scope.FilterTable = filterTable;
         $scope.column = angular.copy(column);
+	    $scope.Search = '';
+	    $scope.ResetSearch = function() {
+	        $scope.Search = '';
+	    }
 
-        function getdistincts(excludeEmpty) {
+	    function getdistincts(excludeEmpty) {
             var distincts = $filter('orderBy')($scope.column.Distincts) || [];
             if (excludeEmpty) {
                 var l = distincts.length;
@@ -1001,8 +1063,12 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                 }
             }
             return distincts;
-        }
-        $scope.Distincts = getdistincts(true);
+	    }
+
+	    $scope.Distincts = $scope.column.Distincts || [];
+        //since we know it will be sorted we can check element at pos 0
+	    $scope.HasEmpty = $scope.Distincts.length > 0 && $scope.Distincts[0] === "";
+	    
 
         $scope.ModelOptions = {
             debounce: {
@@ -1017,15 +1083,19 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
         }
 
         $scope.All = function () {
-            for (var i=0; i < $scope.Distincts.length; i++) {
-                var x = $scope.Distincts[i];
-                $scope.column.CustomFilter.Selected[x] = true;
-            }
+            updateFiltered(true);
         }
         $scope.None = function () {
-            $scope.column.CustomFilter.FnReset();
+            updateFiltered(false);
         }
+        function updateFiltered(setTo) {
+            var currents = $filter('filter')($scope.Distincts, $scope.Search);
+            for (var i = 0; i < currents.length; i++) {
+                var x = currents[i];
+                $scope.column.CustomFilter.Selected[x] = setTo;
+            }
 
+        }
         $scope.ok = function () {
             var selected = Object.keys($scope.column.CustomFilter.Selected);
             for (var i = 0; i < selected.length; i++) {
@@ -1038,7 +1108,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             if (selected.length === 0) {
                 $scope.column.CustomFilter.FnReset();
             } else {
-                $scope.column.CustomFilter.Text = selected.length + " gewählt";
+                $scope.column.CustomFilter.Text = selected.length + " " + filterTable.Translations.FilterTable_0_Selected;
                 $scope.column.CustomFilter.Tooltip = selected.join(', ');
             }
             $uibModalInstance.close($scope.column);
@@ -1055,7 +1125,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	"use strict";
 
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
-	    .factory('filterTableConstructor', ["$filter", "$timeout", "$parse", "$sce", function ($filter, $timeout, $parse, $sce) {
+	    .factory('filterTableConstructor', ["$filter", "$timeout", "$parse", "$sce", "$translate", function ($filter, $timeout, $parse, $sce, $translate) {
 	        function HeaderDef(title, calculator, showPageValues) {
                 this.Title = title || "";
                 this._calculator = calculator || null;
@@ -1124,8 +1194,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                 Calculate: function (column) {
                     if (this.CanCalculate) {
                         var data = column.GetFilterTable().DataFiltered || [];
-                        var dataDisplayed = column.GetFilterTable().DataDisplayed ||[];
-                        return this._calculator.call(this, column, data, dataDisplayed);
+                        var dataDisplayed = column.GetFilterTable().DataDisplayed || [];
+                        try {
+                            return this._calculator.call(this, column, data, dataDisplayed);
+                        } catch (ex) {
+                            console.log(ex);
+                            return undefined;
+                        }
                     }
                     return null;
                 }
@@ -1276,12 +1351,24 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                    Reduced: this._distinctsReduced,
 	                };
 	            },
-                GetDistincts: function(reduced) {
-                  if ((reduced || false) === true) {
-                      return this.DistinctsReduced;
-                  }
-                    return this.Distincts;
-                },
+	            GetDistincts: function (reduced, addEmptyIfMissing) {
+	                addEmptyIfMissing = addEmptyIfMissing || false;
+	                var distincts = [];
+	                if ((reduced || false) === true) {
+	                    distincts = this.DistinctsReduced;
+	                } else {
+	                    distincts = this.Distincts;
+	                }
+	                if (addEmptyIfMissing) {
+	                    //since we know it will be sorted we can check element at pos 0
+                        if (distincts.length > 0) {
+                            if (distincts[0] !== "") {
+                                distincts.unshift("");
+                            }
+                        }
+                    }
+	                return distincts;
+	            },
 	            get Distincts() {
 	                return this.DistinctHolder.All;
 	            },
@@ -1343,6 +1430,12 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                 get HasCustomFilter() {
                     return this.CustomFilter !== null;
                 },
+                UpdateCustomFilterTexts: function () {
+                    var col = this;
+                    if (col.HasCustomFilter && angular.isDefined(col.CustomFilter.FnUpdateText) && angular.isFunction(col.CustomFilter.FnUpdateText)) {
+                        col.CustomFilter.FnUpdateText.call(col.CustomFilter);
+                    }
+                },
                 get FilterType() {
                     if (this.HasCustomFilter) {
                         if (angular.isDefined(this.CustomFilter.InputHtml)) {
@@ -1356,7 +1449,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                     return "Input";
                 },
                 TrustIt: function(val) {
-                    if ((val || null) !== null && angular.isString(val)) {
+                    if (val !== null && angular.isDefined(val) && angular.isString(val)) {
                         return $sce.trustAsHtml(val);
                     }
                     return val;
@@ -1400,6 +1493,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 	        function FilterTable() {
 	            var ft = this;
+
 	            ft._loading = true;
 	            this._error = false;
 	            defineProp(this, 'test1', {
@@ -1456,6 +1550,84 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                    this.Pending = true;
 	                },
 	            };
+
+	            this.UpdateTranslations = function(callback) {
+	                var me = this;
+	                var arr = me.Translations.Keys;
+	                $translate(arr).then(function(translations) {
+	                    var i;
+	                    for (i = 0; i < arr.length; i++) {
+	                        var key = arr[i];
+	                        me.Translations[key] = translations[key];
+	                    }
+	                    for (i = 0; i < me.Columns.length; i++) {
+	                        var col = me.Columns[i];
+	                        col.UpdateCustomFilterTexts();
+	                    }
+	                    callback = callback || null;
+                        if (angular.isDefined(callback) && angular.isFunction(callback)) {
+                            callback.call(me);
+                        }
+	                });
+	            };
+
+	            this.InitTranslations = function () {
+	                var me = this;
+	                var keys = me.Translations.Keys;
+                    var defineTranslationFor = function(thisKey) {
+                        Object.defineProperty(me.Translations, thisKey, {
+                            get: function () {
+                                var val = me.Translations.backingfields[thisKey];
+                                if ((val || null) == null) {
+                                    val = me.Translations.fallback[thisKey];
+                                }
+                                return val;
+                            },
+                            set: function (val) {
+                                if (val === thisKey) {
+                                    delete me.Translations.backingfields[thisKey];
+                                } else {
+                                    me.Translations.backingfields[thisKey] = val;
+                                }
+                            }
+                        });
+                    }
+	                for (var i = 0; i < keys.length; i++) {
+	                    var key = keys[i];
+	                    defineTranslationFor(key);
+	                }
+	            };
+	            //Currently not on prototype because that would affect every page, if wanted we can switch it, basically just move above function(s) and this declaration
+	            this.Translations = {
+                    backingfields: {},
+                    fallback: {
+	                    FilterTable_Error_Getting_Data: "Fehler beim Beziehen der Daten.",
+	                    FilterTable_Error_No_Data: "Keine Daten gefunden.",
+	                    FilterTable_Error_Filter_No_Data: "Filter enthält keine Daten.",
+	                    FilterTable_Page: "Seite",
+	                    FilterTable_Of: "von",
+	                    FilterTable_Total: "Total",
+	                    FilterTable_Records: "Datensätze",
+	                    FilterTable_Click_To_Select: "Klicken zum auswählen.",
+	                    FilterTable_0_Selected: "gewählt.",
+	                    FilterTable_Filter: "filtern",
+	                    FilterTable_Empty_Value: "(Kein Wert)",
+	                    FilterTable_Accept: "Übernehmen",
+	                    FilterTable_Cancel: "Abbrechen",
+	                    FilterTable_Reset_Filter: "Filter löschen",
+                    },
+                    get Keys() {
+                        var arr = [];
+                        for (var x in this.fallback) {
+                            if (this.fallback.hasOwnProperty(x)) {
+                                arr.push(x);
+                            }
+                        }
+                        return arr;
+                    }
+	            };
+
+	            ft.InitTranslations();
 	        }
 
 	        FilterTable.prototype = {
@@ -1468,10 +1640,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                    var fetchDistincts = function (data) {
 	                        var onData = (data || []).map(function(item) { return item[colDef.Key] });
                             var distincts = {};
-                            var distinctList = [""];
+                            var distinctList = [];
                             for (var i = 0; i < onData.length; i++) {
-                                var entry = (onData[i] || null);
-                                if (entry !== null && angular.isUndefined(distincts[entry])) {
+                                var entry = onData[i];
+                                if (entry == null || angular.isUndefined(entry)) {
+                                    entry = "";
+                                }
+                                if (angular.isUndefined(distincts[entry])) {
                                     distincts[entry] = "";
                                     distinctList.push(entry.toString());
                                 }
@@ -1954,21 +2129,35 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                             c.BuildSelect = true;
                             //Replace it
                             c.CustomFilter = {
-                                    Text: c.Display + " filtern",
+                                    Text: c.Display + " " + ft.Translations.FilterTable_Filter,
                                     TemplateUrl: "wwwroot/FilterTable/Views/FilterTableMultiSelect.html",
                                     Controller: "FilterTableModalMultiSelectCtrl",
-                                    Tooltip: "Klicken zum auswählen.",
+                                    Tooltip: ft.Translations.FilterTable_Click_To_Select,
                                     Selected: {},
                                     FnFilter: function (item, col) {
                                         if (Object.keys(this.Selected).length === 0) {
                                             return true;
                                         }
-                                        return angular.isDefined(this.Selected[item[c.Key]]);
+                                        var val = item[c.Key];
+                                        val = (val === null || angular.isUndefined(val)) ? "" : val; //null and undefined -> ""
+                                        val = val.toString(); // TrustedValueHolder --> back to strings 
+                                        return angular.isDefined(this.Selected[val]);
                                     },
                                     FnReset: function() {
-                                        this.Tooltip = "Klicken zum auswählen.",
-                                        this.Text = c.Display + " filtern",
+                                        this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
+                                        this.Text = c.Display + " " + ft.Translations.FilterTable_Filter,
                                         this.Selected = {};
+                                    },
+                                    FnUpdateText: function() {
+                                        var selected = Object.keys(this.Selected);
+                                        var l = selected.length;
+                                        if (l > 0) {
+                                            this.Tooltip = selected.join(', ');
+                                            this.Text = l + " " + ft.Translations.FilterTable_0_Selected;
+                                        } else {
+                                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select;
+                                            this.Text = c.Display + " " + ft.Translations.FilterTable_Filter;
+                                        }
                                     }
                             } 
                         }
@@ -2249,42 +2438,14 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
                     $rootScope.$on("$translateChangeEnd", function () {
                         //console.log("$translateChangeEnd");
-                        updateTranslations();
-                        scope.filterTable.Refresh();
+                        scope.filterTable.UpdateTranslations(scope.filterTable.Refresh);
                     });
 
-                    function updateTranslations() {
-                        var arr =[];
-                        for (var x in scope.Translations.fallback) {
-                            if (scope.Translations.fallback.hasOwnProperty(x)) {
-                                arr.push(x);
-                            }
-                        }
-                        $translate(arr).then(function(translations) {
-                            for (var i = 0; i < arr.length; i++) {
-                                var key = arr[i];
-                                var same = (key === translations[key]);
-                                if (same) {
-                                    scope.Translations[key]= scope.Translations.fallback[key];
-                                } else {
-                                    scope.Translations[key]= translations[key];
-                                }
-                            }
-                        });
-                    }
-                    //TODO: move to filtertable (prototype)? (watch for change only once though)
-                    scope.Translations = {
-                        fallback: {
-                            FilterTable_Error_Getting_Data: "Fehler beim Beziehen der Daten.",
-                            FilterTable_Error_No_Data: "Keine Daten gefunden.",
-                            FilterTable_Error_Filter_No_Data: "Filter enthält keine Daten.",
-                            FilterTable_Page: "Seite",
-                            FilterTable_Of: "von",
-                            FilterTable_Total: "Total",
-                            FilterTable_Records: "Datensätze"
-                        }
-                    }
-	                updateTranslations();
+                    Object.defineProperty(scope, "Translations", {
+                        get: function () { return scope.filterTable.Translations; },
+                    });
+                   
+                    scope.filterTable.UpdateTranslations(scope.filterTable.Refresh);
 
 	                scope.animationsEnabled = true;
 
@@ -2297,9 +2458,17 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                             , undefined
                             , function (newColDef) {
                                 col.CustomFilter = newColDef.CustomFilter;
-                                scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = false;
+                                col.UpdateCustomFilterTexts();
+                                scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = true;
                             }
                         );
+                    }
+
+                    scope.resetFilter = function(col, event) {
+                        event.preventDefault();
+                        col.CustomFilter.FnReset();
+                        col.UpdateCustomFilterTexts();
+                        scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = true;
                     }
 
 	                scope.openThis = function (size, templateUrl, controller, column, cancel, ok) {
@@ -2313,7 +2482,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                        size: size,
 	                        resolve: {
 	                            filterTable: function () { return scope.filterTable; },
-                                column: column
+	                            column: column,
+                                translations: scope.Translations
 	                        }
 	                    });
 

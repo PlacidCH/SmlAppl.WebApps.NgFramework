@@ -86,15 +86,29 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
-    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\" />\r" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
     "\n" +
     "                                    <span class=\"input-group-addon\">...</span>\r" +
     "\n" +
     "                                </div>\r" +
     "\n" +
+    "                                <!--<div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
+    "\n" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\" />\r" +
+    "\n" +
+    "                                    <div class=\"input-group-btn\">\r" +
+    "\n" +
+    "                                        <button type=\"button\" class=\"btn btn-default\">...</button>\r" +
+    "\n" +
+    "                                        <button type=\"button\" class=\"btn btn-default\" title=\"reset\" ng-click=\"resetFilter(col, $event)\"><span class=\"glyphicon glyphicon-remove\"></span></button>\r" +
+    "\n" +
+    "                                    </div>\r" +
+    "\n" +
+    "                                </div>-->\r" +
+    "\n" +
     "                                <select ng-switch-when=\"Select\" class=\"select2\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\">\r" +
     "\n" +
-    "                                    <option ng-repeat=\"item in col.GetDistincts(filterTable.ReduceSelects)\">{{::item}}</option>\r" +
+    "                                    <option ng-repeat=\"item in col.GetDistincts(filterTable.ReduceSelects, true)\">{{::item}}</option>\r" +
     "\n" +
     "                                </select>\r" +
     "\n" +
@@ -235,21 +249,57 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-12\">\r" +
     "\n" +
-    "            <!--<button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Alle</button>-->\r" +
+    "            <div class=\"input-group\">\r" +
     "\n" +
-    "            <!--/\r" +
+    "                <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-search\"></i></span>\r" +
     "\n" +
-    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Keine</button>-->\r" +
+    "                <input type=\"text\" name=\"Search\" lass=\"form-control\" ng-model=\"Search\" ng-model-options=\"ModelOptions\" />\r" +
     "\n" +
-    "            <br/>\r" +
+    "                <div class=\"input-group-btn\">\r" +
     "\n" +
-    "            <div ng-repeat=\"item in Distincts\">\r" +
+    "                    <button class=\"btn btn-default\" ng-click=\"ResetSearch()\"><span class=\"glyphicon glyphicon-remove\"></span></button>\r" +
     "\n" +
-    "                <label>\r" +
+    "                    <button class=\"btn btn-default\" ng-click=\"All()\" title=\"Wählen\"><span class=\"glyphicon glyphicon-plus\"></span></button>\r" +
     "\n" +
-    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\" />\r" +
+    "                    <button class=\"btn btn-default\" ng-click=\"None()\" title=\"Abwählen\"><span class=\"glyphicon glyphicon-minus\"></span></button>\r" +
     "\n" +
-    "                    {{item}}\r" +
+    "                </div>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"row\" style=\"display: none;\">\r" +
+    "\n" +
+    "        <div class=\"col-md-4 col-md-offset-1\">\r" +
+    "\n" +
+    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Wählen</button>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-4 col-md-offset-2\">\r" +
+    "\n" +
+    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Abwählen</button>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"row\" style=\"max-height: 400px; overflow-y: auto; margin-top: 20px;\">\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <div ng-repeat=\"item in Distincts | filter: Search\">\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "                <label ng-class=\"{'margin-bottom-sm': $first && HasEmpty}\">\r" +
+    "\n" +
+    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\"/>\r" +
+    "\n" +
+    "                    {{item == \"\" ? FilterTable.Translations.FilterTable_Empty_Value : item}}\r" +
     "\n" +
     "                </label>\r" +
     "\n" +
@@ -263,11 +313,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "<div class=\"modal-footer\">\r" +
     "\n" +
-    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"Reset()\">Kein Filter</button>\r" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"Reset()\">{{FilterTable.Translations.FilterTable_Reset_Filter}}</button>\r" +
     "\n" +
-    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">OK</button>\r" +
+    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{FilterTable.Translations.FilterTable_Accept}}</button>\r" +
     "\n" +
-    "    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\r" +
+    "    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\">{{FilterTable.Translations.FilterTable_Cancel}}</button>\r" +
     "\n" +
     "</div>\r" +
     "\n" +
@@ -289,69 +339,75 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <uib-tab heading=\"Spalten\" ng-if=\"FilterTable.CanSelectCols\">\r" +
     "\n" +
-    "            <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
+    "            <div style=\"max-height: 400px; overflow-y: auto;\">\r" +
     "\n" +
-    "                <thead>\r" +
+    "                <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
     "\n" +
-    "                    <tr>\r" +
+    "                    <thead>\r" +
     "\n" +
-    "                        <th>Name</th>\r" +
+    "                        <tr>\r" +
     "\n" +
-    "                        <th>Sichtbar</th>\r" +
+    "                            <th>Name</th>\r" +
     "\n" +
-    "                        <th>Dropdown</th>\r" +
+    "                            <th>Sichtbar</th>\r" +
     "\n" +
-    "                    </tr>\r" +
+    "                            <th>Dropdown</th>\r" +
     "\n" +
-    "                    <tr>\r" +
+    "                        </tr>\r" +
     "\n" +
-    "                        <td>\r" +
+    "                        <tr>\r" +
     "\n" +
-    "                            <input name=\"theColFilter.Display\" ng-model=\"theColFilter.Display\" placeholder=\"Name\" />\r" +
+    "                            <td>\r" +
     "\n" +
-    "                        </td>\r" +
+    "                                <input name=\"theColFilter.Display\" ng-model=\"theColFilter.Display\" placeholder=\"Name\" />\r" +
     "\n" +
-    "                        <td>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                            <input type=\"checkbox\" ng-model=\"visible.all\" ng-change=\"ChangeVisible(visible.all)\" /> Alle\r" +
+    "                            <td>\r" +
     "\n" +
-    "                        </td>\r" +
+    "                                <input type=\"checkbox\" ng-model=\"visible.all\" ng-change=\"ChangeVisible(visible.all)\" /> Alle\r" +
     "\n" +
-    "                        <td></td>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                    </tr>\r" +
+    "                            <td></td>\r" +
     "\n" +
-    "                </thead>\r" +
+    "                        </tr>\r" +
     "\n" +
-    "                <tbody>\r" +
+    "                    </thead>\r" +
     "\n" +
-    "                    <tr ng-repeat=\"col in FilterTable.CurrentCols | filter: theColFilter\">\r" +
+    "                    <tbody>\r" +
     "\n" +
-    "                        <td>{{::col.Display}}</td>\r" +
+    "                        <tr ng-repeat=\"col in FilterTable.CurrentCols | filter: theColFilter\">\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"col.Visible\" /></td>\r" +
+    "                            <td>{{::col.Display}}</td>\r" +
     "\n" +
-    "                        <td ng-switch=\"FilterTable.NoSearchSelects\">\r" +
+    "                            <td><input type=\"checkbox\" ng-model=\"col.Visible\" /></td>\r" +
     "\n" +
-    "                            <input ng-switch-when=\"true\" type=\"checkbox\" ng-model=\"noSelect\" ng-disabled=\"true\" />\r" +
+    "                            <td ng-switch=\"FilterTable.NoSearchSelects\">\r" +
     "\n" +
-    "                            <input ng-switch-when=\"false\" type=\"checkbox\" ng-model=\"col.BuildSelect\" ng-disabled=\"!col.CanBuildSelect\" />\r" +
+    "                                <input ng-switch-when=\"true\" type=\"checkbox\" ng-model=\"noSelect\" ng-disabled=\"true\" />\r" +
     "\n" +
-    "                        </td>\r" +
+    "                                <input ng-switch-when=\"false\" type=\"checkbox\" ng-model=\"col.BuildSelect\" ng-disabled=\"!col.CanBuildSelect\" />\r" +
     "\n" +
-    "                    </tr>\r" +
+    "                            </td>\r" +
     "\n" +
-    "                </tbody>\r" +
+    "                        </tr>\r" +
     "\n" +
-    "            </table>\r" +
+    "                    </tbody>\r" +
+    "\n" +
+    "                </table>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </uib-tab>\r" +
     "\n" +
     "        <uib-tab heading=\"Tabelle\" ng-if=\"true\">\r" +
     "\n" +
-    "            <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
+    "            <div style=\"max-height: 400px; overflow-y: auto;\">\r" +
     "\n" +
-    "                <thead>\r" +
+    "                <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover\">\r" +
+    "\n" +
+    "                    <thead>\r" +
     "\n" +
     "                    <tr>\r" +
     "\n" +
@@ -361,15 +417,15 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                    </tr>\r" +
     "\n" +
-    "                </thead>\r" +
+    "                    </thead>\r" +
     "\n" +
-    "                <tbody>\r" +
+    "                    <tbody>\r" +
     "\n" +
     "                    <tr>\r" +
     "\n" +
     "                        <td>Suche aktiv</td>\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.SearchActive\" /></td>\r" +
+    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.SearchActive\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -377,7 +433,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Keine Dropdowns</td>\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.NoSearchSelects\" /></td>\r" +
+    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.NoSearchSelects\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -385,7 +441,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Dropdowns einschränken</td>\r" +
     "\n" +
-    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.ReduceSelects\" /></td>\r" +
+    "                        <td><input type=\"checkbox\" ng-model=\"FilterTable.ReduceSelects\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -393,13 +449,15 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Datensätze pro Seite</td>\r" +
     "\n" +
-    "                        <td><input type=\"number\" ng-model=\"FilterTable.PageSize\" ng-model-options=\"ModelOptions\" /></td>\r" +
+    "                        <td><input type=\"number\" ng-model=\"FilterTable.PageSize\" ng-model-options=\"ModelOptions\"/></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
-    "                </tbody>\r" +
+    "                    </tbody>\r" +
     "\n" +
-    "            </table>\r" +
+    "                </table>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </uib-tab>\r" +
     "\n" +
