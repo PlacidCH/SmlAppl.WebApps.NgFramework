@@ -1307,7 +1307,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                     return "Input";
                 },
                 TrustIt: function(val) {
-                    if ((val || null) !== null && angular.isString(val)) {
+                    if (val !== null && angular.isDefined(val) && angular.isString(val)) {
                         return $sce.trustAsHtml(val);
                     }
                     return val;
