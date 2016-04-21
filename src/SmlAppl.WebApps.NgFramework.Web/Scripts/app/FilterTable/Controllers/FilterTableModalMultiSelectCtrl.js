@@ -1,5 +1,5 @@
 ﻿	angular.module("smlAppl.webApps.framework.filterTable.directives")
-        .controller('FilterTableModalMultiSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", function ($scope, $uibModalInstance, $filter, filterTable, column) {
+        .controller('FilterTableModalMultiSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", "$translate", function ($scope, $uibModalInstance, $filter, filterTable, column, $translate) {
 
         $scope.FilterTable = filterTable;
         $scope.column = angular.copy(column);
@@ -65,7 +65,7 @@
             if (selected.length === 0) {
                 $scope.column.CustomFilter.FnReset();
             } else {
-                $scope.column.CustomFilter.Text = selected.length + " gewählt";
+                $scope.column.CustomFilter.Text = selected.length + " " + filterTable.Translations.FilterTable_0_Selected;
                 $scope.column.CustomFilter.Tooltip = selected.join(', ');
             }
             $uibModalInstance.close($scope.column);

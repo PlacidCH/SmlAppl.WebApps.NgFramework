@@ -29,15 +29,15 @@
 
                 <label ng-class="{'margin-bottom-sm': $first && HasEmpty}">
                     <input type="checkbox" ng-model="column.CustomFilter.Selected[item]"/>
-                    {{item == "" ? "(Kein Wert)" : item}}
+                    {{item == "" ? FilterTable.Translations.FilterTable_Empty_Value : item}}
                 </label>
             </div>
         </div>
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="Reset()">Kein Filter</button>
-    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="Reset()">{{FilterTable.Translations.FilterTable_Reset_Filter}}</button>
+    <button class="btn btn-primary" type="button" ng-click="ok()">{{FilterTable.Translations.FilterTable_Accept}}</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">{{FilterTable.Translations.FilterTable_Cancel}}</button>
 </div>
 

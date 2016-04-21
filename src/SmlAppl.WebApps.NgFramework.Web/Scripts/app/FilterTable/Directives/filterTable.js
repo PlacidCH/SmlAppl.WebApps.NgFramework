@@ -2,7 +2,7 @@
 	"use strict";
 
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
-	    .factory('filterTableConstructor', ["$filter", "$timeout", "$parse", "$sce", function ($filter, $timeout, $parse, $sce) {
+	    .factory('filterTableConstructor', ["$filter", "$timeout", "$parse", "$sce", "$translate", function ($filter, $timeout, $parse, $sce, $translate) {
 	        function HeaderDef(title, calculator, showPageValues) {
                 this.Title = title || "";
                 this._calculator = calculator || null;
@@ -307,6 +307,12 @@
                 get HasCustomFilter() {
                     return this.CustomFilter !== null;
                 },
+                UpdateCustomFilterTexts: function () {
+                    var col = this;
+                    if (col.HasCustomFilter && angular.isDefined(col.CustomFilter.FnUpdateText) && angular.isFunction(col.CustomFilter.FnUpdateText)) {
+                        col.CustomFilter.FnUpdateText.call(col.CustomFilter);
+                    }
+                },
                 get FilterType() {
                     if (this.HasCustomFilter) {
                         if (angular.isDefined(this.CustomFilter.InputHtml)) {
@@ -364,6 +370,7 @@
 
 	        function FilterTable() {
 	            var ft = this;
+
 	            ft._loading = true;
 	            this._error = false;
 	            defineProp(this, 'test1', {
@@ -420,6 +427,84 @@
 	                    this.Pending = true;
 	                },
 	            };
+
+	            this.UpdateTranslations = function(callback) {
+	                var me = this;
+	                var arr = me.Translations.Keys;
+	                $translate(arr).then(function(translations) {
+	                    var i;
+	                    for (i = 0; i < arr.length; i++) {
+	                        var key = arr[i];
+	                        me.Translations[key] = translations[key];
+	                    }
+	                    for (i = 0; i < me.Columns.length; i++) {
+	                        var col = me.Columns[i];
+	                        col.UpdateCustomFilterTexts();
+	                    }
+	                    callback = callback || null;
+                        if (angular.isDefined(callback) && angular.isFunction(callback)) {
+                            callback.call(me);
+                        }
+	                });
+	            };
+
+	            this.InitTranslations = function () {
+	                var me = this;
+	                var keys = me.Translations.Keys;
+                    var defineTranslationFor = function(thisKey) {
+                        Object.defineProperty(me.Translations, thisKey, {
+                            get: function () {
+                                var val = me.Translations.backingfields[thisKey];
+                                if ((val || null) == null) {
+                                    val = me.Translations.fallback[thisKey];
+                                }
+                                return val;
+                            },
+                            set: function (val) {
+                                if (val === thisKey) {
+                                    delete me.Translations.backingfields[thisKey];
+                                } else {
+                                    me.Translations.backingfields[thisKey] = val;
+                                }
+                            }
+                        });
+                    }
+	                for (var i = 0; i < keys.length; i++) {
+	                    var key = keys[i];
+	                    defineTranslationFor(key);
+	                }
+	            };
+	            //Currently not on prototype because that would affect every page, if wanted we can switch it, basically just move above function(s) and this declaration
+	            this.Translations = {
+                    backingfields: {},
+                    fallback: {
+	                    FilterTable_Error_Getting_Data: "Fehler beim Beziehen der Daten.",
+	                    FilterTable_Error_No_Data: "Keine Daten gefunden.",
+	                    FilterTable_Error_Filter_No_Data: "Filter enthält keine Daten.",
+	                    FilterTable_Page: "Seite",
+	                    FilterTable_Of: "von",
+	                    FilterTable_Total: "Total",
+	                    FilterTable_Records: "Datensätze",
+	                    FilterTable_Click_To_Select: "Klicken zum auswählen.",
+	                    FilterTable_0_Selected: "gewählt.",
+	                    FilterTable_Filter: "filtern",
+	                    FilterTable_Empty_Value: "(Kein Wert)",
+	                    FilterTable_Accept: "Übernehmen",
+	                    FilterTable_Cancel: "Abbrechen",
+	                    FilterTable_Reset_Filter: "Filter löschen",
+                    },
+                    get Keys() {
+                        var arr = [];
+                        for (var x in this.fallback) {
+                            if (this.fallback.hasOwnProperty(x)) {
+                                arr.push(x);
+                            }
+                        }
+                        return arr;
+                    }
+	            };
+
+	            ft.InitTranslations();
 	        }
 
 	        FilterTable.prototype = {
@@ -921,10 +1006,10 @@
                             c.BuildSelect = true;
                             //Replace it
                             c.CustomFilter = {
-                                    Text: c.Display + " filtern",
+                                    Text: c.Display + " " + ft.Translations.FilterTable_Filter,
                                     TemplateUrl: "wwwroot/FilterTable/Views/FilterTableMultiSelect.html",
                                     Controller: "FilterTableModalMultiSelectCtrl",
-                                    Tooltip: "Klicken zum auswählen.",
+                                    Tooltip: ft.Translations.FilterTable_Click_To_Select,
                                     Selected: {},
                                     FnFilter: function (item, col) {
                                         if (Object.keys(this.Selected).length === 0) {
@@ -936,9 +1021,20 @@
                                         return angular.isDefined(this.Selected[val]);
                                     },
                                     FnReset: function() {
-                                        this.Tooltip = "Klicken zum auswählen.",
-                                        this.Text = c.Display + " filtern",
+                                        this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
+                                        this.Text = c.Display + " " + ft.Translations.FilterTable_Filter,
                                         this.Selected = {};
+                                    },
+                                    FnUpdateText: function() {
+                                        var selected = Object.keys(this.Selected);
+                                        var l = selected.length;
+                                        if (l > 0) {
+                                            this.Tooltip = selected.join(', ');
+                                            this.Text = l + " " + ft.Translations.FilterTable_0_Selected;
+                                        } else {
+                                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select;
+                                            this.Text = c.Display + " " + ft.Translations.FilterTable_Filter;
+                                        }
                                     }
                             } 
                         }
@@ -1219,42 +1315,14 @@
 
                     $rootScope.$on("$translateChangeEnd", function () {
                         //console.log("$translateChangeEnd");
-                        updateTranslations();
-                        scope.filterTable.Refresh();
+                        scope.filterTable.UpdateTranslations(scope.filterTable.Refresh);
                     });
 
-                    function updateTranslations() {
-                        var arr =[];
-                        for (var x in scope.Translations.fallback) {
-                            if (scope.Translations.fallback.hasOwnProperty(x)) {
-                                arr.push(x);
-                            }
-                        }
-                        $translate(arr).then(function(translations) {
-                            for (var i = 0; i < arr.length; i++) {
-                                var key = arr[i];
-                                var same = (key === translations[key]);
-                                if (same) {
-                                    scope.Translations[key]= scope.Translations.fallback[key];
-                                } else {
-                                    scope.Translations[key]= translations[key];
-                                }
-                            }
-                        });
-                    }
-                    //TODO: move to filtertable (prototype)? (watch for change only once though)
-                    scope.Translations = {
-                        fallback: {
-                            FilterTable_Error_Getting_Data: "Fehler beim Beziehen der Daten.",
-                            FilterTable_Error_No_Data: "Keine Daten gefunden.",
-                            FilterTable_Error_Filter_No_Data: "Filter enthält keine Daten.",
-                            FilterTable_Page: "Seite",
-                            FilterTable_Of: "von",
-                            FilterTable_Total: "Total",
-                            FilterTable_Records: "Datensätze"
-                        }
-                    }
-	                updateTranslations();
+                    Object.defineProperty(scope, "Translations", {
+                        get: function () { return scope.filterTable.Translations; },
+                    });
+                   
+                    scope.filterTable.UpdateTranslations(scope.filterTable.Refresh);
 
 	                scope.animationsEnabled = true;
 
@@ -1267,6 +1335,7 @@
                             , undefined
                             , function (newColDef) {
                                 col.CustomFilter = newColDef.CustomFilter;
+                                col.UpdateCustomFilterTexts();
                                 scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = true;
                             }
                         );
@@ -1275,6 +1344,7 @@
                     scope.resetFilter = function(col, event) {
                         event.preventDefault();
                         col.CustomFilter.FnReset();
+                        col.UpdateCustomFilterTexts();
                         scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = true;
                     }
 
@@ -1289,7 +1359,8 @@
 	                        size: size,
 	                        resolve: {
 	                            filterTable: function () { return scope.filterTable; },
-                                column: column
+	                            column: column,
+                                translations: scope.Translations
 	                        }
 	                    });
 
