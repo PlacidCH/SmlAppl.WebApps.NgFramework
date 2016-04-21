@@ -3,8 +3,12 @@
 
         $scope.FilterTable = filterTable;
         $scope.column = angular.copy(column);
+	    $scope.Search = '';
+	    $scope.ResetSearch = function() {
+	        $scope.Search = '';
+	    }
 
-        function getdistincts(excludeEmpty) {
+	    function getdistincts(excludeEmpty) {
             var distincts = $filter('orderBy')($scope.column.Distincts) || [];
             if (excludeEmpty) {
                 var l = distincts.length;
@@ -16,8 +20,12 @@
                 }
             }
             return distincts;
-        }
-        $scope.Distincts = getdistincts(true);
+	    }
+
+	    $scope.Distincts = $scope.column.Distincts || [];
+        //since we know it will be sorted we can check element at pos 0
+	    $scope.HasEmpty = $scope.Distincts.length > 0 && $scope.Distincts[0] === "";
+	    
 
         $scope.ModelOptions = {
             debounce: {
@@ -32,15 +40,19 @@
         }
 
         $scope.All = function () {
-            for (var i=0; i < $scope.Distincts.length; i++) {
-                var x = $scope.Distincts[i];
-                $scope.column.CustomFilter.Selected[x] = true;
-            }
+            updateFiltered(true);
         }
         $scope.None = function () {
-            $scope.column.CustomFilter.FnReset();
+            updateFiltered(false);
         }
+        function updateFiltered(setTo) {
+            var currents = $filter('filter')($scope.Distincts, $scope.Search);
+            for (var i = 0; i < currents.length; i++) {
+                var x = currents[i];
+                $scope.column.CustomFilter.Selected[x] = setTo;
+            }
 
+        }
         $scope.ok = function () {
             var selected = Object.keys($scope.column.CustomFilter.Selected);
             for (var i = 0; i < selected.length; i++) {

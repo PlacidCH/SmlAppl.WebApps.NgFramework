@@ -71,8 +71,13 @@
                 Calculate: function (column) {
                     if (this.CanCalculate) {
                         var data = column.GetFilterTable().DataFiltered || [];
-                        var dataDisplayed = column.GetFilterTable().DataDisplayed ||[];
-                        return this._calculator.call(this, column, data, dataDisplayed);
+                        var dataDisplayed = column.GetFilterTable().DataDisplayed || [];
+                        try {
+                            return this._calculator.call(this, column, data, dataDisplayed);
+                        } catch (ex) {
+                            console.log(ex);
+                            return undefined;
+                        }
                     }
                     return null;
                 }
@@ -223,12 +228,24 @@
 	                    Reduced: this._distinctsReduced,
 	                };
 	            },
-                GetDistincts: function(reduced) {
-                  if ((reduced || false) === true) {
-                      return this.DistinctsReduced;
-                  }
-                    return this.Distincts;
-                },
+	            GetDistincts: function (reduced, addEmptyIfMissing) {
+	                addEmptyIfMissing = addEmptyIfMissing || false;
+	                var distincts = [];
+	                if ((reduced || false) === true) {
+	                    distincts = this.DistinctsReduced;
+	                } else {
+	                    distincts = this.Distincts;
+	                }
+	                if (addEmptyIfMissing) {
+	                    //since we know it will be sorted we can check element at pos 0
+                        if (distincts.length > 0) {
+                            if (distincts[0] !== "") {
+                                distincts.unshift("");
+                            }
+                        }
+                    }
+	                return distincts;
+	            },
 	            get Distincts() {
 	                return this.DistinctHolder.All;
 	            },
@@ -415,10 +432,13 @@
 	                    var fetchDistincts = function (data) {
 	                        var onData = (data || []).map(function(item) { return item[colDef.Key] });
                             var distincts = {};
-                            var distinctList = [""];
+                            var distinctList = [];
                             for (var i = 0; i < onData.length; i++) {
-                                var entry = (onData[i] || null);
-                                if (entry !== null && angular.isUndefined(distincts[entry])) {
+                                var entry = onData[i];
+                                if (entry == null || angular.isUndefined(entry)) {
+                                    entry = "";
+                                }
+                                if (angular.isUndefined(distincts[entry])) {
                                     distincts[entry] = "";
                                     distinctList.push(entry.toString());
                                 }
@@ -910,7 +930,10 @@
                                         if (Object.keys(this.Selected).length === 0) {
                                             return true;
                                         }
-                                        return angular.isDefined(this.Selected[item[c.Key]]);
+                                        var val = item[c.Key];
+                                        val = (val === null || angular.isUndefined(val)) ? "" : val; //null and undefined -> ""
+                                        val = val.toString(); // TrustedValueHolder --> back to strings 
+                                        return angular.isDefined(this.Selected[val]);
                                     },
                                     FnReset: function() {
                                         this.Tooltip = "Klicken zum auswählen.",
@@ -1244,9 +1267,15 @@
                             , undefined
                             , function (newColDef) {
                                 col.CustomFilter = newColDef.CustomFilter;
-                                scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = false;
+                                scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = true;
                             }
                         );
+                    }
+
+                    scope.resetFilter = function(col, event) {
+                        event.preventDefault();
+                        col.CustomFilter.FnReset();
+                        scope.filterTable.FilterUpdateHandler.ResetHeaderAndFooter = true;
                     }
 
 	                scope.openThis = function (size, templateUrl, controller, column, cancel, ok) {
