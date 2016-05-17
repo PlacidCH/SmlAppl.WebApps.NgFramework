@@ -38,7 +38,7 @@
 					Notify.alertGetError(handledResponse);
 
 					// return new promise which could be handled
-					return $q.reject(handledResponse)
+					return $q.reject(handledResponse);
 				}
 
 				// calls handleError and then shows a save error-notification
@@ -47,8 +47,13 @@
 
 					Notify.alertSaveError(handledResponse);
 
+					if (response && response.statusText && response.data && response.data.ExceptionMessage) {
+						// exception was returned -> write it to console
+						console.log("%c" + response.statusText + " (" + response.data.ExceptionType + "): " + response.data.ExceptionMessage, 'background: black; color: yellow');
+					}
+
 					// return new promise which could be handled
-					return $q.reject(handledResponse)
+					return $q.reject(handledResponse);
 				}
 
 				// transform the successful response, unwrapping the application data from the API response payload.

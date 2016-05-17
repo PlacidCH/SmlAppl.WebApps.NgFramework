@@ -29,7 +29,12 @@
 
 					if (!message) {
 						// no message text, show general error
-						message = "Message_Save_Error";
+						if (response.data && response.data.Validations && response.data.Validations.length > 0) {
+							// validation errors occured
+							message = "View_Validation_Error_Msg";
+						} else {
+							message = "Msg_Save_Error";
+						}
 					}
 
 					alertErrorInternal(message);
@@ -42,7 +47,7 @@
 
 					if (!message) {
 						// no message text, show general error
-						message = "Message_DataGet_Error";
+						message = "Msg_DataGet_Error";
 					}
 
 					alertErrorInternal(message);
