@@ -49,6 +49,71 @@
 
 })();
 
+/* #### File: Scripts/app/Config/Config.js */ 
+angular.module("smlAppl.webApps.framework")
+	.config(function($httpProvider) {
+		$httpProvider.interceptors.push("AuthInterceptor");
+		$httpProvider.interceptors.push("LangInterceptor");
+		$httpProvider.interceptors.push("ClientTokenInterceptor");
+	});
+
+
+/* #### File: Scripts/app/Config/Interceptors/ClientTokenInterceptor.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("ClientTokenInterceptor", [
+			function() {
+
+				// create a unique guid per client. Will be renewed when hitting F5 or opening a second browser-tab.
+				var clientToken = guid();
+
+				this.request = function(config) {
+
+					config.headers = config.headers || {};
+
+					config.headers['Client-Token'] = clientToken;
+
+					return config;
+				};
+
+				// source from: http://stackoverflow.com/a/105074
+				function guid() {
+					function s4() {
+						return Math.floor((1 + Math.random()) * 0x10000)
+							.toString(16)
+							.substring(1);
+					}
+
+					return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+						s4() + '-' + s4() + s4() + s4();
+				}
+			}
+		]);
+})();
+
+/* #### File: Scripts/app/Config/Interceptors/LangInterceptor.js */ 
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("LangInterceptor", [
+			"$q", "$injector",
+			function ($q, $injector) {
+
+				this.request = function (config) {
+
+
+					config.headers = config.headers || {};
+					config.headers["Accept-Language"] = $injector.get("$translate").use();
+
+					return config;
+				};
+			}
+		]);
+})();
+
 /* #### File: Scripts/app/Config/appConfigFw.js */ 
 (function() {
 	'use strict';
