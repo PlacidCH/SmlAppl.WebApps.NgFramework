@@ -50,22 +50,6 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        </tr>\r" +
     "\n" +
-    "                        <tr ng-repeat=\"headerRow in filterTable.HeaderRows\">\r" +
-    "\n" +
-    "                            <th>\r" +
-    "\n" +
-    "                                <span ng-bind-html=\"::headerRow.Title\"></span>\r" +
-    "\n" +
-    "                            </th>\r" +
-    "\n" +
-    "                            <th ng-repeat=\"col in filterTable.VisibleCols\">\r" +
-    "\n" +
-    "                                <span ng-bind-html=\"headerRow.GetValue(col)\"></span>\r" +
-    "\n" +
-    "                            </th>\r" +
-    "\n" +
-    "                        </tr>\r" +
-    "\n" +
     "                        <tr ng-show=\"filterTable.SearchActive\">\r" +
     "\n" +
     "                            <td>\r" +
@@ -119,6 +103,22 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "                            </td>\r" +
     "\n" +
     "                        </tr>\r" +
+    "\n" +
+    "						<tr ng-repeat=\"headerRow in filterTable.HeaderRows\">\r" +
+    "\n" +
+    "							<th>\r" +
+    "\n" +
+    "								<span ng-bind-html=\"::headerRow.Title\"></span>\r" +
+    "\n" +
+    "							</th>\r" +
+    "\n" +
+    "							<th ng-repeat=\"col in filterTable.VisibleCols\">\r" +
+    "\n" +
+    "								<span ng-bind-html=\"headerRow.GetValue(col)\"></span>\r" +
+    "\n" +
+    "							</th>\r" +
+    "\n" +
+    "						</tr>\r" +
     "\n" +
     "                    </thead>\r" +
     "\n" +
