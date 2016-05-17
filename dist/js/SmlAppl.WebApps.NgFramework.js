@@ -49,26 +49,36 @@
 
 })();
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
+/* #### File: Scripts/app/Config/Config.js */ 
+angular.module("smlAppl.webApps.framework")
+	.config(function($httpProvider) {
+		$httpProvider.interceptors.push("AuthInterceptor");
+		$httpProvider.interceptors.push("LangInterceptor");
+	});
 
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
+
+/* #### File: Scripts/app/Config/Interceptors/LangInterceptor.js */ 
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("LangInterceptor", [
+			"$q", "$injector",
+			function ($q, $injector) {
+
+				this.request = function (config) {
 
 
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+					config.headers = config.headers || {};
+					config.headers["Accept-Language"] = $injector.get("$translate").use();
 
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
+					return config;
+				};
+			}
+		]);
 })();
 
-/* #### File: Scripts/app/Config/routes.js */ 
+/* #### File: Scripts/app/Config/Routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -234,6 +244,25 @@
 ////])
 
 //;
+
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
 
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
