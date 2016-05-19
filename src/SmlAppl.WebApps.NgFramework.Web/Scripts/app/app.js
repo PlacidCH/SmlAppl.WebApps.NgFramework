@@ -17,12 +17,13 @@
 		"smlAppl.webApps.framework.filterTable",
 
 		// 3rd Party Modules (in the order of the lib folder names)
-		"ngCookies",
+		"ui.bootstrap", // angular-bootstrap
+		"ngCookies", // angular-cookies
 		"angular-jwt",
-		"ngMessages",
-		"ngSanitize",
-		"pascalprecht.translate",
-		"ui.router",
+		"ngMessages", // angular-messages
+		"ngSanitize", // angular-sanitize
+		"pascalprecht.translate", // angular-translate
+		"ui.router", // angular-ui-router
 		"ngNotify",
 	]);
 
