@@ -18,6 +18,7 @@
 
 		// 3rd Party Modules (in the order of the lib folder names)
 		"ui.bootstrap", // angular-bootstrap
+		"monospaced.elastic", // angular-elastic
 		"ngCookies", // angular-cookies
 		"angular-jwt",
 		"ngMessages", // angular-messages
