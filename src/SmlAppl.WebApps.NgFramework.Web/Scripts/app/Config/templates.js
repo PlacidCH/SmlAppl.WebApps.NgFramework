@@ -1,7 +1,67 @@
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/Login.html',
+  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/login.html',
     "<!-- Paths to Content and bower_components are according to the WebApp-paths, not the paths from the ng-framework -->\r" +
     "\n" +
     "<link href=\"Content/css/login.css\" rel=\"stylesheet\" />\r" +
@@ -98,7 +158,35 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
+  $templateCache.put('wwwroot/Views/msgBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/popupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
     "\n" +
     "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +

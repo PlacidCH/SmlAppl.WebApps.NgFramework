@@ -9351,6 +9351,39 @@ td .checkbox {
   margin-top: 0;
   margin-bottom: 0;
 }
+.filtertable-container {
+  background-color: transparent;
+}
+.filtertable-table {
+  background-color: transparent;
+}
+.filtertable-table-header {
+  background-color: transparent;
+}
+.filtertable-table-body {
+  background-color: transparent;
+}
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(odd) th,
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(odd) td {
+  background-color: #f9f9f9;
+}
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(even) th,
+.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(even) td {
+  background-color: transparent;
+}
+.filtertable-table-footer {
+  background-color: transparent;
+}
+.filtertable-footer {
+  background-color: transparent;
+}
+.filtertable-cell-clickable {
+  cursor: pointer;
+}
+.info-button label:after {
+  padding-left: 10px;
+  float: right;
+}
 html {
   position: relative;
   min-height: 100%;
@@ -9433,6 +9466,31 @@ body {
 }
 .margin-bottom-lg {
   margin-bottom: 40px;
+}
+.modal-dialog-fullscreen {
+  padding-right: 10px;
+}
+.modal-dialog-fullscreen .modal-dialog {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 8px;
+  right: 8px;
+  margin: 0;
+  width: auto;
+}
+.modal-dialog-fullscreen .modal-dialog .modal-content {
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  padding: 10px;
+  margin: 0;
+}
+.modal-dialog-fullscreen .modal-dialog .modal-footer {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
 }
 /*!
  * ui-select
@@ -9689,34 +9747,5 @@ body > .ui-select-bootstrap.open {
 .ui-select-choices-row:hover {
   color: #fff;
   background-color: #3875d7;
-}
-.filtertable-container {
-  background-color: transparent;
-}
-.filtertable-table {
-  background-color: transparent;
-}
-.filtertable-table-header {
-  background-color: transparent;
-}
-.filtertable-table-body {
-  background-color: transparent;
-}
-.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(odd) th,
-.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(odd) td {
-  background-color: #f9f9f9;
-}
-.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(even) th,
-.filtertable > .filtertable-table.table-striped > tbody > tr:nth-child(even) td {
-  background-color: transparent;
-}
-.filtertable-table-footer {
-  background-color: transparent;
-}
-.filtertable-footer {
-  background-color: transparent;
-}
-.filtertable-cell-clickable {
-  cursor: pointer;
 }
 /*# sourceMappingURL=../../dist/css/main.css.map */

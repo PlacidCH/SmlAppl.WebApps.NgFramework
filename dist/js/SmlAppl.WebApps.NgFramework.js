@@ -306,7 +306,67 @@ angular.module("smlAppl.webApps.framework")
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/Login.html',
+  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/login.html',
     "<!-- Paths to Content and bower_components are according to the WebApp-paths, not the paths from the ng-framework -->\r" +
     "\n" +
     "<link href=\"Content/css/login.css\" rel=\"stylesheet\" />\r" +
@@ -403,7 +463,35 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
+  $templateCache.put('wwwroot/Views/msgBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/popupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
     "\n" +
     "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +
@@ -420,13 +508,39 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 }]);
 
 
-/* #### File: Scripts/app/Controllers/LoginCtrl.js */ 
+/* #### File: Scripts/app/Controllers/ClaimsCtrl.js */ 
 (function() {
 	"use strict";
 
 	angular.module("smlAppl.webApps.framework.controllers")
+		.controller("ClaimsCtrl", [
+			"$scope", "Authentication", "Principal",
+			function ($scope, Authentication, Principal) {
+
+				Authentication.claims()
+					.then(function (response) {
+					$scope.claims = response;
+				});
+
+				$scope.roles = Principal.roles();
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/Controllers/LoginCtrl.js */ 
+/*
+ * When data.redirectState is defined on the state, this state will be used to redirect.
+ * Otherwise a redirect to home will take place.
+ */
+
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.controllers")
 		.controller("LoginCtrl", [
-			"$scope", "$state", "Authentication", "$rootScope", function($scope, $state, Authentication, $rootScope) {
+			"$scope", "$state", "Authentication", "$rootScope",
+			function($scope, $state, Authentication, $rootScope) {
 				$scope.loginData = {
 					userName: "",
 					password: ""
@@ -436,8 +550,8 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 
 				$scope.login = function() {
 
-					Authentication.login($scope.loginData).then(function (response) {
-						// login successful
+					Authentication.login($scope.loginData).then(function(response) {
+							// login successful
 
 							if ($rootScope.toState.data && $rootScope.toState.data.redirectState) {
 								// Redirect state is defined -> go to the state defined
@@ -451,6 +565,53 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 							$scope.errMessage = err.error_description;
 						});
 				};
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/Controllers/MsgBoxCtrl.js */ 
+/*
+	The modal provides the params content and data.
+	All relevant data to be displayed can be packed into data.
+
+	Structure:
+		content: 
+			{
+				title: 'My super title', // localization-key possible, will be translated
+				message: 'You are a hero!', // localization-key possible, will be translated
+				showCancelBtn: true
+			},
+
+		data: 
+			{
+				mySuperObject: 
+					{
+						prop1: 'We are superheros.',
+						prop2: 1000
+					}
+			}
+*/
+
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.controllers")
+		.controller("MsgBoxCtrl", [
+			"$scope", "$uibModalInstance", "content", "data",
+			function($scope, $uibModalInstance, content, data) {
+
+				$scope.content = content;
+				$scope.data = data;
+
+				$scope.ok = function() {
+					$uibModalInstance.close($scope.data);
+				};
+
+				$scope.cancel = function() {
+					$uibModalInstance.dismiss('cancel');
+				};
+
 			}
 		]);
 
@@ -496,6 +657,73 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 				}
 			}
 		]);
+})();
+
+/* #### File: Scripts/app/Directives/infoButton.js */ 
+/*
+ * The path of the InfoButtons must be specified with the infoButtonProvider.setViewUri().
+ */
+
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.directives")
+		.directive("infoButton", [
+			"appConfig", "$sce", "HttpHandler", "$http", "MsgBox", "$translate", "infoButton",
+			function (appConfig, $sce, HttpHandler, $http, MsgBox, $translate, infoButton) {
+				return {
+					restrict: "E",
+					scope: {
+						content: "=?"
+					},
+					template: '<button ng-click="show()" class="btn btn-info btn-xs info-button" type="button"><i class="fa fa-question"></i></button>',
+					link: function (scope, element, attrs) {
+
+						var contentFile = attrs["contentFile"];
+						
+						scope.show = function () {
+							if (contentFile) {
+								showInfoFile(contentFile);
+							} else {
+								showInfoContent(scope.content);
+							}
+						}
+
+						function showInfoContent(content) {
+							MsgBox.alert("Info", content, { size: "lg" });
+						}
+
+						function showInfoFile(fileName) {
+							var requestForLang = getInfoHtmlForLang(fileName);
+
+							requestForLang.then(function (response) {
+								return response;
+							}, function (response) {
+								// the file for this lang doesn't exist, take the default
+								var filePath = infoButton.viewUri + "/" + fileName;
+
+								return $http.get(filePath)
+									.then(HttpHandler.handleSuccess, HttpHandler.handleError);
+							})
+								.then(function (response) {
+									// show the msgbox with the content
+									showInfoContent(response);
+								});
+						}
+
+						function getInfoHtmlForLang(fileName) {
+							var currentLang = $translate.use();
+
+							var filePath = infoButton.viewUri + "/" + currentLang + "/" + fileName;
+
+							return $http.get(filePath)
+								.then(HttpHandler.handleSuccess, HttpHandler.handleError);
+						}
+					},
+				};
+			}
+		]);
+
 })();
 
 /* #### File: Scripts/app/Directives/popupDatepicker.js */ 
@@ -2739,6 +2967,93 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 })();
 
+/* #### File: Scripts/app/Services/InfoButton.js */ 
+function InfoButton(viewUri) {
+	this.viewUri = viewUri;
+}
+
+/* #### File: Scripts/app/Services/MsgBox.js */ 
+/*
+ * Size: sm, md, lg and fullscreen
+ */
+
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.service("MsgBox", [
+		"$uibModal", "appConfigFw",
+		function ($uibModal, appConfigFw) {
+			
+			// build settings because of dynamic content
+			function getSettings(title, message, showCancelBtn, options, data) {
+				var size = "";
+
+				if (options) {
+					if (options.size) {
+						size = options.size;
+					}
+				}
+
+				var settings = {
+					animation: true,
+					templateUrl: appConfigFw.uriBaseViews + "msgBox.tpl.html",
+					controller: "MsgBoxCtrl",
+					resolve: {
+						content: function() { return { title: title, message: message, showCancelBtn: showCancelBtn }; },
+						data: function() { return data; }
+					}
+				};
+
+				if (size.toLowerCase() === "fullscreen") {
+					settings.windowClass = "modal-dialog-fullscreen";
+				} else {
+					settings.size = size;
+				}
+
+				return settings;
+			}
+
+
+			this.confirm = function (title, message, options) {
+				var modalInstance = $uibModal.open(getSettings(title, message, true, options));
+				return modalInstance.result;
+			}
+
+			this.alert = function (title, message, options) {
+				var modalInstance = $uibModal.open(getSettings(title, message, false, options));
+				return modalInstance.result;
+			}
+
+			// Input
+
+			this.input = function (title, message, options) {
+				var modalInstance = $uibModal.open(getSettingsForInput(title, message, options, false));
+				return modalInstance.result;
+			}
+
+			this.inputMultiline = function (title, message, options) {
+				var modalInstance = $uibModal.open(getSettingsForInput(title, message, options, true));
+				return modalInstance.result;
+			}
+
+			function getSettingsForInput(title, message, options, isMultiline) {
+				var settings = getSettings(title, message, true, options, { inputText: null });
+
+				if (isMultiline) {
+					settings.templateUrl = appConfigFw.uriBaseViews + "inputBoxMultiline.tpl.html";
+				} else {
+					settings.templateUrl = appConfigFw.uriBaseViews + "inputBox.tpl.html";
+				}
+
+				return settings;
+			}
+		}
+		]);
+
+})();
+
+
 /* #### File: Scripts/app/Services/Notify.js */ 
 (function() {
 	"use strict";
@@ -3141,4 +3456,27 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 				}
 			}
 		]);
+})();
+
+/* #### File: Scripts/app/Services/infoButtonProvider.js */ 
+(function() {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.services")
+		.provider("infoButton", [
+			function() {
+				var viewUri = null;
+
+				this.setViewUri = function(uri) {
+					viewUri = uri;
+				};
+
+				this.$get = [
+					function() {
+						return new InfoButton(viewUri);
+					}
+				];
+			}
+		]);
+
 })();
