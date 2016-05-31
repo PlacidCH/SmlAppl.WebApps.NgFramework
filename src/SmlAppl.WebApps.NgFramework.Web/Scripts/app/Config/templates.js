@@ -1,7 +1,7 @@
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
+  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -14,7 +14,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
     "\n" +
-    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
@@ -31,7 +31,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+  $templateCache.put('wwwroot/Views/inputBoxMultiline.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -44,7 +44,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
     "\n" +
-    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +

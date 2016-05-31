@@ -306,7 +306,7 @@ angular.module("smlAppl.webApps.framework")
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
+  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -319,7 +319,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
     "\n" +
-    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
@@ -336,7 +336,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+  $templateCache.put('wwwroot/Views/inputBoxMultiline.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -349,7 +349,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
     "\n" +
-    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
@@ -744,7 +744,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 						data: "=ngModel",
 						//required: "="
 					},
-					templateUrl: appConfigFw.uriBaseViews + "PopupDatepicker.tpl.html",
+					templateUrl: appConfigFw.uriBaseViews + "popupDatepicker.tpl.html",
 
 					link: function(scope, element, attrs) {
 
@@ -2911,8 +2911,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 	angular.module("smlAppl.webApps.framework.services")
 		.service("HttpHandler", [
-			"$q", "Notify",
-			function ($q, Notify) {
+			"$q", "Notify", "Principal",
+			function ($q, Notify, Principal) {
 
 				var self = this;
 
@@ -2937,7 +2937,12 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 				this.handleGetErrorWithNotify = function (response) {
 					var handledResponse = self.handleError(response);
 
-					Notify.alertGetError(handledResponse);
+					// 401 = Unauthorized
+					if (!(response.status === 401 && !Principal.isAuthenticated())) {
+						// just show the get error when the user is not unauthorized or authenticated
+						// because in this case the user gets redirected to the login-page
+						Notify.alertGetError(handledResponse);
+					}
 
 					// return new promise which could be handled
 					return $q.reject(handledResponse);

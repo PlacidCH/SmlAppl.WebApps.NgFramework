@@ -9,8 +9,8 @@
 
 	angular.module("smlAppl.webApps.framework.services")
 		.service("HttpHandler", [
-			"$q", "Notify",
-			function ($q, Notify) {
+			"$q", "Notify", "Principal",
+			function ($q, Notify, Principal) {
 
 				var self = this;
 
@@ -35,7 +35,12 @@
 				this.handleGetErrorWithNotify = function (response) {
 					var handledResponse = self.handleError(response);
 
-					Notify.alertGetError(handledResponse);
+					// 401 = Unauthorized
+					if (!(response.status === 401 && !Principal.isAuthenticated())) {
+						// just show the get error when the user is not unauthorized or authenticated
+						// because in this case the user gets redirected to the login-page
+						Notify.alertGetError(handledResponse);
+					}
 
 					// return new promise which could be handled
 					return $q.reject(handledResponse);
