@@ -116,26 +116,7 @@ angular.module("smlAppl.webApps.framework")
 		]);
 })();
 
-/* #### File: Scripts/app/Config/appConfigFw.js */ 
-(function() {
-	'use strict';
-
-	angular.module("smlAppl.webApps.framework")
-		.constant("appConfigFw", getAppConfig());
-
-
-	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
-
-			uriFwBaseApi: "apiFw/v01/",
-		}
-	}
-
-})();
-
-/* #### File: Scripts/app/Config/routes.js */ 
+/* #### File: Scripts/app/Config/Routes.js */ 
 //var baseViewPath = "App/Views/";
 //var baseGlobalViewPath = "App/Global/Views/";
 
@@ -302,11 +283,30 @@ angular.module("smlAppl.webApps.framework")
 
 //;
 
+/* #### File: Scripts/app/Config/appConfigFw.js */ 
+(function() {
+	'use strict';
+
+	angular.module("smlAppl.webApps.framework")
+		.constant("appConfigFw", getAppConfig());
+
+
+	function getAppConfig() {
+		return {
+			uriBaseViews: "wwwroot/Views/",
+			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+
+			uriFwBaseApi: "apiFw/v01/",
+		}
+	}
+
+})();
+
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -319,7 +319,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
     "\n" +
-    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "		<textarea class=\"form-control msd-elastic\" ng-model=\"data.inputText\"></textarea>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
@@ -336,37 +336,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/inputBoxMultiline.tpl.html',
-    "<div>\r" +
-    "\n" +
-    "	<div class=\"modal-header\">\r" +
-    "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-body\">\r" +
-    "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
-    "\n" +
-    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-footer\">\r" +
-    "\n" +
-    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
-    "\n" +
-    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n"
-  );
-
-
-  $templateCache.put('wwwroot/Views/login.html',
+  $templateCache.put('wwwroot/Views/Login.html',
     "<!-- Paths to Content and bower_components are according to the WebApp-paths, not the paths from the ng-framework -->\r" +
     "\n" +
     "<link href=\"Content/css/login.css\" rel=\"stylesheet\" />\r" +
@@ -463,6 +433,51 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
+  $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
+    "<div class=\"input-group\">\r" +
+    "\n" +
+    "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +
+    "\n" +
+    "	<span class=\"input-group-btn\">\r" +
+    "\n" +
+    "		<button type=\"button\" class=\"btn btn-default\" ng-click=\"openCal($event)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\r" +
+    "\n" +
+    "	</span>\r" +
+    "\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
   $templateCache.put('wwwroot/Views/msgBox.tpl.html',
     "<div>\r" +
     "\n" +
@@ -488,21 +503,6 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "</div>\r" +
     "\n"
-  );
-
-
-  $templateCache.put('wwwroot/Views/popupDatepicker.tpl.html',
-    "<div class=\"input-group\">\r" +
-    "\n" +
-    "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +
-    "\n" +
-    "	<span class=\"input-group-btn\">\r" +
-    "\n" +
-    "		<button type=\"button\" class=\"btn btn-default\" ng-click=\"openCal($event)\"><i class=\"glyphicon glyphicon-calendar\"></i></button>\r" +
-    "\n" +
-    "	</span>\r" +
-    "\n" +
-    "</div>"
   );
 
 }]);
@@ -3002,7 +3002,7 @@ function InfoButton(viewUri) {
 
 				var settings = {
 					animation: true,
-					templateUrl: appConfigFw.uriBaseViews + "msgBox.tpl.html",
+					templateUrl: appConfigFw.uriBaseViews + "MsgBox.tpl.html",
 					controller: "MsgBoxCtrl",
 					resolve: {
 						content: function() { return { title: title, message: message, showCancelBtn: showCancelBtn }; },
@@ -3046,9 +3046,9 @@ function InfoButton(viewUri) {
 				var settings = getSettings(title, message, true, options, { inputText: null });
 
 				if (isMultiline) {
-					settings.templateUrl = appConfigFw.uriBaseViews + "inputBoxMultiline.tpl.html";
+					settings.templateUrl = appConfigFw.uriBaseViews + "InputBoxMultiline.tpl.html";
 				} else {
-					settings.templateUrl = appConfigFw.uriBaseViews + "inputBox.tpl.html";
+					settings.templateUrl = appConfigFw.uriBaseViews + "InputBox.tpl.html";
 				}
 
 				return settings;

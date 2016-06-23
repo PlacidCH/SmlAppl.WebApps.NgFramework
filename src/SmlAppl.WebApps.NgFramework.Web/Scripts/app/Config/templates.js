@@ -1,7 +1,7 @@
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
+  $templateCache.put('wwwroot/Views/InputBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -31,7 +31,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/inputBoxMultiline.tpl.html',
+  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -44,7 +44,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
     "\n" +
-    "		<textarea msd-elastic class=\"form-control\" ng-model=\"data.inputText\"></textarea>\r" +
+    "		<textarea class=\"form-control msd-elastic\" ng-model=\"data.inputText\"></textarea>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
@@ -61,7 +61,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/login.html',
+  $templateCache.put('wwwroot/Views/Login.html',
     "<!-- Paths to Content and bower_components are according to the WebApp-paths, not the paths from the ng-framework -->\r" +
     "\n" +
     "<link href=\"Content/css/login.css\" rel=\"stylesheet\" />\r" +
@@ -158,7 +158,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/msgBox.tpl.html',
+  $templateCache.put('wwwroot/Views/MsgBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -186,7 +186,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('wwwroot/Views/popupDatepicker.tpl.html',
+  $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
     "\n" +
     "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +

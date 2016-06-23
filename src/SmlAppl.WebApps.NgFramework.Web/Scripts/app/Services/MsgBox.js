@@ -22,7 +22,7 @@
 
 				var settings = {
 					animation: true,
-					templateUrl: appConfigFw.uriBaseViews + "msgBox.tpl.html",
+					templateUrl: appConfigFw.uriBaseViews + "MsgBox.tpl.html",
 					controller: "MsgBoxCtrl",
 					resolve: {
 						content: function() { return { title: title, message: message, showCancelBtn: showCancelBtn }; },
@@ -66,9 +66,9 @@
 				var settings = getSettings(title, message, true, options, { inputText: null });
 
 				if (isMultiline) {
-					settings.templateUrl = appConfigFw.uriBaseViews + "inputBoxMultiline.tpl.html";
+					settings.templateUrl = appConfigFw.uriBaseViews + "InputBoxMultiline.tpl.html";
 				} else {
-					settings.templateUrl = appConfigFw.uriBaseViews + "inputBox.tpl.html";
+					settings.templateUrl = appConfigFw.uriBaseViews + "InputBox.tpl.html";
 				}
 
 				return settings;
