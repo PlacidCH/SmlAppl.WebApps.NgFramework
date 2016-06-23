@@ -306,6 +306,36 @@ angular.module("smlAppl.webApps.framework")
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('wwwroot/Views/InputBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
   $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
     "<div>\r" +
     "\n" +
@@ -433,6 +463,34 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
+  $templateCache.put('wwwroot/Views/MsgBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
   $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
     "\n" +
@@ -445,64 +503,6 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "	</span>\r" +
     "\n" +
     "</div>"
-  );
-
-
-  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
-    "<div>\r" +
-    "\n" +
-    "	<div class=\"modal-header\">\r" +
-    "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-body\">\r" +
-    "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
-    "\n" +
-    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-footer\">\r" +
-    "\n" +
-    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
-    "\n" +
-    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n"
-  );
-
-
-  $templateCache.put('wwwroot/Views/msgBox.tpl.html',
-    "<div>\r" +
-    "\n" +
-    "	<div class=\"modal-header\">\r" +
-    "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-body\">\r" +
-    "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-footer\">\r" +
-    "\n" +
-    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
-    "\n" +
-    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n"
   );
 
 }]);
