@@ -15,7 +15,7 @@
 						data: "=ngModel",
 						//required: "="
 					},
-					templateUrl: appConfigFw.uriBaseViews + "popupDatepicker.tpl.html",
+					templateUrl: appConfigFw.uriBaseViews + "PopupDatepicker.tpl.html",
 
 					link: function(scope, element, attrs) {
 

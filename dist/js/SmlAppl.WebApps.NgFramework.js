@@ -311,13 +311,23 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "	<div class=\"modal-header\">\r" +
     "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "		<h3 translate translate-values=\"content.titleArgs\" class=\"modal-title\">{{ content.title }}</h3>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
     "	<div class=\"modal-body\">\r" +
     "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "		<!-- TODO: This line does not function, but it is required when the message contains HTML content\r" +
+    "\n" +
+    "				   \"ng-if\" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.\r" +
+    "\n" +
+    "		<span translate translate-values=\"content.messageArgs\" ng-bind-html=\"content.message\"></span>\r" +
+    "\n" +
+    "		-->\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs !== null\" translate translate-values=\"content.messageArgs\">{{content.message}}</span>\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs === null\" ng-bind-html=\"content.message | translate\"></span>\r" +
     "\n" +
     "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
     "\n" +
@@ -341,13 +351,23 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "	<div class=\"modal-header\">\r" +
     "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "		<h3 translate translate-values=\"content.titleArgs\" class=\"modal-title\">{{ content.title }}</h3>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
     "	<div class=\"modal-body\">\r" +
     "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "		<!-- TODO: This line does not function, but it is required when the message contains HTML content\r" +
+    "\n" +
+    "				   \"ng-if\" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.\r" +
+    "\n" +
+    "		<span translate translate-values=\"content.messageArgs\" ng-bind-html=\"content.message\"></span>\r" +
+    "\n" +
+    "		-->\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs !== null\" translate translate-values=\"content.messageArgs\">{{content.message}}</span>\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs === null\" ng-bind-html=\"content.message | translate\"></span>\r" +
     "\n" +
     "		<textarea class=\"form-control msd-elastic\" ng-model=\"data.inputText\"></textarea>\r" +
     "\n" +
@@ -468,13 +488,23 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "	<div class=\"modal-header\">\r" +
     "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "		<h3 translate translate-values=\"content.titleArgs\" class=\"modal-title\">{{ content.title }}</h3>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
     "	<div class=\"modal-body\">\r" +
     "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "		<!-- TODO: This line does not function, but it is required when the message contains HTML content\r" +
+    "\n" +
+    "			       \"ng-if\" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.\r" +
+    "\n" +
+    "		<span translate translate-values=\"content.messageArgs\" ng-bind-html=\"content.message\"></span>\r" +
+    "\n" +
+    "		-->\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs !== null\" translate translate-values=\"content.messageArgs\">{{content.message}}</span>\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs === null\" ng-bind-html=\"content.message | translate\"></span>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
@@ -744,7 +774,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 						data: "=ngModel",
 						//required: "="
 					},
-					templateUrl: appConfigFw.uriBaseViews + "popupDatepicker.tpl.html",
+					templateUrl: appConfigFw.uriBaseViews + "PopupDatepicker.tpl.html",
 
 					link: function(scope, element, attrs) {
 
@@ -2994,6 +3024,21 @@ function InfoButton(viewUri) {
 			function getSettings(title, message, showCancelBtn, options, data) {
 				var size = "";
 
+				var tmpTitle = title;
+				var tmpMessage = message;
+				var titleArgs = null;
+				var messageArgs = null;
+
+				if (angular.isObject(title)) {
+					tmpTitle = title.title;
+					titleArgs = title.titleArgs;
+				}
+
+				if (angular.isObject(message)) {
+					tmpMessage = message.message;
+					messageArgs = message.messageArgs;
+				}
+
 				if (options) {
 					if (options.size) {
 						size = options.size;
@@ -3005,7 +3050,7 @@ function InfoButton(viewUri) {
 					templateUrl: appConfigFw.uriBaseViews + "MsgBox.tpl.html",
 					controller: "MsgBoxCtrl",
 					resolve: {
-						content: function() { return { title: title, message: message, showCancelBtn: showCancelBtn }; },
+						content: function () { return { title: tmpTitle, titleArgs: titleArgs, message: tmpMessage, messageArgs: messageArgs, showCancelBtn: showCancelBtn }; },
 						data: function() { return data; }
 					}
 				};
