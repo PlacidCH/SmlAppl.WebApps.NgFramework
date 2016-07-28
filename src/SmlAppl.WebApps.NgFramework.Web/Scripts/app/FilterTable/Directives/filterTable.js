@@ -1109,6 +1109,7 @@
 	                    }
 	                };
 
+	                scope.ParentScope = scope.$parent;
 	                scope.filterTable = new filterTableConstructor.FilterTable();
 
 	                //function mappedField_old(onObject, name, definition) {

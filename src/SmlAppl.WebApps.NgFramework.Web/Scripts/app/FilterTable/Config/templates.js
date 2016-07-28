@@ -126,15 +126,15 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-repeat=\"item in filterTable.DataDisplayed\">\r" +
     "\n" +
-    "                            <td class=\"text-center\" ng-class=\"::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}\" ng-click=\"filterTable.ExecuteClickAction(filterTable.ActionCol, item)\">\r" +
+    "                            <td class=\"text-center\" ng-class=\"::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}\" ng-click=\"filterTable.ActionCol.HasClickAction && filterTable.ExecuteClickAction(filterTable.ActionCol, item)\">\r" +
     "\n" +
-    "                                <span ng-bind-html=\"::item[filterTable.ActionCol.Key]\"></span>\r" +
+    "                                <span ng-bind-html=\"::item[filterTable.ActionCol.Key]\" compile-template compile-scope=\"ParentScope\"></span>\r" +
     "\n" +
     "                            </td>\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"filterTable.ExecuteClickAction(col, item)\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"col.HasClickAction && filterTable.ExecuteClickAction(col, item)\">\r" +
     "\n" +
-    "                                <span ng-bind-html=\"::item[col.Key]\"></span>\r" +
+    "                                <span ng-bind-html=\"::item[col.Key]\" compile-template compile-scope=\"ParentScope\"></span>\r" +
     "\n" +
     "                            </td>\r" +
     "\n" +

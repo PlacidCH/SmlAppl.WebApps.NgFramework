@@ -647,6 +647,36 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 
 })();
 
+/* #### File: Scripts/app/Directives/compileTemplate.js */ 
+/*
+ * Used to compile html fragments bound with html-bind.
+ */
+
+(function () {
+	"use strict";
+
+	angular.module("smlAppl.webApps.framework.directives")
+		.directive('compileTemplate', ["$compile", "$parse", function ($compile, $parse) {
+		    return {
+		        link: function (scope, element, attr) {
+		            var parsed = $parse(attr.ngBindHtml);
+
+		            var boundScope = scope;
+		            if (angular.isDefined(attr.compileScope)) {
+		                boundScope = $parse(attr.compileScope)(scope);
+		            }
+
+		            function getStringValue() { return (parsed(boundScope) || '').toString(); }
+
+		            //Recompile if the template changes
+		            scope.$watch(getStringValue, function () {
+		                $compile(element, null, -9999)(boundScope);  //The -9999 makes it skip directives so that we do not recompile ourselves
+		            });
+		        }
+		    }
+		}]);
+})();
+
 /* #### File: Scripts/app/Directives/displayEmployee.js */ 
 /*
 	Displays the employees name from its id.
@@ -930,15 +960,15 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <tr ng-repeat=\"item in filterTable.DataDisplayed\">\r" +
     "\n" +
-    "                            <td class=\"text-center\" ng-class=\"::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}\" ng-click=\"filterTable.ExecuteClickAction(filterTable.ActionCol, item)\">\r" +
+    "                            <td class=\"text-center\" ng-class=\"::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}\" ng-click=\"filterTable.ActionCol.HasClickAction && filterTable.ExecuteClickAction(filterTable.ActionCol, item)\">\r" +
     "\n" +
-    "                                <span ng-bind-html=\"::item[filterTable.ActionCol.Key]\"></span>\r" +
+    "                                <span ng-bind-html=\"::item[filterTable.ActionCol.Key]\" compile-template compile-scope=\"ParentScope\"></span>\r" +
     "\n" +
     "                            </td>\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"filterTable.ExecuteClickAction(col, item)\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"col.HasClickAction && filterTable.ExecuteClickAction(col, item)\">\r" +
     "\n" +
-    "                                <span ng-bind-html=\"::item[col.Key]\"></span>\r" +
+    "                                <span ng-bind-html=\"::item[col.Key]\" compile-template compile-scope=\"ParentScope\"></span>\r" +
     "\n" +
     "                            </td>\r" +
     "\n" +
@@ -2521,6 +2551,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                    }
 	                };
 
+	                scope.ParentScope = scope.$parent;
 	                scope.filterTable = new filterTableConstructor.FilterTable();
 
 	                //function mappedField_old(onObject, name, definition) {

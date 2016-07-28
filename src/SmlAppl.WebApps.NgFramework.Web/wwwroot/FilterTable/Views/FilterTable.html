@@ -60,11 +60,11 @@
                     </thead>
                     <tbody class="filtertable-table-body" ng-if="filterTable.VisibleCols.length > 0">
                         <tr ng-repeat="item in filterTable.DataDisplayed">
-                            <td class="text-center" ng-class="::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}" ng-click="filterTable.ExecuteClickAction(filterTable.ActionCol, item)">
-                                <span ng-bind-html="::item[filterTable.ActionCol.Key]"></span>
+                            <td class="text-center" ng-class="::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}" ng-click="filterTable.ActionCol.HasClickAction && filterTable.ExecuteClickAction(filterTable.ActionCol, item)">
+                                <span ng-bind-html="::item[filterTable.ActionCol.Key]" compile-template compile-scope="ParentScope"></span>
                             </td>
-                            <td ng-repeat="col in filterTable.VisibleCols" ng-class="::{'filtertable-cell-clickable' : col.HasClickAction}" ng-click="filterTable.ExecuteClickAction(col, item)">
-                                <span ng-bind-html="::item[col.Key]"></span>
+                            <td ng-repeat="col in filterTable.VisibleCols" ng-class="::{'filtertable-cell-clickable' : col.HasClickAction}" ng-click="col.HasClickAction && filterTable.ExecuteClickAction(col, item)">
+                                <span ng-bind-html="::item[col.Key]" compile-template compile-scope="ParentScope"></span>
                             </td>
                         </tr>
                     </tbody>
