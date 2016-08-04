@@ -4,15 +4,14 @@
 	</div>
 	<div class="modal-body">
 		<!-- TODO: This line does not function, but it is required when the message contains HTML content
-				   "ng-if" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.
+			       "ng-if" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.
 		<span translate translate-values="content.messageArgs" ng-bind-html="content.message"></span>
 		-->
 		<span ng-if="content.messageArgs !== null" translate translate-values="content.messageArgs">{{content.message}}</span>
 		<span ng-if="content.messageArgs === null" ng-bind-html="content.message | translate"></span>
-		<textarea class="form-control msd-elastic" ng-model="data.inputText"></textarea>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-primary" type="button" ng-click="ok()">{{ "View_Button_Ok" | translate }}</button>
 		<button class="btn btn-warning" type="button" ng-click="cancel()" ng-if="content.showCancelBtn">{{ "View_Button_Cancel" | translate }}</button>
+		<button class="btn btn-primary" type="button" ng-click="ok()">{{ "View_Button_Ok" | translate }}</button>
 	</div>
 </div>

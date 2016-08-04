@@ -1,18 +1,68 @@
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
+  $templateCache.put('wwwroot/Views/InputBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
     "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
+    "		<h3 translate translate-values=\"content.titleArgs\" class=\"modal-title\">{{ content.title }}</h3>\r" +
     "\n" +
     "	</div>\r" +
     "\n" +
     "	<div class=\"modal-body\">\r" +
     "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
+    "		<!-- TODO: This line does not function, but it is required when the message contains HTML content\r" +
+    "\n" +
+    "				   \"ng-if\" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.\r" +
+    "\n" +
+    "		<span translate translate-values=\"content.messageArgs\" ng-bind-html=\"content.message\"></span>\r" +
+    "\n" +
+    "		-->\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs !== null\" translate translate-values=\"content.messageArgs\">{{content.message}}</span>\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs === null\" ng-bind-html=\"content.message | translate\"></span>\r" +
+    "\n" +
+    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('wwwroot/Views/InputBoxMultiline.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 translate translate-values=\"content.titleArgs\" class=\"modal-title\">{{ content.title }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<!-- TODO: This line does not function, but it is required when the message contains HTML content\r" +
+    "\n" +
+    "				   \"ng-if\" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.\r" +
+    "\n" +
+    "		<span translate translate-values=\"content.messageArgs\" ng-bind-html=\"content.message\"></span>\r" +
+    "\n" +
+    "		-->\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs !== null\" translate translate-values=\"content.messageArgs\">{{content.message}}</span>\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs === null\" ng-bind-html=\"content.message | translate\"></span>\r" +
     "\n" +
     "		<textarea class=\"form-control msd-elastic\" ng-model=\"data.inputText\"></textarea>\r" +
     "\n" +
@@ -96,9 +146,9 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "							<div class=\"form-group\">\r" +
     "\n" +
-    "								<input name=\"userName\" ng-model=\"loginData.userName\" ng-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
+    "								<input name=\"userName\" ng-model=\"loginData.userName\" on-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
     "\n" +
-    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" ng-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
+    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" on-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
     "\n" +
     "							</div>\r" +
     "\n" +
@@ -128,6 +178,44 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
+  $templateCache.put('wwwroot/Views/MsgBox.tpl.html',
+    "<div>\r" +
+    "\n" +
+    "	<div class=\"modal-header\">\r" +
+    "\n" +
+    "		<h3 translate translate-values=\"content.titleArgs\" class=\"modal-title\">{{ content.title }}</h3>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-body\">\r" +
+    "\n" +
+    "		<!-- TODO: This line does not function, but it is required when the message contains HTML content\r" +
+    "\n" +
+    "			       \"ng-if\" is used to handle those cases where angular params are used.  HTML content should not be used in this case until this issue is resolved.\r" +
+    "\n" +
+    "		<span translate translate-values=\"content.messageArgs\" ng-bind-html=\"content.message\"></span>\r" +
+    "\n" +
+    "		-->\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs !== null\" translate translate-values=\"content.messageArgs\">{{content.message}}</span>\r" +
+    "\n" +
+    "		<span ng-if=\"content.messageArgs === null\" ng-bind-html=\"content.message | translate\"></span>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "	<div class=\"modal-footer\">\r" +
+    "\n" +
+    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
+    "\n" +
+    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "	</div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n"
+  );
+
+
   $templateCache.put('wwwroot/Views/PopupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
     "\n" +
@@ -140,64 +228,6 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "	</span>\r" +
     "\n" +
     "</div>"
-  );
-
-
-  $templateCache.put('wwwroot/Views/inputBox.tpl.html',
-    "<div>\r" +
-    "\n" +
-    "	<div class=\"modal-header\">\r" +
-    "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-body\">\r" +
-    "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
-    "\n" +
-    "		<input class=\"form-control\" ng-model=\"data.inputText\" />\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-footer\">\r" +
-    "\n" +
-    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
-    "\n" +
-    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n"
-  );
-
-
-  $templateCache.put('wwwroot/Views/msgBox.tpl.html',
-    "<div>\r" +
-    "\n" +
-    "	<div class=\"modal-header\">\r" +
-    "\n" +
-    "		<h3 class=\"modal-title\">{{ content.title | translate }}</h3>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-body\">\r" +
-    "\n" +
-    "		<span ng-bind-html=\"content.message | translate \"></span>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "	<div class=\"modal-footer\">\r" +
-    "\n" +
-    "		<button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\" ng-if=\"content.showCancelBtn\">{{ \"View_Button_Cancel\" | translate }}</button>\r" +
-    "\n" +
-    "		<button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"View_Button_Ok\" | translate }}</button>\r" +
-    "\n" +
-    "	</div>\r" +
-    "\n" +
-    "</div>\r" +
-    "\n"
   );
 
 }]);

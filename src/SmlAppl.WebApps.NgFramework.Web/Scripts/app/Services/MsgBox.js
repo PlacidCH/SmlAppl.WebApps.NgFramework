@@ -14,6 +14,21 @@
 			function getSettings(title, message, showCancelBtn, options, data) {
 				var size = "";
 
+				var tmpTitle = title;
+				var tmpMessage = message;
+				var titleArgs = null;
+				var messageArgs = null;
+
+				if (angular.isObject(title)) {
+					tmpTitle = title.title;
+					titleArgs = title.titleArgs;
+				}
+
+				if (angular.isObject(message)) {
+					tmpMessage = message.message;
+					messageArgs = message.messageArgs;
+				}
+
 				if (options) {
 					if (options.size) {
 						size = options.size;
@@ -25,7 +40,7 @@
 					templateUrl: appConfigFw.uriBaseViews + "MsgBox.tpl.html",
 					controller: "MsgBoxCtrl",
 					resolve: {
-						content: function() { return { title: title, message: message, showCancelBtn: showCancelBtn }; },
+						content: function () { return { title: tmpTitle, titleArgs: titleArgs, message: tmpMessage, messageArgs: messageArgs, showCancelBtn: showCancelBtn }; },
 						data: function() { return data; }
 					}
 				};

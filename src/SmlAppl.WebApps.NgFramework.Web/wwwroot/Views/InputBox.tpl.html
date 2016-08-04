@@ -9,7 +9,7 @@
 		-->
 		<span ng-if="content.messageArgs !== null" translate translate-values="content.messageArgs">{{content.message}}</span>
 		<span ng-if="content.messageArgs === null" ng-bind-html="content.message | translate"></span>
-		<textarea class="form-control msd-elastic" ng-model="data.inputText"></textarea>
+		<input class="form-control" ng-model="data.inputText" />
 	</div>
 	<div class="modal-footer">
 		<button class="btn btn-primary" type="button" ng-click="ok()">{{ "View_Button_Ok" | translate }}</button>
