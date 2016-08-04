@@ -30,8 +30,8 @@
 								{{ errMessage | translate }}
 							</p>
 							<div class="form-group">
-								<input name="userName" ng-model="loginData.userName" ng-required="true" placeholder="{{ 'Model_Account_Login_Username' | translate }}" class="form-control bigmargin bigInput" autofocus />
-								<input name="password" type="password" ng-model="loginData.password" ng-required="true" placeholder="{{ 'Model_Account_Login_Password'| translate }}" class="form-control bigmargin bigInput" />
+								<input name="userName" ng-model="loginData.userName" on-change="errMessage = ''" ng-required="true" placeholder="{{ 'Model_Account_Login_Username' | translate }}" class="form-control bigmargin bigInput" autofocus />
+								<input name="password" type="password" ng-model="loginData.password" on-change="errMessage = ''" ng-required="true" placeholder="{{ 'Model_Account_Login_Password'| translate }}" class="form-control bigmargin bigInput" />
 							</div>
 
 							<div class="form-group">

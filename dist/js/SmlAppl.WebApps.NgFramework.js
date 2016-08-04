@@ -401,9 +401,9 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "							<div class=\"form-group\">\r" +
     "\n" +
-    "								<input name=\"userName\" ng-model=\"loginData.userName\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
+    "								<input name=\"userName\" ng-model=\"loginData.userName\" ng-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
     "\n" +
-    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
+    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" ng-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
     "\n" +
     "							</div>\r" +
     "\n" +
@@ -3190,7 +3190,7 @@ function InfoButton(viewUri) {
 
 				this.login = function(loginData) {
 
-					var data = "grant_type=password&username=" + loginData.userName + "&password=" + loginData.password;
+					var data = "grant_type=password&username=" + encodeURIComponent(loginData.userName) + "&password=" + encodeURIComponent(loginData.password);
 
 					var deferred = $q.defer();
 
