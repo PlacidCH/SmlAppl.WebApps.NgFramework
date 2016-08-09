@@ -19,6 +19,7 @@
 					//employeeId: null
 				};
 				var _authenticated = false;
+			    var tokenDecoded = null; // for later requests
 
 
 				// service functions
@@ -94,7 +95,11 @@
 					return false;
 				};
 
-				this.authenticate = function(token) {
+                this.isUserOvertaken = function() {
+                    return tokenGetIsUserOvertaken(tokenDecoded);
+                }
+
+			    this.authenticate = function(token) {
 					var tokenDecoded = jwtHelper.decodeToken(token);
 
 					var userName = tokenGetUserName(tokenDecoded);
@@ -110,6 +115,7 @@
 					var identity = {
 						userName: userName,
 						roles: roles,
+                        isUserOvertaken: false
 						//expiration: tokenDecoded.exp,
 						//employeeId: employeeId
 					}
@@ -128,6 +134,7 @@
 						roles: []
 					};
 					_authenticated = false;
+				    tokenDecoded = null;
 
 					$rootScope.$broadcast("onPrincipalChanged");
 				};
@@ -153,15 +160,20 @@
 
 				this.setTokenCookie = function(token) {
 
-					var tokenDecoded = jwtHelper.decodeToken(token);
+					tokenDecoded = jwtHelper.decodeToken(token);
 
 					var userName = tokenGetUserName(tokenDecoded);
 					var employeeId = tokenGetEmployeeId(tokenDecoded);
 
-					$cookies.putObject(cookieTokenName,
-						{ token: token, userName: userName, expiration: tokenDecoded.exp, employeeId: employeeId },
-						{ path: "/", expires: moment.unix(tokenDecoded.exp).format() }
-					);
+				    $cookies.putObject(cookieTokenName,
+				        {
+				            token: token,
+				            userName: userName,
+				            expiration: tokenDecoded.exp,
+				            employeeId: employeeId
+				        },
+				        { path: "/", expires: moment.unix(tokenDecoded.exp).format() }
+				    );
 				};
 
 				this.getTokenCookie = function() {
@@ -169,10 +181,30 @@
 				};
 
 
-				// Helper functions
+			    // Helper functions
 				function tokenGetEmployeeId(tokenDecoded) {
-					return tokenDecoded["http://sml.zhaw.ch/2013/07/identity/claims/employeeid"];
+				    return tokenDecoded["http://sml.zhaw.ch/2013/07/identity/claims/employeeid"];
 				}
+
+				function tokenGetIsUserOvertaken(tokenDecoded) {
+				    if (!tokenDecoded) {
+				        // no token
+				        return false;
+				    }
+
+				    var value = tokenDecoded["http://sml.zhaw.ch/2016/08/identity/claims/isuserovertaken"];
+			        if (!value) {
+			            // until SmlAppl.Framework v00.047
+			            value = tokenDecoded["Overtaken"];
+			        }
+
+			        if (value) {
+			            return value.toLowerCase() === "true";
+			        }
+
+			        // if the claim is not provided it's not overtaken
+			        return false;
+			    }
 
 				function tokenGetUserName(tokenDecoded) {
 					return tokenDecoded["unique_name"];

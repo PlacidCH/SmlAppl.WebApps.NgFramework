@@ -1,0 +1,22 @@
+﻿<div>
+    <div class="modal-header">
+        <h3 class="modal-title">Overtake user {{ data.FullName }} ({{ data.UserName }})</h3>
+    </div>
+    <div class="modal-body">
+
+        <div class="form-group">
+            <label>Your userName</label>
+            <input class="form-control" type="text" ng-model="credentials.userName">
+        </div>
+
+        <div class="form-group">
+            <label>Your password</label>
+            <input class="form-control" type="password" ng-model="credentials.password">
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">{{ "Ui_Ok" | translate }}</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">{{ "Ui_Close" | translate }}</button>
+    </div>
+</div>

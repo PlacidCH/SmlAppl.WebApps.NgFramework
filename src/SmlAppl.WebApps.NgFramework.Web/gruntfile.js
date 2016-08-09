@@ -32,6 +32,7 @@ module.exports = function (grunt) {
 				src: [
 					'Scripts/app/app.js',
 					'Scripts/app/FilterTable/app.js',
+					'Scripts/app/superAdmin/app.js',
 					'Scripts/app/**/*.js'
 				],
 				dest: rootGitFolder + 'dist/js/SmlAppl.WebApps.NgFramework.js',
@@ -51,8 +52,12 @@ module.exports = function (grunt) {
 				dest: 'Scripts/app/Config/templates.js'
 			},
 			'smlAppl.webApps.framework.filterTable': {
-				src: 'wwwroot/FilterTable/Views/**/*.html',
-				dest: 'Scripts/app/FilterTable/Config/templates.js'
+			    src: 'wwwroot/FilterTable/Views/**/*.html',
+			    dest: 'Scripts/app/FilterTable/Config/templates.js'
+			},
+			'smlAppl.webApps.framework.superAdmin': {
+			    src: 'wwwroot/superAdmin/views/**/*.html',
+			    dest: 'Scripts/app/superAdmin/config/templates.js'
 			}
 		},
 
@@ -142,8 +147,12 @@ module.exports = function (grunt) {
 				tasks: ['ngtemplates:smlAppl.webApps.framework']
 			},
 			templatesFilterTable: {
-				files: ['wwwroot/FilterTable/Views/**/*.html'],
-				tasks: ['ngtemplates:smlAppl.webApps.framework.filterTable']
+			    files: ['wwwroot/FilterTable/Views/**/*.html'],
+			    tasks: ['ngtemplates:smlAppl.webApps.framework.filterTable']
+			},
+			templatesSuperAdmin: {
+			    files: ['wwwroot/superAdmin/Views/**/*.html'],
+			    tasks: ['ngtemplates:smlAppl.webApps.framework.superAdmin']
 			},
 			less: {
 				files: ['Content/css/**/*.less'],

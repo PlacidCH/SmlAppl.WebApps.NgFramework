@@ -4,6 +4,7 @@
 
 	angular.module("smlAppl.webApps.framework.controllers", []);
 	angular.module("smlAppl.webApps.framework.directives", []);
+	angular.module("smlAppl.webApps.framework.components", []);
 	angular.module("smlAppl.webApps.framework.filters", []);
 	angular.module("smlAppl.webApps.framework.services", []);
 
@@ -11,11 +12,13 @@
 		// Custom modules 
 		"smlAppl.webApps.framework.controllers",
 		"smlAppl.webApps.framework.directives",
+		"smlAppl.webApps.framework.components",
 		"smlAppl.webApps.framework.filters",
 		"smlAppl.webApps.framework.services",
 
 		// ng-framework Custom modules
 		"smlAppl.webApps.framework.filterTable",
+		"smlAppl.webApps.framework.superAdmin",
 
 		// 3rd Party Modules (in the order of the lib folder names)
 		"ui.bootstrap", // angular-bootstrap
@@ -47,6 +50,24 @@
 		//"smlAppl.webApps.framework.filterTable.filters",
 		//"smlAppl.webApps.framework.filterTable.services",
 		"smlAppl.webApps.framework.filterTable.directives"
+	]);
+
+})();
+
+/* #### File: Scripts/app/superAdmin/app.js */ 
+(function() {
+	"use strict";
+
+    // register superAdmin modules
+	angular.module("smlAppl.webApps.framework.superAdmin.controllers", []);
+	angular.module("smlAppl.webApps.framework.superAdmin.components", []);
+	angular.module("smlAppl.webApps.framework.superAdmin.services", []);
+
+
+	angular.module("smlAppl.webApps.framework.superAdmin", [
+		"smlAppl.webApps.framework.superAdmin.controllers",
+		"smlAppl.webApps.framework.superAdmin.components",
+		"smlAppl.webApps.framework.superAdmin.services"
 	]);
 
 })();
@@ -116,173 +137,6 @@ angular.module("smlAppl.webApps.framework")
 		]);
 })();
 
-/* #### File: Scripts/app/Config/Routes.js */ 
-//var baseViewPath = "App/Views/";
-//var baseGlobalViewPath = "App/Global/Views/";
-
-//angular.module("smlAppl.webApps.framework")
-//	.config([
-//		"$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
-
-//			// For any unmatched url, send to /index
-//			$urlRouterProvider.otherwise("/home");
-
-//			$stateProvider
-//				.state("root", {
-//					abstract: true,
-//					views: {
-//						"navigation": {
-//							templateUrl: "Layout/navigation.html"
-//						},
-//						//"breadcrumb": {
-//						//	template: "<div ncy-breadcrumb></div>"
-//						//},
-//						//"footer": {
-//						//	templateUrl: baseViewPath + "Description/Footer.html"
-//						//},
-//					}
-//				})
-//				.state("home", {
-//					parent: "root",
-//					url: "/home",
-//					views: {
-//						"@": {
-//							templateUrl: "home.html"
-//						},
-//					},
-//					ncyBreadcrumb: {
-//						label: "View_Home_PageTitle"
-//					}
-//				})
-//				//.state("login", {
-//				//	url: "/login",
-//				//	controller: "loginCtrl",
-//				//	templateUrl: appConfig.uriBaseGlobalViews + "Login.html",
-//				//	ncyBreadcrumb: {
-//				//		label: "View_Layout_LogIn"
-//				//	}
-//				//})
-//				//.state("forbidden", {
-//				//	parent: "root",
-//				//	url: "/forbidden",
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: appConfig.uriBaseGlobalViews + "forbidden.html"
-//				//		},
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		label: "View_Forbidden_PageTitle"
-//				//	}
-//				//})
-//				//.state("claims", {
-//				//	parent: "root",
-//				//	url: "/claims",
-//				//	controller: "claimsCtrl",
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: appConfig.uriBaseGlobalViews + "Claims.html"
-//				//		},
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		label: "Claims"
-//				//	}
-//				//})
-//				//.state("moddesc", {
-//				//	parent: "home",
-//				//	url: "/moddesc",
-//				//	data: {
-//				//		roles: [appConfig.rights.read, appConfig.rights.readAll]
-//				//	},
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: baseViewPath + "Description/List.html"
-//				//		},
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		label: "View_ModDesc_PageTitle"
-//				//	}
-//				//})
-//				//.state("moddesc.list", {
-//				//	url: "/list",
-//				//	data: {
-//				//		roles: [appConfig.rights.readAll, appConfig.rights.read]
-//				//	},
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: baseViewPath + "Description/List.html",
-//				//		}
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		skip: true,
-//				//		label: "View_ModDesc_List_PageTitle",
-//				//		//parent: "moddesc"
-//				//	}
-//				//})
-//				//.state("moddesc.create", {
-//				//	url: "/create",
-//				//	data: {
-//				//		roles: [appConfig.rights.create]
-//				//	},
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: baseViewPath + "Description/Create.html",
-//				//		}
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		label: "View_ModDesc_Create_PageTitle",
-//				//		//parent: "moddesc"
-//				//	}
-//				//})
-//				//.state("moddesc.edit", {
-//				//	url: "/edit/{id}",
-//				//	data: {
-//				//		roles: [appConfig.rights.updateAllModDesc, appConfig.rights.updateModDesc]
-//				//	},
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: baseViewPath + "Description/Edit.html",
-//				//		}
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		label: "View_ModDesc_Edit_PageTitle",
-//				//		//parent: "moddesc"
-//				//	}
-//				//})
-
-
-//				//.state("moddesc.literatureTest", {
-//				//	url: "/literatureTest/{id}",
-//				//	data: {
-//				//		roles: [appConfig.rights.updateAllModDesc, appConfig.rights.updateModDesc]
-//				//	},
-//				//	views: {
-//				//		"@": {
-//				//			templateUrl: baseViewPath + "Description/literatureTest.html",
-//				//		}
-//				//	},
-//				//	ncyBreadcrumb: {
-//				//		label: "View_ModDesc_Edit_PageTitle",
-//				//		//parent: "moddesc"
-//				//	}
-//				//});
-//		}
-//	])
-//	//.run([
-//	//	"$rootScope", "$state", "$stateParams", "authorization", "principal",
-//	//	function($rootScope, $state, $stateParams, authorization, principal) {
-//	//		$rootScope.$on("$stateChangeStart", function (event, toState, toStateParams) {
-//	//			// track the state the user wants to go to; authorization service needs this
-//	//			$rootScope.toState = toState;
-//	//			$rootScope.toStateParams = toStateParams;
-//	//			// if the principal is resolved, do an authorization check immediately. otherwise,
-//	//			// it'll be done when the state it resolved.
-//	//			if (principal.isIdentityResolved()) authorization.authorize();
-//	//		});
-//	//	}
-////])
-
-//;
-
 /* #### File: Scripts/app/Config/appConfigFw.js */ 
 (function() {
 	'use strict';
@@ -292,15 +146,79 @@ angular.module("smlAppl.webApps.framework")
 
 
 	function getAppConfig() {
-		return {
-			uriBaseViews: "wwwroot/Views/",
-			uriFilterTableViews: "wwwroot/FilterTable/Views/",
+	    return {
+	        uriBaseViews: "wwwroot/Views/",
+	        uriFilterTableViews: "wwwroot/FilterTable/Views/",
+	        uriSuperAdminViews: "wwwroot/superAdmin/views/",
 
 			uriFwBaseApi: "apiFw/v01/",
 		}
 	}
 
 })();
+
+/* #### File: Scripts/app/Config/routing.js */ 
+var baseViewPath = "App/Views/";
+var baseGlobalViewPath = "App/Global/Views/";
+
+angular.module("smlAppl.webApps.framework")
+	.config([
+		"$stateProvider", "$urlRouterProvider", "appConfigFw",
+        function ($stateProvider, $urlRouterProvider, appConfigFw) {
+
+            var uriSuperAdminViews = appConfigFw.uriSuperAdminViews;
+
+            $stateProvider
+
+                // superAdmin
+                .state("superadmin",
+                {
+                    parent: "root",
+                    //abstract: true,
+                    url: "/superadmin",
+                    data: {
+                        //roles: [appConfig.rights.settings],
+                        "showSidebar": true,
+                    },
+                    views: {
+                        "": {
+                            template: '<div ui-view></div>'
+                            //templateUrl: uriSuperAdminViews + "layout.html"
+                        },
+                        "sidebar@root": {
+                            templateUrl: uriSuperAdminViews + "navigation.html"
+                        },
+                    }
+                })
+                .state("superadmin.user",
+                {
+                    url: "/user",
+                    views: {
+                        "": {
+                            template: '<user-list></user-list>'
+                            //templateUrl: uriSuperAdminViews + "user/list.html",
+                        }
+                    }
+                })
+
+            ;
+        }
+	])
+	//.run([
+	//	"$rootScope", "$state", "$stateParams", "authorization", "principal",
+	//	function($rootScope, $state, $stateParams, authorization, principal) {
+	//		$rootScope.$on("$stateChangeStart", function (event, toState, toStateParams) {
+	//			// track the state the user wants to go to; authorization service needs this
+	//			$rootScope.toState = toState;
+	//			$rootScope.toStateParams = toStateParams;
+	//			// if the principal is resolved, do an authorization check immediately. otherwise,
+	//			// it'll be done when the state it resolved.
+	//			if (principal.isIdentityResolved()) authorization.authorize();
+	//		});
+	//	}
+//])
+
+;
 
 /* #### File: Scripts/app/Config/templates.js */ 
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
@@ -729,8 +647,8 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 
 	angular.module("smlAppl.webApps.framework.directives")
 		.directive("infoButton", [
-			"appConfig", "$sce", "HttpHandler", "$http", "MsgBox", "$translate", "infoButton",
-			function (appConfig, $sce, HttpHandler, $http, MsgBox, $translate, infoButton) {
+			"$sce", "HttpHandler", "$http", "MsgBox", "$translate", "infoButton",
+			function ($sce, HttpHandler, $http, MsgBox, $translate, infoButton) {
 				return {
 					restrict: "E",
 					scope: {
@@ -3377,6 +3295,7 @@ function InfoButton(viewUri) {
 					//employeeId: null
 				};
 				var _authenticated = false;
+			    var tokenDecoded = null; // for later requests
 
 
 				// service functions
@@ -3452,7 +3371,11 @@ function InfoButton(viewUri) {
 					return false;
 				};
 
-				this.authenticate = function(token) {
+                this.isUserOvertaken = function() {
+                    return tokenGetIsUserOvertaken(tokenDecoded);
+                }
+
+			    this.authenticate = function(token) {
 					var tokenDecoded = jwtHelper.decodeToken(token);
 
 					var userName = tokenGetUserName(tokenDecoded);
@@ -3468,6 +3391,7 @@ function InfoButton(viewUri) {
 					var identity = {
 						userName: userName,
 						roles: roles,
+                        isUserOvertaken: false
 						//expiration: tokenDecoded.exp,
 						//employeeId: employeeId
 					}
@@ -3486,6 +3410,7 @@ function InfoButton(viewUri) {
 						roles: []
 					};
 					_authenticated = false;
+				    tokenDecoded = null;
 
 					$rootScope.$broadcast("onPrincipalChanged");
 				};
@@ -3511,15 +3436,20 @@ function InfoButton(viewUri) {
 
 				this.setTokenCookie = function(token) {
 
-					var tokenDecoded = jwtHelper.decodeToken(token);
+					tokenDecoded = jwtHelper.decodeToken(token);
 
 					var userName = tokenGetUserName(tokenDecoded);
 					var employeeId = tokenGetEmployeeId(tokenDecoded);
 
-					$cookies.putObject(cookieTokenName,
-						{ token: token, userName: userName, expiration: tokenDecoded.exp, employeeId: employeeId },
-						{ path: "/", expires: moment.unix(tokenDecoded.exp).format() }
-					);
+				    $cookies.putObject(cookieTokenName,
+				        {
+				            token: token,
+				            userName: userName,
+				            expiration: tokenDecoded.exp,
+				            employeeId: employeeId
+				        },
+				        { path: "/", expires: moment.unix(tokenDecoded.exp).format() }
+				    );
 				};
 
 				this.getTokenCookie = function() {
@@ -3527,10 +3457,30 @@ function InfoButton(viewUri) {
 				};
 
 
-				// Helper functions
+			    // Helper functions
 				function tokenGetEmployeeId(tokenDecoded) {
-					return tokenDecoded["http://sml.zhaw.ch/2013/07/identity/claims/employeeid"];
+				    return tokenDecoded["http://sml.zhaw.ch/2013/07/identity/claims/employeeid"];
 				}
+
+				function tokenGetIsUserOvertaken(tokenDecoded) {
+				    if (!tokenDecoded) {
+				        // no token
+				        return false;
+				    }
+
+				    var value = tokenDecoded["http://sml.zhaw.ch/2016/08/identity/claims/isuserovertaken"];
+			        if (!value) {
+			            // until SmlAppl.Framework v00.047
+			            value = tokenDecoded["Overtaken"];
+			        }
+
+			        if (value) {
+			            return value.toLowerCase() === "true";
+			        }
+
+			        // if the claim is not provided it's not overtaken
+			        return false;
+			    }
 
 				function tokenGetUserName(tokenDecoded) {
 					return tokenDecoded["unique_name"];
@@ -3557,6 +3507,280 @@ function InfoButton(viewUri) {
 						return new InfoButton(viewUri);
 					}
 				];
+			}
+		]);
+
+})();
+
+/* #### File: Scripts/app/superAdmin/Config/templates.js */ 
+angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('wwwroot/superAdmin/views/layout.html',
+    "<div ui-view></div>"
+  );
+
+
+  $templateCache.put('wwwroot/superAdmin/views/navigation.html',
+    "    \r" +
+    "\n" +
+    "<div class=\"panel panel-default\">\r" +
+    "\n" +
+    "    <div class=\"panel-heading\">\r" +
+    "\n" +
+    "        <h4>\r" +
+    "\n" +
+    "            <i class=\"fa fa-cog\"></i> {{ \"Ui_SuperAdmin\" | translate }}\r" +
+    "\n" +
+    "        </h4>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <div class=\"panel-body\">\r" +
+    "\n" +
+    "        <ul class=\"nav nav-pills nav-stacked\">\r" +
+    "\n" +
+    "            \r" +
+    "\n" +
+    "            <li role=\"presentation\">\r" +
+    "\n" +
+    "                <a class=\"list-group-item\" ui-sref=\"superadmin.user\" ui-sref-active=\"active\">\r" +
+    "\n" +
+    "                    <h4 class=\"list-group-item-heading\">{{ \"Ui_SuperAdmin_User\" | translate }}</h4>\r" +
+    "\n" +
+    "                </a>\r" +
+    "\n" +
+    "            </li>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        </ul>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('wwwroot/superAdmin/views/userList/userList.html',
+    "\r" +
+    "\n" +
+    "<filter-table items=\"$ctrl.data\" options=\"$ctrl.TOptions\" initial-empty=\"true\"></filter-table>"
+  );
+
+
+  $templateCache.put('wwwroot/superAdmin/views/userList/userOvertake.html',
+    "<div>\r" +
+    "\n" +
+    "    <div class=\"modal-header\">\r" +
+    "\n" +
+    "        <h3 class=\"modal-title\">Overtake user {{ data.FullName }} ({{ data.UserName }})</h3>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"modal-body\">\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        <div class=\"form-group\">\r" +
+    "\n" +
+    "            <label>Your userName</label>\r" +
+    "\n" +
+    "            <input class=\"form-control\" type=\"text\" ng-model=\"credentials.userName\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        <div class=\"form-group\">\r" +
+    "\n" +
+    "            <label>Your password</label>\r" +
+    "\n" +
+    "            <input class=\"form-control\" type=\"password\" ng-model=\"credentials.password\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"modal-footer\">\r" +
+    "\n" +
+    "        <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"Ui_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "        <button class=\"btn btn-default\" type=\"button\" ng-click=\"cancel()\">{{ \"Ui_Close\" | translate }}</button>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>"
+  );
+
+}]);
+
+
+/* #### File: Scripts/app/superAdmin/components/superAdmin/userList/UserOvertakeCtrl.js */ 
+(function() {
+    "use strict";
+
+    angular.module("smlAppl.webApps.framework.superAdmin.controllers")
+        .controller("UserOvertakeCtrl", [
+			"$scope", "$uibModalInstance", "content", "data", "User", "MsgBox",
+			function ($scope, $uibModalInstance, content, data, User, MsgBox) {
+
+			    $scope.content = content;
+			    $scope.data = data;
+
+			    $scope.credentials = {
+			        userName: null,
+			        password: null
+			    };
+
+
+			    $scope.ok = function () {
+			        // try to overtake the user
+			        User.overtake($scope.credentials.userName, $scope.credentials.password, $scope.data.UserName)
+			            .then(function(response) {
+
+			                    $uibModalInstance.close($scope.data);
+			                    MsgBox.alert('Ui_UserOvertake', 'Msg_UserOvertakeSuccessful');
+			                },
+			                function(response) {
+			                    alert('Unable to overtake. ' + response);
+			                });
+			    };
+
+			    $scope.cancel = function () {
+			        $uibModalInstance.dismiss('cancel');
+			    };
+
+			}
+        ]);
+
+})();
+
+/* #### File: Scripts/app/superAdmin/components/superAdmin/userList/userList.js */ 
+(function() {
+    "use strict";
+
+    var componentPath = "wwwroot/superAdmin/views/userList/";
+
+    angular.module("smlAppl.webApps.framework.superAdmin.components")
+        .component("userList",
+            {
+                templateUrl: componentPath + "userList.html",
+                bindings: {
+                    //data: '=ngModel',
+                    //title: '<'
+                    //fieldType: '@?',
+                    //onUpdate: '&'
+                },
+                controller: [
+                    "$scope", "$element", "$attrs", "User", "$state", "$sce", "$uibModal",
+                    function ($scope, $element, $attrs, User, $state, $sce, $uibModal) {
+                        var ctrl = this;
+
+                        ctrl.data = [];
+
+                        User.get()
+                            .then(function (response) {
+                                ctrl.data = response;
+                            });
+
+                        ctrl.TOptions = {
+                        	CanSelectCols: true,
+                        	NoSearchSelects: false,
+                        	Columns: [
+								{ key: "EditAction", actionCol: true, valueFunction: getTableEditIcon, clickAction: editItem },
+								{ key: "UserName", display: "Label_UserName", select: false, visible: true },
+								{ key: "FullName", display: "Label_FullName", select: false, visible: true },
+
+								// invisible fields
+								{ key: "Id", display: "Id", select: false, visible: false, orderAsc: true },
+                        	],
+                        };
+                        
+                        function getTableEditIcon(item) {
+                        	return $sce.trustAsHtml('<button class="btn btn-default btn-xs" type="button"><i class="fa fa-edit"></i></button>');
+                        };
+
+                        function editItem(item, col) {
+
+                            var moduleInstance = $uibModal.open({
+                                animation: true,
+                                templateUrl: componentPath + "userOvertake.html",
+                                controller: "UserOvertakeCtrl",
+                                size: "sm",
+                                resolve: {
+                                    content: {},
+                                    data: item
+                                }
+                            });
+
+                            moduleInstance.result.then(function() {
+                                    $state.go("home");
+                                });
+
+                        };
+                    }
+                ],
+            }
+        );
+
+})();
+
+/* #### File: Scripts/app/superAdmin/services/User.js */ 
+(function() {
+    "use strict";
+
+    angular.module("smlAppl.webApps.framework.superAdmin.services")
+		.service("User",
+		[
+			"$q", "$http", "appConfig", "HttpHandler", "Principal",
+			function ($q, $http, appConfig, HttpHandler, Principal) {
+
+			    var self = this;
+
+			    var baseUri = appConfig.uriFwBaseApi + "Users/";
+
+			    this.get = function () {
+			        var request = $http.get(baseUri);
+			        return request.then(HttpHandler.handleSuccess, HttpHandler.handleError);
+			    }
+
+			    this.getByUserName = function (userName) {
+			        var request = $http.get(baseUri + "?userName=" + userName);
+			        return request.then(HttpHandler.handleSuccess, HttpHandler.handleError);
+			    }
+
+			    this.overtake = function (userName, password, userNameToOvertake) {
+			        var data = "grant_type=password&username=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(password);
+
+			        var deferred = $q.defer();
+
+			        $http.post("oauth/token",
+			                data,
+			                {
+			                    headers: {
+			                        'Content-Type': "application/x-www-form-urlencoded",
+			                        'OvertakeUser': userNameToOvertake
+			                    }
+			                })
+			            .then(function(response) {
+
+			                    Principal.authenticate(response.data.access_token);
+
+			                    deferred.resolve(response);
+
+			                },
+			                function(response) {
+			                    //self.logOut();
+			                    deferred.reject(response);
+			                });
+
+			        return deferred.promise;
+			    }
 			}
 		]);
 

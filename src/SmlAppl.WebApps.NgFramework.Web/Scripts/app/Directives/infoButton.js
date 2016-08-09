@@ -7,8 +7,8 @@
 
 	angular.module("smlAppl.webApps.framework.directives")
 		.directive("infoButton", [
-			"appConfig", "$sce", "HttpHandler", "$http", "MsgBox", "$translate", "infoButton",
-			function (appConfig, $sce, HttpHandler, $http, MsgBox, $translate, infoButton) {
+			"$sce", "HttpHandler", "$http", "MsgBox", "$translate", "infoButton",
+			function ($sce, HttpHandler, $http, MsgBox, $translate, infoButton) {
 				return {
 					restrict: "E",
 					scope: {
