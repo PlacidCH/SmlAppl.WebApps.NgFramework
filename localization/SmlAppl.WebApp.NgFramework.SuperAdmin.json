@@ -1,0 +1,118 @@
+{
+  "Version": 2,
+  "ResourceManagerClassName": "WebAppResourceManager",
+  "ClassNamespace": "SmlAppl.WebApp.NgFramework.Web.Localization",
+  "UsingNamespaces": [
+    "SmlAppl.WebApps.Framework.Common.Localization"
+  ],
+  "Resources": [
+    {
+      "Key": "Msg_UserOvertakeSuccessful",
+      "Category": "SuperAdmin",
+      "Comment": "Display label",
+      "Values": [
+        {
+          "Key": "de",
+          "Value": "Overtake erfolgreich"
+        },
+        {
+          "Key": "en",
+          "Value": "Overtake successful"
+        }
+      ],
+      "Overrides": "",
+      "Params": [],
+      "Languages": "de, en"
+    },
+    {
+      "Key": "Ui_Close",
+      "Category": "SuperAdmin",
+      "Comment": "Display label",
+      "Values": [
+        {
+          "Key": "de",
+          "Value": "Abbrechen"
+        },
+        {
+          "Key": "en",
+          "Value": "Close"
+        }
+      ],
+      "Overrides": "",
+      "Params": [],
+      "Languages": "de, en"
+    },
+    {
+      "Key": "Ui_Ok",
+      "Category": "SuperAdmin",
+      "Comment": "Display label",
+      "Values": [
+        {
+          "Key": "de",
+          "Value": "Ok"
+        },
+        {
+          "Key": "en",
+          "Value": "Ok"
+        }
+      ],
+      "Overrides": "",
+      "Params": [],
+      "Languages": "de, en"
+    },
+    {
+      "Key": "Ui_SuperAdmin",
+      "Category": "SuperAdmin",
+      "Comment": "Display label",
+      "Values": [
+        {
+          "Key": "de",
+          "Value": "Super Admin"
+        },
+        {
+          "Key": "en",
+          "Value": "Super Admin"
+        }
+      ],
+      "Overrides": "",
+      "Params": [],
+      "Languages": "de, en"
+    },
+    {
+      "Key": "Ui_SuperAdmin_User",
+      "Category": "SuperAdmin",
+      "Comment": "Display label",
+      "Values": [
+        {
+          "Key": "de",
+          "Value": "SuperAdmin User"
+        },
+        {
+          "Key": "en",
+          "Value": "SuperAdmin User"
+        }
+      ],
+      "Overrides": "",
+      "Params": [],
+      "Languages": "de, en"
+    },
+    {
+      "Key": "Ui_UserOvertake",
+      "Category": "SuperAdmin",
+      "Comment": "Display label",
+      "Values": [
+        {
+          "Key": "de",
+          "Value": "Benutzer Overtake"
+        },
+        {
+          "Key": "en",
+          "Value": "User Overtake"
+        }
+      ],
+      "Overrides": "",
+      "Params": [],
+      "Languages": "de, en"
+    }
+  ]
+}

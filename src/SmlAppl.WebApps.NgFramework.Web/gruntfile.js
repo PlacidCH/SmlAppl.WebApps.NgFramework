@@ -123,8 +123,16 @@ module.exports = function (grunt) {
 
 		copy: {
 			bower: {
-				src: 'bower.json',
+				src: "bower.json",
 				dest: rootGitFolder
+			},
+			localization: {
+				files: [{
+					expand: true,
+					cwd: 'Localization',
+					src: ['*.json'],
+					dest: rootGitFolder + 'localization/'
+				}]
 			},
 			//less: {
 			//	files: [{
