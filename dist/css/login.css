@@ -9192,6 +9192,12 @@ td .checkbox {
   margin-top: 0;
   margin-bottom: 0;
 }
+@media print {
+  .panel-group-print-collapse .collapse {
+    overflow-y: visible;
+    display: block;
+  }
+}
 html {
   overflow-y: auto;
 }

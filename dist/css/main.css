@@ -9751,4 +9751,10 @@ body > .ui-select-bootstrap.open {
   color: #fff;
   background-color: #3875d7;
 }
+@media print {
+  .panel-group-print-collapse .collapse {
+    overflow-y: visible;
+    display: block;
+  }
+}
 /*# sourceMappingURL=../../dist/css/main.css.map */

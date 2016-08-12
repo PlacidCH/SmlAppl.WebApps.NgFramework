@@ -1,21 +1,18 @@
 ﻿// @componentsDir must be declard in the WebApp or in loginLocal.less for the compilation in the framework
 
 // This is special for the login screen as this is a fullpage and has some special styles
-
 @import "variables.less";
 
 @import "bootstrap-custom/bootstrap.less";
 @import "@{componentsDir}/Font-Awesome/less/font-awesome.less";
 
-
 // custom
 @import "awesome-bootstrap-checkbox.less";
+@import "print.less";
 
 // variables for login
 @font-size-base:          14px;
 @login-bg-color:          #0164a7;
-
-
 
 html {
 	overflow-y:auto;
@@ -26,55 +23,55 @@ body {
 }
 
 .login {
-    align-self:center;
-    padding: 10px 10px;
+	align-self:center;
+	padding: 10px 10px;
 }
 
 .logo {
-    height: 100px;
+	height: 100px;
 	max-height: 100px;
-    margin: 0 0 20px 0;
+	margin: 0 0 20px 0;
 }
 
 .loginbox {
-    background-color:white;
-    border-radius: 2px;
-    padding: 20px 25px 20px 25px;
+	background-color:white;
+	border-radius: 2px;
+	padding: 20px 25px 20px 25px;
 }
 
 .banner {
-    background-color: @login-bg-color;
-    height: 100px;
+	background-color: @login-bg-color;
+	height: 100px;
 	max-height: 100px;
 	width: 100%;
-    padding: 5px 5px;
+	padding: 5px 5px;
 	border-radius: 7px;
-    margin-top:20px;
+	margin-top:20px;
 }
 
 .fit {
-    display:block;
-    max-height:100%;
-    max-width:100%;
-    margin: auto auto;
+	display:block;
+	max-height:100%;
+	max-width:100%;
+	margin: auto auto;
 }
 
 .appname {
-    text-align:center;
-    margin-top:30px;
-    margin-bottom:25px;
-    font-size:20px;
-    font-weight:bold !important;
+	text-align:center;
+	margin-top:30px;
+	margin-bottom:25px;
+	font-size:20px;
+	font-weight:bold !important;
 }
 
 .bigmargin {
-    margin-top: 15px;
-    margin-bottom: 2px;
+	margin-top: 15px;
+	margin-bottom: 2px;
 }
 
 .btn-login {
-    font-size:16px;
-    background-color: @login-bg-color;
+	font-size:16px;
+	background-color: @login-bg-color;
 }
 
 .field-validation-error {
@@ -82,5 +79,5 @@ body {
 }
 
 input.bigInput {
-    font-size: @font-size-base;
+	font-size: @font-size-base;
 }
