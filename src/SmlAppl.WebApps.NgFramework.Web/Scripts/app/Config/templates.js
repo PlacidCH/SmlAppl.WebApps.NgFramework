@@ -146,9 +146,9 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
     "\n" +
     "							<div class=\"form-group\">\r" +
     "\n" +
-    "								<input name=\"userName\" ng-model=\"loginData.userName\" on-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
+    "								<input name=\"userName\" ng-model=\"loginData.userName\" ng-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Username' | translate }}\" class=\"form-control bigmargin bigInput\" autofocus />\r" +
     "\n" +
-    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" on-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
+    "								<input name=\"password\" type=\"password\" ng-model=\"loginData.password\" ng-change=\"errMessage = ''\" ng-required=\"true\" placeholder=\"{{ 'Model_Account_Login_Password'| translate }}\" class=\"form-control bigmargin bigInput\" />\r" +
     "\n" +
     "							</div>\r" +
     "\n" +
