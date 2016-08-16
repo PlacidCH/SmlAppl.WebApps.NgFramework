@@ -91,6 +91,7 @@ module.exports = function (grunt) {
 
 		// system
 
+        // used sync because of file deletion on target
 		sync: {
 			less: {
 				files: [{
