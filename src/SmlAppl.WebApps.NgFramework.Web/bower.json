@@ -39,8 +39,5 @@
     "wwwroot/lib",
     "test",
     "tests"
-  ],
-  "resolutions": {
-    "angular": "1.5.8"
-  }
+  ]
 }
