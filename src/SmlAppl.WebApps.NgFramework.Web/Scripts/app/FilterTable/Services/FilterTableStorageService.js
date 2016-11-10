@@ -6,7 +6,6 @@
 		    var _self = this;
 
 		    var persistenceObject = {
-		        filterTableKey: null,
 		        filterValue: {},
 		        filterSort: []
 		    };
@@ -40,7 +39,6 @@
 
 		    // Persisting data from table into localstorage
 		    this.persist = function (filterTableKey, tOptions, keys) {
-		        persistenceObject.filterTableKey = filterTableKey;
 		        persistenceObject.filterValue = {};
 
 		        //If keys is not defined than persist all
