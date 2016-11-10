@@ -195,3 +195,12 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+
+#Excluding SmlAppl generated files
+dist
+src/SmlAppl.WebApps.NgFramework.Web/Scripts/app/superAdmin/Config/templates.js
+src/SmlAppl.WebApps.NgFramework.Web/Scripts/app/FilterTable/Config/templates.js
+src/SmlAppl.WebApps.NgFramework.Web/Scripts/app/Config/templates.js
+dist/js/SmlAppl.WebApps.NgFramework.js
+dist/js/SmlAppl.WebApps.NgFramework.min.js
