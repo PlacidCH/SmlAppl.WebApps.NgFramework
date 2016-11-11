@@ -7,7 +7,8 @@
 
 		    var persistenceObject = {
 		        filterValue: {},
-		        filterSort: []
+		        filterSort: [],
+		        expirationDate : null
 		    };
 
 		    // Loading data from localstorage to table
@@ -20,6 +21,11 @@
 		        }
 
 		        filterStorage = JSON.parse(filterStorage);
+
+		        //If the persistenceObject has expired than ignore it
+		        if (filterStorage.expirationDate && filterStorage.expirationDate < new Date().getTime()) {
+		            return;
+		        }
 
 		        //If keys is not defined than load all
 		        if (!keys) {
@@ -38,7 +44,7 @@
 		    };
 
 		    // Persisting data from table into localstorage
-		    this.persist = function (filterTableKey, tOptions, keys) {
+		    this.persist = function (filterTableKey, tOptions, keys, options) {
 		        persistenceObject.filterValue = {};
 
 		        //If keys is not defined than persist all
@@ -61,15 +67,18 @@
 		            }
 		        });
 
+		        //If a specific expirationDate in seconds (e.x. when 60 is given, than this object will expire in 1 minute) is given as option, than use that otherwise take default 1h
+		        persistenceObject.expirationDate = new Date().getTime() + (options && options.expirationDate ? options.expirationDate*1000 : 60 * 60*1000);
+		        
 		        localStorage[filterTableKey] = JSON.stringify(persistenceObject);
 		    };
 
 		    //Watch for changes and persist it automatically
-		    this.autoPersist = function (filterTableKey, tOptions, keys, scope) {
+		    this.autoPersist = function (filterTableKey, tOptions, keys, options, scope) {
 		        scope.$watch(function () {
 		            return tOptions.TableFilter.backingfields;
 		        }, function (newValue) {
-		            _self.persist(filterTableKey, tOptions, keys);
+		            _self.persist(filterTableKey, tOptions, keys, options);
 		        }, true);
 		    }
 

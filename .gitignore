@@ -201,3 +201,4 @@ FakesAssemblies/
 src/SmlAppl.WebApps.NgFramework.Web/Scripts/app/superAdmin/Config/templates.js
 src/SmlAppl.WebApps.NgFramework.Web/Scripts/app/FilterTable/Config/templates.js
 src/SmlAppl.WebApps.NgFramework.Web/Scripts/app/Config/templates.js
+src/SmlAppl.WebApps.NgFramework.Web/project.lock.json

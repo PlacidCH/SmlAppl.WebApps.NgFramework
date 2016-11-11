@@ -2809,9 +2809,9 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		    var _self = this;
 
 		    var persistenceObject = {
-		        filterTableKey: null,
 		        filterValue: {},
-		        filterSort: []
+		        filterSort: [],
+		        expirationDate : null
 		    };
 
 		    // Loading data from localstorage to table
@@ -2824,6 +2824,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		        }
 
 		        filterStorage = JSON.parse(filterStorage);
+
+		        //If the persistenceObject has expired than ignore it
+		        if (filterStorage.expirationDate && filterStorage.expirationDate < new Date().getTime()) {
+		            return;
+		        }
 
 		        //If keys is not defined than load all
 		        if (!keys) {
@@ -2842,8 +2847,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		    };
 
 		    // Persisting data from table into localstorage
-		    this.persist = function (filterTableKey, tOptions, keys) {
-		        persistenceObject.filterTableKey = filterTableKey;
+		    this.persist = function (filterTableKey, tOptions, keys, options) {
 		        persistenceObject.filterValue = {};
 
 		        //If keys is not defined than persist all
@@ -2866,15 +2870,18 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		            }
 		        });
 
+		        //If a specific expirationDate in seconds (e.x. when 60 is given, than this object will expire in 1 minute) is given as option, than use that otherwise take default 1h
+		        persistenceObject.expirationDate = new Date().getTime() + (options && options.expirationDate ? options.expirationDate*1000 : 60 * 60*1000);
+		        
 		        localStorage[filterTableKey] = JSON.stringify(persistenceObject);
 		    };
 
 		    //Watch for changes and persist it automatically
-		    this.autoPersist = function (filterTableKey, tOptions, keys, scope) {
+		    this.autoPersist = function (filterTableKey, tOptions, keys, options, scope) {
 		        scope.$watch(function () {
 		            return tOptions.TableFilter.backingfields;
 		        }, function (newValue) {
-		            _self.persist(filterTableKey, tOptions, keys);
+		            _self.persist(filterTableKey, tOptions, keys, options);
 		        }, true);
 		    }
 
@@ -3618,114 +3625,6 @@ function InfoButton(viewUri) {
 
 })();
 
-/* #### File: Scripts/app/superAdmin/Config/templates.js */ 
-angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', function($templateCache) {
-  'use strict';
-
-  $templateCache.put('wwwroot/superAdmin/views/layout.html',
-    "<div ui-view></div>"
-  );
-
-
-  $templateCache.put('wwwroot/superAdmin/views/navigation.html',
-    "    \r" +
-    "\n" +
-    "<div class=\"panel panel-default\">\r" +
-    "\n" +
-    "    <div class=\"panel-heading\">\r" +
-    "\n" +
-    "        <h4>\r" +
-    "\n" +
-    "            <i class=\"fa fa-cog\"></i> {{ \"Ui_SuperAdmin\" | translate }}\r" +
-    "\n" +
-    "        </h4>\r" +
-    "\n" +
-    "    </div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    <div class=\"panel-body\">\r" +
-    "\n" +
-    "        <ul class=\"nav nav-pills nav-stacked\">\r" +
-    "\n" +
-    "            \r" +
-    "\n" +
-    "            <li role=\"presentation\">\r" +
-    "\n" +
-    "                <a class=\"list-group-item\" ui-sref=\"superadmin.user\" ui-sref-active=\"active\">\r" +
-    "\n" +
-    "                    <h4 class=\"list-group-item-heading\">{{ \"Ui_SuperAdmin_User\" | translate }}</h4>\r" +
-    "\n" +
-    "                </a>\r" +
-    "\n" +
-    "            </li>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "        </ul>\r" +
-    "\n" +
-    "    </div>\r" +
-    "\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('wwwroot/superAdmin/views/userList/userList.html',
-    "\r" +
-    "\n" +
-    "<filter-table items=\"$ctrl.data\" options=\"$ctrl.TOptions\" initial-empty=\"true\"></filter-table>"
-  );
-
-
-  $templateCache.put('wwwroot/superAdmin/views/userList/userOvertake.html',
-    "<div>\r" +
-    "\n" +
-    "    <div class=\"modal-header\">\r" +
-    "\n" +
-    "        <h3 class=\"modal-title\">Overtake user {{ data.FullName }} ({{ data.UserName }})</h3>\r" +
-    "\n" +
-    "    </div>\r" +
-    "\n" +
-    "    <div class=\"modal-body\">\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "        <div class=\"form-group\">\r" +
-    "\n" +
-    "            <label>Your userName</label>\r" +
-    "\n" +
-    "            <input class=\"form-control\" type=\"text\" ng-model=\"credentials.userName\">\r" +
-    "\n" +
-    "        </div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "        <div class=\"form-group\">\r" +
-    "\n" +
-    "            <label>Your password</label>\r" +
-    "\n" +
-    "            <input class=\"form-control\" type=\"password\" ng-model=\"credentials.password\">\r" +
-    "\n" +
-    "        </div>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    </div>\r" +
-    "\n" +
-    "    <div class=\"modal-footer\">\r" +
-    "\n" +
-    "        <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"Ui_Ok\" | translate }}</button>\r" +
-    "\n" +
-    "        <button class=\"btn btn-default\" type=\"button\" ng-click=\"cancel()\">{{ \"Ui_Close\" | translate }}</button>\r" +
-    "\n" +
-    "    </div>\r" +
-    "\n" +
-    "</div>"
-  );
-
-}]);
-
-
 /* #### File: Scripts/app/superAdmin/components/superAdmin/userList/UserOvertakeCtrl.js */ 
 (function() {
     "use strict";
@@ -3835,6 +3734,114 @@ angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', fu
         );
 
 })();
+
+/* #### File: Scripts/app/superAdmin/config/templates.js */ 
+angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('wwwroot/superAdmin/views/layout.html',
+    "<div ui-view></div>"
+  );
+
+
+  $templateCache.put('wwwroot/superAdmin/views/navigation.html',
+    "    \r" +
+    "\n" +
+    "<div class=\"panel panel-default\">\r" +
+    "\n" +
+    "    <div class=\"panel-heading\">\r" +
+    "\n" +
+    "        <h4>\r" +
+    "\n" +
+    "            <i class=\"fa fa-cog\"></i> {{ \"Ui_SuperAdmin\" | translate }}\r" +
+    "\n" +
+    "        </h4>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <div class=\"panel-body\">\r" +
+    "\n" +
+    "        <ul class=\"nav nav-pills nav-stacked\">\r" +
+    "\n" +
+    "            \r" +
+    "\n" +
+    "            <li role=\"presentation\">\r" +
+    "\n" +
+    "                <a class=\"list-group-item\" ui-sref=\"superadmin.user\" ui-sref-active=\"active\">\r" +
+    "\n" +
+    "                    <h4 class=\"list-group-item-heading\">{{ \"Ui_SuperAdmin_User\" | translate }}</h4>\r" +
+    "\n" +
+    "                </a>\r" +
+    "\n" +
+    "            </li>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        </ul>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('wwwroot/superAdmin/views/userList/userList.html',
+    "\r" +
+    "\n" +
+    "<filter-table items=\"$ctrl.data\" options=\"$ctrl.TOptions\" initial-empty=\"true\"></filter-table>"
+  );
+
+
+  $templateCache.put('wwwroot/superAdmin/views/userList/userOvertake.html',
+    "<div>\r" +
+    "\n" +
+    "    <div class=\"modal-header\">\r" +
+    "\n" +
+    "        <h3 class=\"modal-title\">Overtake user {{ data.FullName }} ({{ data.UserName }})</h3>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"modal-body\">\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        <div class=\"form-group\">\r" +
+    "\n" +
+    "            <label>Your userName</label>\r" +
+    "\n" +
+    "            <input class=\"form-control\" type=\"text\" ng-model=\"credentials.userName\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        <div class=\"form-group\">\r" +
+    "\n" +
+    "            <label>Your password</label>\r" +
+    "\n" +
+    "            <input class=\"form-control\" type=\"password\" ng-model=\"credentials.password\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"modal-footer\">\r" +
+    "\n" +
+    "        <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{ \"Ui_Ok\" | translate }}</button>\r" +
+    "\n" +
+    "        <button class=\"btn btn-default\" type=\"button\" ng-click=\"cancel()\">{{ \"Ui_Close\" | translate }}</button>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>"
+  );
+
+}]);
+
 
 /* #### File: Scripts/app/superAdmin/services/User.js */ 
 (function() {
