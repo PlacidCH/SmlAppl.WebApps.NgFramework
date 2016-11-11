@@ -8,7 +8,7 @@
 		    var persistenceObject = {
 		        filterValue: {},
 		        filterSort: [],
-		        expirationDate : null
+		        expireInSeconds: null
 		    };
 
 		    // Loading data from localstorage to table
@@ -23,7 +23,7 @@
 		        filterStorage = JSON.parse(filterStorage);
 
 		        //If the persistenceObject has expired than ignore it
-		        if (filterStorage.expirationDate && filterStorage.expirationDate < new Date().getTime()) {
+		        if (filterStorage.expireInSeconds && filterStorage.expireInSeconds < new Date().getTime()) {
 		            return;
 		        }
 
@@ -67,8 +67,8 @@
 		            }
 		        });
 
-		        //If a specific expirationDate in seconds (e.x. when 60 is given, than this object will expire in 1 minute) is given as option, than use that otherwise take default 1h
-		        persistenceObject.expirationDate = new Date().getTime() + (options && options.expirationDate ? options.expirationDate*1000 : 60 * 60*1000);
+		        //If a specific expireInSeconds (e.x. when 60 is given, than this object will expire in 1 minute) is given as option, than use that otherwise take default 1h
+		        persistenceObject.expireInSeconds = new Date().getTime() + (options && options.expireInSeconds ? options.expireInSeconds * 1000 : 60 * 60 * 1000);
 		        
 		        localStorage[filterTableKey] = JSON.stringify(persistenceObject);
 		    };
