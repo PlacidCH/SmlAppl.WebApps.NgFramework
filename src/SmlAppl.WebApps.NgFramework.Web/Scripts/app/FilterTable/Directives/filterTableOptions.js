@@ -50,5 +50,7 @@
             }
             checkAllButtonStati();
         }
+
+        $scope.disablePageSizeInput = ($scope.FilterTable.PageSize === Number.MAX_VALUE);
     }]);
 })();

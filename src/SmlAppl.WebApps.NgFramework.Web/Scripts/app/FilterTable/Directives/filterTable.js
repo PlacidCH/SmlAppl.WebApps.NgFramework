@@ -1304,6 +1304,7 @@
 	                        FooterRows: { syncIn: true, syncOut: true, value: [], changeFunc: createInfoRows },
 
 	                        Data: { syncIn: true, syncOut: false, value: [], afterChangeFunc: function (newValue) { scope.filterTable.PassedData = newValue; } },
+                            DisablePaging : false
 
 	                    }
 
@@ -1313,6 +1314,10 @@
 	                }
 
 	                initFilterTable();
+	                if (scope.filterTable.DisablePaging == true) {
+
+	                    scope.filterTable.PageSize = Number.MAX_VALUE;
+	                }
 
                     $rootScope.$on("$translateChangeEnd", function () {
                         //console.log("$translateChangeEnd");

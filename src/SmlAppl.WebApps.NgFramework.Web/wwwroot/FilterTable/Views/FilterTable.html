@@ -95,7 +95,7 @@
             </div>
             <div class="row filtertable-footer">
                 <div class="col-md-12" ng-if="!filterTable.Loading && filterTable.HasData">
-                    <div class="pull-right">
+                    <div class="pull-right" ng-if="filterTable.DisablePaging != true">
                         <button class="btn btn-default" style="float: left;" ng-click="filterTable.CurrentPage = 1" ng-disabled="filterTable.BackwardDisabled"><i class="fa fa-fast-backward"></i></button>
                         <button class="btn btn-default" style="float: left;" ng-click="filterTable.CurrentPage = (filterTable.CurrentPage - 1)" ng-disabled="filterTable.BackwardDisabled"><i class="fa fa-step-backward"></i></button>
                         <div style="float: left; text-align: right;">

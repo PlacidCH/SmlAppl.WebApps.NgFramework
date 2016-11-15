@@ -955,7 +955,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                <div class=\"col-md-12\" ng-if=\"!filterTable.Loading && filterTable.HasData\">\r" +
     "\n" +
-    "                    <div class=\"pull-right\">\r" +
+    "                    <div class=\"pull-right\" ng-if=\"filterTable.DisablePaging != true\">\r" +
     "\n" +
     "                        <button class=\"btn btn-default\" style=\"float: left;\" ng-click=\"filterTable.CurrentPage = 1\" ng-disabled=\"filterTable.BackwardDisabled\"><i class=\"fa fa-fast-backward\"></i></button>\r" +
     "\n" +
@@ -1208,7 +1208,9 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                        <td>Datensätze pro Seite</td>\r" +
     "\n" +
-    "                        <td><input type=\"number\" ng-model=\"FilterTable.PageSize\" ng-model-options=\"ModelOptions\"/></td>\r" +
+    "                        <td ng-if=\"!disablePageSizeInput\"><input type=\"number\" ng-model=\"FilterTable.PageSize\" ng-model-options=\"ModelOptions\" /></td>\r" +
+    "\n" +
+    "                        <td ng-if=\"disablePageSizeInput\"><input type=\"number\" ng-disabled=\"disablePageSizeInput\" /></td>\r" +
     "\n" +
     "                    </tr>\r" +
     "\n" +
@@ -2671,6 +2673,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                        FooterRows: { syncIn: true, syncOut: true, value: [], changeFunc: createInfoRows },
 
 	                        Data: { syncIn: true, syncOut: false, value: [], afterChangeFunc: function (newValue) { scope.filterTable.PassedData = newValue; } },
+                            DisablePaging : false
 
 	                    }
 
@@ -2680,6 +2683,10 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                }
 
 	                initFilterTable();
+	                if (scope.filterTable.DisablePaging == true) {
+
+	                    scope.filterTable.PageSize = Number.MAX_VALUE;
+	                }
 
                     $rootScope.$on("$translateChangeEnd", function () {
                         //console.log("$translateChangeEnd");
@@ -2797,6 +2804,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             }
             checkAllButtonStati();
         }
+
+        $scope.disablePageSizeInput = ($scope.FilterTable.PageSize === Number.MAX_VALUE);
     }]);
 })();
 
@@ -2811,7 +2820,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		    var persistenceObject = {
 		        filterValue: {},
 		        filterSort: [],
-		        expirationDate : null
+		        expireInSeconds: null
 		    };
 
 		    // Loading data from localstorage to table
@@ -2826,7 +2835,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		        filterStorage = JSON.parse(filterStorage);
 
 		        //If the persistenceObject has expired than ignore it
-		        if (filterStorage.expirationDate && filterStorage.expirationDate < new Date().getTime()) {
+		        if (filterStorage.expireInSeconds && filterStorage.expireInSeconds < new Date().getTime()) {
 		            return;
 		        }
 
@@ -2870,8 +2879,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 		            }
 		        });
 
-		        //If a specific expirationDate in seconds (e.x. when 60 is given, than this object will expire in 1 minute) is given as option, than use that otherwise take default 1h
-		        persistenceObject.expirationDate = new Date().getTime() + (options && options.expirationDate ? options.expirationDate*1000 : 60 * 60*1000);
+		        //If a specific expireInSeconds (e.x. when 60 is given, than this object will expire in 1 minute) is given as option, than use that otherwise take default 1h
+		        persistenceObject.expireInSeconds = new Date().getTime() + (options && options.expireInSeconds ? options.expireInSeconds * 1000 : 60 * 60 * 1000);
 		        
 		        localStorage[filterTableKey] = JSON.stringify(persistenceObject);
 		    };

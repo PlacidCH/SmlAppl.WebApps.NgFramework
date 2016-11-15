@@ -59,7 +59,8 @@
                     </tr>
                     <tr>
                         <td>Datensätze pro Seite</td>
-                        <td><input type="number" ng-model="FilterTable.PageSize" ng-model-options="ModelOptions"/></td>
+                        <td ng-if="!disablePageSizeInput"><input type="number" ng-model="FilterTable.PageSize" ng-model-options="ModelOptions" /></td>
+                        <td ng-if="disablePageSizeInput"><input type="number" ng-disabled="disablePageSizeInput" /></td>
                     </tr>
                     </tbody>
                 </table>
