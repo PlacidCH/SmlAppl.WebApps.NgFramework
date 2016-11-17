@@ -34,11 +34,21 @@
 
 		        //Going through all saved filterValues and applies it to table if exists
 		        _.each(filterStorage.filterValue, function (value, key) {
-		            if (_.contains(keys, key)) {
-		                tOptions.TableFilter[key] = value;
+
+		            if (_self._keyExists(key, tOptions)) {
+		                var col = _.findWhere(tOptions.Columns, { key: key });
+		                //If its a multiselect
+		                if (col && col.customFilter) {
+		                    
+		                    setTimeout(function () {
+		                        var col = _.findWhere(tOptions.Columns, { _key: key });
+		                        col.CustomFilter.Selected = value;
+		                    });
+		                    		                } else {
+		                    tOptions.TableFilter[key] = value;
+		                }
+
 		            } else {
-		                //Ignoring this key
-		                //console.error("Loading: " + key + " is not a valid table key");
 		            }
 		        });
 		    };
@@ -49,7 +59,7 @@
 
 		        //If keys is not defined than persist all
 		        if (!keys) {
-		            keys = _self._getColumns(tOptions, true);
+		            keys = _self._getColumns(tOptions);
 		        }
 
 		        //Persisting each given key from the table only if the table has the column
@@ -60,8 +70,17 @@
 		            value = (value == undefined ? "" : value);
 
 		            //Persisting the key specified and only the ones that are actually in the table
-		            if (key in tOptions.TableFilter) {
-		                persistenceObject.filterValue[key] = value;
+		            if (_self._keyExists(key, tOptions)) {
+
+		                var col = _.findWhere(tOptions.Columns, { _key: key });
+                        //If its a multiselect
+		                if (col.CustomFilter) {
+		                    persistenceObject.filterValue[key] = col.CustomFilter.Selected;
+		                } else {
+                            //else if its simple input field
+		                    persistenceObject.filterValue[key] = value;
+		                }
+                        
 		            } else {
 		                //Ignoring this column
 		            }
@@ -76,28 +95,39 @@
 		    //Watch for changes and persist it automatically
 		    this.autoPersist = function (filterTableKey, tOptions, keys, options, scope) {
 		        scope.$watch(function () {
-		            return tOptions.TableFilter.backingfields;
-		        }, function (newValue) {
-		            _self.persist(filterTableKey, tOptions, keys, options);
+		            return tOptions;
+		        }, function (tOptionsNew) {
+		            _self.persist(filterTableKey, tOptionsNew, keys, options);
 		        }, true);
 		    }
 
 		    //Returns all available columns
-		    this._getColumns = function (tOptions, fromBacking) {
+		    this._getColumns = function (tOptions) {
 		        var columns = [];
 
-
-		        if (fromBacking) {
-		            _.each(tOptions.TableFilter.backingfields, function (value, key) {
-		                columns.push(key);
-		            });
-		        } else {
-		            _.each(tOptions.Columns, function (column) {
+		        _.each(tOptions.Columns, function (column) {
+		            if (column._key) {
+		                columns.push(column._key);
+		            } else if(column.key){
 		                columns.push(column.key);
-		            });
-		        }
+		            }
+
+		        });
 
 		        return columns;
+		    }
+
+		    this._keyExists = function (key, tOptions) {
+		        var continueSearch = true;
+		        var match = false;
+		        _.each(_self._getColumns(tOptions), function (column) {
+		            if (continueSearch && column == key) {
+		                match = true;
+		                continueSearch = false;
+		            };
+		        });
+                
+		        return match;
 		    }
 		}]);
 })();
