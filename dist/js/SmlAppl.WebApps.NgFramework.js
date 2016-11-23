@@ -2034,7 +2034,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                return this._hasData;
 	            },
 	            get ShowNoDataMsg() {
-	                return !this.Loading && !this.HasData && !this.InitialEmpty;
+	                return !this.Loading && !this.HasData;
 	            },
 	            get ShowDataFilteredOutMsg() {
 	                return !this.Loading && this.HasData && this.DataFiltered.length === 0;
