@@ -52,11 +52,11 @@ module.exports = function (grunt) {
 				dest: './src/Scripts/app/Config/templates.js'
 			},
 			'smlAppl.webApps.framework.filterTable': {
-			    src: './src/FilterTable/Views/**/*.html',
+			    src: './src/Scripts/app/FilterTable/Views/**/*.html',
 			    dest: './src/Scripts/app/FilterTable/Config/templates.js'
 			},
 			'smlAppl.webApps.framework.superAdmin': {
-			    src: './src/superAdmin/views/**/*.html',
+			    src: './src/Scripts/app/superAdmin/views/**/*.html',
 			    dest: './src/Scripts/app/superAdmin/config/templates.js'
 			}
 		},

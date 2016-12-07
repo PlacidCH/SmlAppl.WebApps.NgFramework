@@ -762,7 +762,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
 angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('./src/FilterTable/Views/FilterTable.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterTable.html',
     "<div ng-switch=\"filterTable.Status\" class=\"filtertable-container\">\r" +
     "\n" +
     "    <div class=\"row\">\r" +
@@ -997,7 +997,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   );
 
 
-  $templateCache.put('./src/FilterTable/Views/FilterTableMultiSelect.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterTableMultiSelect.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
     "    <h3 class=\"modal-title\">Filter {{column.Display}}</h3>\r" +
@@ -1087,7 +1087,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   );
 
 
-  $templateCache.put('./src/FilterTable/Views/FilterTableOptions.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterTableOptions.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
     "    <h3 class=\"modal-title\">Einstellungen</h3>\r" +
@@ -1396,7 +1396,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                inIgnoreColumns: "=?ignoreColumns",
 	                inInitialEmpty: "=?initialEmpty"
 	            },
-	            templateUrl: "./src/FilterTable/Views/FilterTable.html",
+	            templateUrl: "./src/Scripts/app/FilterTable/Views/FilterTable.html",
 
 	            link: function (scope, element, attrs) {
 
@@ -1589,7 +1589,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	                scope.animationsEnabled = true;
 
 	                scope.open = function (size) {
-	                    scope.openThis(size, "./src/FilterTable/Views/FilterTableOptions.html", "FilterTableOptionsCtrl");
+	                    scope.openThis(size, "./src/Scripts/app/FilterTable/Views/FilterTableOptions.html", "FilterTableOptionsCtrl");
 	                }
 
                     scope.defineFilter = function(col) {
@@ -2705,7 +2705,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                     //Replace it
                     c.CustomFilter = {
                         Text: c.Display + " " + ft.Translations.FilterTable_Filter,
-                        TemplateUrl: "./src/FilterTable/Views/FilterTableMultiSelect.html",
+                        TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterTableMultiSelect.html",
                         Controller: "FilterTableModalMultiSelectCtrl",
                         Tooltip: ft.Translations.FilterTable_Click_To_Select,
                         Selected: {},
@@ -3746,12 +3746,12 @@ function InfoButton(viewUri) {
 angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('./src/superAdmin/views/layout.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/layout.html',
     "<div ui-view></div>"
   );
 
 
-  $templateCache.put('./src/superAdmin/views/navigation.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/navigation.html',
     "    \r" +
     "\n" +
     "<div class=\"panel panel-default\">\r" +
@@ -3794,14 +3794,14 @@ angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', fu
   );
 
 
-  $templateCache.put('./src/superAdmin/views/userList/userList.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/userList/userList.html',
     "\r" +
     "\n" +
     "<filter-table items=\"$ctrl.data\" options=\"$ctrl.TOptions\" initial-empty=\"true\"></filter-table>"
   );
 
 
-  $templateCache.put('./src/superAdmin/views/userList/userOvertake.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/userList/userOvertake.html',
     "<div>\r" +
     "\n" +
     "    <div class=\"modal-header\">\r" +

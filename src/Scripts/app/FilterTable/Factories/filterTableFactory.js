@@ -1006,7 +1006,7 @@
                     //Replace it
                     c.CustomFilter = {
                         Text: c.Display + " " + ft.Translations.FilterTable_Filter,
-                        TemplateUrl: "./src/FilterTable/Views/FilterTableMultiSelect.html",
+                        TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterTableMultiSelect.html",
                         Controller: "FilterTableModalMultiSelectCtrl",
                         Tooltip: ft.Translations.FilterTable_Click_To_Select,
                         Selected: {},

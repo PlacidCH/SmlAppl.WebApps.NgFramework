@@ -1,12 +1,12 @@
 angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('./src/superAdmin/views/layout.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/layout.html',
     "<div ui-view></div>"
   );
 
 
-  $templateCache.put('./src/superAdmin/views/navigation.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/navigation.html',
     "    \r" +
     "\n" +
     "<div class=\"panel panel-default\">\r" +
@@ -49,14 +49,14 @@ angular.module('smlAppl.webApps.framework.superAdmin').run(['$templateCache', fu
   );
 
 
-  $templateCache.put('./src/superAdmin/views/userList/userList.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/userList/userList.html',
     "\r" +
     "\n" +
     "<filter-table items=\"$ctrl.data\" options=\"$ctrl.TOptions\" initial-empty=\"true\"></filter-table>"
   );
 
 
-  $templateCache.put('./src/superAdmin/views/userList/userOvertake.html',
+  $templateCache.put('./src/Scripts/app/superAdmin/views/userList/userOvertake.html',
     "<div>\r" +
     "\n" +
     "    <div class=\"modal-header\">\r" +

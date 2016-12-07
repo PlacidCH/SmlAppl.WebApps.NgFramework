@@ -1,7 +1,7 @@
 angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('./src/FilterTable/Views/FilterTable.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterTable.html',
     "<div ng-switch=\"filterTable.Status\" class=\"filtertable-container\">\r" +
     "\n" +
     "    <div class=\"row\">\r" +
@@ -236,7 +236,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   );
 
 
-  $templateCache.put('./src/FilterTable/Views/FilterTableMultiSelect.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterTableMultiSelect.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
     "    <h3 class=\"modal-title\">Filter {{column.Display}}</h3>\r" +
@@ -326,7 +326,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   );
 
 
-  $templateCache.put('./src/FilterTable/Views/FilterTableOptions.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterTableOptions.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
     "    <h3 class=\"modal-title\">Einstellungen</h3>\r" +

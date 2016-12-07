@@ -25,7 +25,7 @@
 	                inIgnoreColumns: "=?ignoreColumns",
 	                inInitialEmpty: "=?initialEmpty"
 	            },
-	            templateUrl: "./src/FilterTable/Views/FilterTable.html",
+	            templateUrl: "./src/Scripts/app/FilterTable/Views/FilterTable.html",
 
 	            link: function (scope, element, attrs) {
 
@@ -218,7 +218,7 @@
 	                scope.animationsEnabled = true;
 
 	                scope.open = function (size) {
-	                    scope.openThis(size, "./src/FilterTable/Views/FilterTableOptions.html", "FilterTableOptionsCtrl");
+	                    scope.openThis(size, "./src/Scripts/app/FilterTable/Views/FilterTableOptions.html", "FilterTableOptionsCtrl");
 	                }
 
                     scope.defineFilter = function(col) {
