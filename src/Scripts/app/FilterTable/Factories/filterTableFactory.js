@@ -1037,6 +1037,46 @@
                         }
                     }
                 }
+
+                if (c.CustomFilter === "ConditionalSelect") {
+                    //TODO: localisation
+                    c.CanBuildSelect = true;
+                    c.BuildSelect = true;
+                    //Replace it
+                    c.CustomFilter = {
+                        Text: " ... ",
+                        TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterConditional.html",
+                        Controller: "FilterTableModalConditionalSelectCtrl",
+                        Tooltip: ft.Translations.FilterTable_Click_To_Select,
+                        Selected: {},
+                        FnFilter: function (item, col) {
+                            if (Object.keys(this.Selected).length === 0) {
+                                return true;
+                            }
+                            var val = item[c.Key];
+                            val = (val === null || angular.isUndefined(val)) ? "" : val; //null and undefined -> ""
+                            val = val.toString(); // TrustedValueHolder --> back to strings
+                            return angular.isDefined(this.Selected[val]);
+                        },
+                        FnReset: function() {
+                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
+                                this.Text = " ... " ,
+                                this.Selected = {};
+                        },
+                        FnUpdateText: function() {
+                            var selected = Object.keys(this.Selected);
+                            var l = selected.length;
+                            if (l > 0) {
+                                this.Tooltip = selected.join(', ');
+                                this.Text = " ... "
+                            } else {
+                                this.Tooltip = ft.Translations.FilterTable_Click_To_Select;
+                                this.Text = " ... "
+                            }
+                        }
+                    }
+                }
+
             }
 
             if (angular.isUndefined(c.CustomFilter.FnFilter) || !angular.isFunction(c.CustomFilter.FnFilter)) {
