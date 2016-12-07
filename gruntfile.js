@@ -48,7 +48,7 @@ module.exports = function (grunt) {
 
 		ngtemplates: {
 			'smlAppl.webApps.framework': {
-				src: './src/Views/**/*.html',
+				src: './Views/**/*.html',
 				dest: './src/Scripts/app/Config/templates.js'
 			},
 			'smlAppl.webApps.framework.filterTable': {
@@ -152,7 +152,7 @@ module.exports = function (grunt) {
 				tasks: ['concat', 'uglify']
 			},
 			templates: {
-				files: ['./src/Views/**/*.html'],
+				files: ['./Views/**/*.html'],
 				tasks: ['ngtemplates:smlAppl.webApps.framework']
 			},
 			templatesFilterTable: {

@@ -1,7 +1,7 @@
 angular.module('smlAppl.webApps.framework').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('./src/Views/InputBox.tpl.html',
+  $templateCache.put('./Views/InputBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -41,7 +41,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('./src/Views/InputBoxMultiline.tpl.html',
+  $templateCache.put('./Views/InputBoxMultiline.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -81,7 +81,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('./src/Views/Login.html',
+  $templateCache.put('./Views/Login.html',
     "<!-- Paths to Content and bower_components are according to the WebApp-paths, not the paths from the ng-framework -->\r" +
     "\n" +
     "<link href=\"Content/css/login.css\" rel=\"stylesheet\" />\r" +
@@ -178,7 +178,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('./src/Views/MsgBox.tpl.html',
+  $templateCache.put('./Views/MsgBox.tpl.html',
     "<div>\r" +
     "\n" +
     "	<div class=\"modal-header\">\r" +
@@ -216,7 +216,7 @@ angular.module('smlAppl.webApps.framework').run(['$templateCache', function($tem
   );
 
 
-  $templateCache.put('./src/Views/PopupDatepicker.tpl.html',
+  $templateCache.put('./Views/PopupDatepicker.tpl.html',
     "<div class=\"input-group\">\r" +
     "\n" +
     "	<input type=\"text\" id=\"datepicker\" name=\"datepicker\" class=\"form-control\" uib-datepicker-popup=\"dd.MM.yyyy\" ng-model=\"data\" is-open=\"states.opened\" min-date=\"minDate\" max-date=\"maxDate\" datepicker-options=\"dateOptions\" ng-required=\"required\" close-text=\"Close\" />\r" +
