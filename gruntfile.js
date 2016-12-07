@@ -15,7 +15,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-sync');
 
-	var rootGitFolder = "../../";
+	var rootGitFolder = "./";
 
 	grunt.initConfig({
 
@@ -30,10 +30,10 @@ module.exports = function (grunt) {
 			dist: {
 				// first load the app.js from each module
 				src: [
-					'Scripts/app/app.js',
-					'Scripts/app/FilterTable/app.js',
-					'Scripts/app/superAdmin/app.js',
-					'Scripts/app/**/*.js'
+					'./src/Scripts/app/app.js',
+					'./src/Scripts/app/FilterTable/app.js',
+					'./src/Scripts/app/superAdmin/app.js',
+					'./src/Scripts/app/**/*.js'
 				],
 				dest: rootGitFolder + 'dist/js/SmlAppl.WebApps.NgFramework.js',
 			}
@@ -48,16 +48,16 @@ module.exports = function (grunt) {
 
 		ngtemplates: {
 			'smlAppl.webApps.framework': {
-				src: 'wwwroot/Views/**/*.html',
-				dest: 'Scripts/app/Config/templates.js'
+				src: './src/Views/**/*.html',
+				dest: './src/Scripts/app/Config/templates.js'
 			},
 			'smlAppl.webApps.framework.filterTable': {
-			    src: 'wwwroot/FilterTable/Views/**/*.html',
-			    dest: 'Scripts/app/FilterTable/Config/templates.js'
+			    src: './src/FilterTable/Views/**/*.html',
+			    dest: './src/Scripts/app/FilterTable/Config/templates.js'
 			},
 			'smlAppl.webApps.framework.superAdmin': {
-			    src: 'wwwroot/superAdmin/views/**/*.html',
-			    dest: 'Scripts/app/superAdmin/config/templates.js'
+			    src: './src/superAdmin/views/**/*.html',
+			    dest: './src/Scripts/app/superAdmin/config/templates.js'
 			}
 		},
 
@@ -67,11 +67,11 @@ module.exports = function (grunt) {
 				sourceMap: true
 			},
 			app: {
-				src: 'Content/css/mainLocal.less',
+				src: './src/assets/css/mainLocal.less',
 				dest: rootGitFolder + 'dist/css/main.css'
 			},
 			login: {
-				src: 'Content/css/loginLocal.less',
+				src: './src/assets/css/loginLocal.less',
 				dest: rootGitFolder + 'dist/css/login.css'
 			}
 		},
@@ -96,7 +96,7 @@ module.exports = function (grunt) {
 			less: {
 				files: [{
 					//expand: true,
-					cwd: 'Content/css',
+					cwd: './src/assets/css',
 					//src: ['*.less'],
 					src: ['**', '!mainLocal.less', '!loginLocal.less'],
 					dest: rootGitFolder + 'less/'
@@ -110,7 +110,7 @@ module.exports = function (grunt) {
 			images: {
 				files: [{
 					//expand: true,
-					cwd: 'Content/images',
+					cwd: './src/assets/images',
 					//src: ['*.less'],
 					src: ['**'],
 					dest: rootGitFolder + 'dist/images/'
@@ -138,7 +138,7 @@ module.exports = function (grunt) {
 			//less: {
 			//	files: [{
 			//		expand: true,
-			//		cwd: 'Content/css',
+			//		cwd: './src/assets/css',
 			//		//src: ['*.less'],
 			//		src: ['**', '!mainLocal.less', '!loginLocal.less'],
 			//		dest: rootGitFolder + 'less/'
@@ -148,23 +148,23 @@ module.exports = function (grunt) {
 
 		watch: {
 			scripts: {
-				files: ['Scripts/app/**/*.js'],
+				files: ['./src/Scripts/app/**/*.js'],
 				tasks: ['concat', 'uglify']
 			},
 			templates: {
-				files: ['wwwroot/Views/**/*.html'],
+				files: ['./src/Views/**/*.html'],
 				tasks: ['ngtemplates:smlAppl.webApps.framework']
 			},
 			templatesFilterTable: {
-			    files: ['wwwroot/FilterTable/Views/**/*.html'],
+			    files: ['./src/FilterTable/Views/**/*.html'],
 			    tasks: ['ngtemplates:smlAppl.webApps.framework.filterTable']
 			},
 			templatesSuperAdmin: {
-			    files: ['wwwroot/superAdmin/Views/**/*.html'],
+			    files: ['./src/superAdmin/Views/**/*.html'],
 			    tasks: ['ngtemplates:smlAppl.webApps.framework.superAdmin']
 			},
 			less: {
-				files: ['Content/css/**/*.less'],
+				files: ['./src/assets/css/**/*.less'],
 				tasks: ['less']
 			},
 			bower: {

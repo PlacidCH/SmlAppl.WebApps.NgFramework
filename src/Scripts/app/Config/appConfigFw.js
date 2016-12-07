@@ -7,9 +7,9 @@
 
 	function getAppConfig() {
 	    return {
-	        uriBaseViews: "wwwroot/Views/",
-	        uriFilterTableViews: "wwwroot/FilterTable/Views/",
-	        uriSuperAdminViews: "wwwroot/superAdmin/views/",
+	        uriBaseViews: "./Views/",
+	        uriFilterTableViews: "./FilterTable/Views/",
+	        uriSuperAdminViews: "./superAdmin/views/",
 
 			uriFwBaseApi: "apiFw/v01/",
 		}

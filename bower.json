@@ -36,7 +36,6 @@
     "src/**",
     "node_modules",
     "bower_components",
-    "wwwroot/lib",
     "test",
     "tests"
   ]
