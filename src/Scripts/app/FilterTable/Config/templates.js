@@ -4,31 +4,33 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterConditional.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
-    "    <h3 class=\"modal-title\">Conditional filter {{column.Display}}</h3>\r" +
+    "    <h3 class=\"modal-title\">Conditional filter: {{column.Display}}</h3>\r" +
     "\n" +
     "</div>\r" +
     "\n" +
     "<div class=\"modal-body\">\r" +
     "\n" +
-    "    <div class=\"row\">\r" +
+    "    <div class=\"row\" ng-repeat=\"conditionItem in currentConditionalFilter\">\r" +
     "\n" +
-    "        <div class=\"col-md-12\">\r" +
+    "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "            <div class=\"input-group\">\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "                <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-search\"></i></span>\r" +
+    "            {{conditionItem.condition}}\r" +
     "\n" +
-    "                <input type=\"text\" name=\"Search\" lass=\"form-control\" ng-model=\"Search\" ng-model-options=\"ModelOptions\" />\r" +
+    "        </div>\r" +
     "\n" +
-    "                <div class=\"input-group-btn\">\r" +
+    "        <div class=\"col-md-6\">\r" +
     "\n" +
-    "                    <button class=\"btn btn-default\" ng-click=\"ResetSearch()\"><span class=\"glyphicon glyphicon-remove\"></span></button>\r" +
+    "            {{conditionItem.value}}\r" +
     "\n" +
-    "                    <button class=\"btn btn-default\" ng-click=\"All()\" title=\"Wählen\"><span class=\"glyphicon glyphicon-plus\"></span></button>\r" +
+    "        </div>\r" +
     "\n" +
-    "                    <button class=\"btn btn-default\" ng-click=\"None()\" title=\"Abwählen\"><span class=\"glyphicon glyphicon-minus\"></span></button>\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "                </div>\r" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\">X</button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
@@ -36,37 +38,47 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "    </div>\r" +
     "\n" +
-    "    <div class=\"row\" style=\"display: none;\">\r" +
+    "    <div class=\"row\">\r" +
     "\n" +
-    "        <div class=\"col-md-4 col-md-offset-1\">\r" +
+    "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Wählen</button>\r" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
+    "\n" +
+    "                    <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                    <option value=\">\">></option>\r" +
+    "\n" +
+    "                    <option value=\">=\">>=</option>\r" +
+    "\n" +
+    "                    <option value=\"<\"><</option>\r" +
+    "\n" +
+    "                    <option value=\"<=\"><=</option>\r" +
+    "\n" +
+    "                </select>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-4 col-md-offset-2\">\r" +
+    "        <div class=\"col-md-6\">\r" +
     "\n" +
-    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Abwählen</button>\r" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <input type=\"text\" class=\"form-control\" ng-model=\"conditionalFilterItem.value\">\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "    </div>\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "    <div class=\"row\" style=\"max-height: 400px; overflow-y: auto; margin-top: 20px;\">\r" +
+    "            <div class=\"form-group\">\r" +
     "\n" +
-    "        <div class=\"col-md-12\">\r" +
-    "\n" +
-    "            <div ng-repeat=\"item in Distincts | filter: Search\">\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "                <label ng-class=\"{'margin-bottom-sm': $first && HasEmpty}\">\r" +
-    "\n" +
-    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\"/>\r" +
-    "\n" +
-    "                    {{item == \"\" ? FilterTable.Translations.FilterTable_Empty_Value : item}}\r" +
-    "\n" +
-    "                </label>\r" +
+    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +

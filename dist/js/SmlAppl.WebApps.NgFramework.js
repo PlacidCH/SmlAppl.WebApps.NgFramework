@@ -765,31 +765,33 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
   $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterConditional.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
-    "    <h3 class=\"modal-title\">Conditional filter {{column.Display}}</h3>\r" +
+    "    <h3 class=\"modal-title\">Conditional filter: {{column.Display}}</h3>\r" +
     "\n" +
     "</div>\r" +
     "\n" +
     "<div class=\"modal-body\">\r" +
     "\n" +
-    "    <div class=\"row\">\r" +
+    "    <div class=\"row\" ng-repeat=\"conditionItem in currentConditionalFilter\">\r" +
     "\n" +
-    "        <div class=\"col-md-12\">\r" +
+    "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "            <div class=\"input-group\">\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "                <span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-search\"></i></span>\r" +
+    "            {{conditionItem.condition}}\r" +
     "\n" +
-    "                <input type=\"text\" name=\"Search\" lass=\"form-control\" ng-model=\"Search\" ng-model-options=\"ModelOptions\" />\r" +
+    "        </div>\r" +
     "\n" +
-    "                <div class=\"input-group-btn\">\r" +
+    "        <div class=\"col-md-6\">\r" +
     "\n" +
-    "                    <button class=\"btn btn-default\" ng-click=\"ResetSearch()\"><span class=\"glyphicon glyphicon-remove\"></span></button>\r" +
+    "            {{conditionItem.value}}\r" +
     "\n" +
-    "                    <button class=\"btn btn-default\" ng-click=\"All()\" title=\"Wählen\"><span class=\"glyphicon glyphicon-plus\"></span></button>\r" +
+    "        </div>\r" +
     "\n" +
-    "                    <button class=\"btn btn-default\" ng-click=\"None()\" title=\"Abwählen\"><span class=\"glyphicon glyphicon-minus\"></span></button>\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "                </div>\r" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\">X</button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
@@ -797,37 +799,47 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "    </div>\r" +
     "\n" +
-    "    <div class=\"row\" style=\"display: none;\">\r" +
+    "    <div class=\"row\">\r" +
     "\n" +
-    "        <div class=\"col-md-4 col-md-offset-1\">\r" +
+    "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"All()\">Wählen</button>\r" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
+    "\n" +
+    "                    <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                    <option value=\">\">></option>\r" +
+    "\n" +
+    "                    <option value=\">=\">>=</option>\r" +
+    "\n" +
+    "                    <option value=\"<\"><</option>\r" +
+    "\n" +
+    "                    <option value=\"<=\"><=</option>\r" +
+    "\n" +
+    "                </select>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-4 col-md-offset-2\">\r" +
+    "        <div class=\"col-md-6\">\r" +
     "\n" +
-    "            <button class=\"btn btn-default\" type=\"button\" ng-click=\"None()\">Abwählen</button>\r" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <input type=\"text\" class=\"form-control\" ng-model=\"conditionalFilterItem.value\">\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "    </div>\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "    <div class=\"row\" style=\"max-height: 400px; overflow-y: auto; margin-top: 20px;\">\r" +
+    "            <div class=\"form-group\">\r" +
     "\n" +
-    "        <div class=\"col-md-12\">\r" +
-    "\n" +
-    "            <div ng-repeat=\"item in Distincts | filter: Search\">\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "                <label ng-class=\"{'margin-bottom-sm': $first && HasEmpty}\">\r" +
-    "\n" +
-    "                    <input type=\"checkbox\" ng-model=\"column.CustomFilter.Selected[item]\"/>\r" +
-    "\n" +
-    "                    {{item == \"\" ? FilterTable.Translations.FilterTable_Empty_Value : item}}\r" +
-    "\n" +
-    "                </label>\r" +
+    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
@@ -1335,81 +1347,89 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
 /* #### File: ./src/Scripts/app/FilterTable/Controllers/FilterTableModaConditionalSelectCtrl.js */ 
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
-        .controller('FilterTableModalMultiSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", "$translate", function ($scope, $uibModalInstance, $filter, filterTable, column, $translate) {
+        .controller('FilterTableModalConditionalSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", "$translate", function ($scope, $uibModalInstance, $filter, filterTable, column, $translate) {
 
-        $scope.FilterTable = filterTable;
-        $scope.column = angular.copy(column);
-	    $scope.Search = '';
-	    $scope.ResetSearch = function() {
-	        $scope.Search = '';
-	    }
+            $scope.conditionalFilterItem = {
+                condition: null,
+                value: null
+            };
 
-	    function getdistincts(excludeEmpty) {
-            var distincts = $filter('orderBy')($scope.column.Distincts) || [];
-            if (excludeEmpty) {
-                var l = distincts.length;
-                for (var i = l; i > 0; i--) {
-                    var val = distincts[i-1];
-                    if (val === null || val === undefined || val.trim() === "") {
-                        distincts.splice(i-1, 1);
+            $scope.FilterTable = filterTable;
+            $scope.column = angular.copy(column);
+
+            console.log("Selected",$scope.column.CustomFilter.Selected);
+            $scope.currentConditionalFilter = $scope.column.CustomFilter.Selected;
+            $scope.Search = '';
+            $scope.ResetSearch = function() {
+                $scope.Search = '';
+            }
+                /**
+                 * [
+                 {condition: '<=', value: 100}
+
+                 ]
+                 * @type {Array}
+                 */
+
+
+            $scope.ModelOptions = {
+                debounce: {
+                    default: 500,
+                    blur: 0
+                }
+            };
+
+            $scope.addCondition = function(){
+                $scope.currentConditionalFilter.push(angular.copy($scope.conditionalFilterItem));
+                $scope.conditionalFilterItem = {
+                    condition: null,
+                    value: null
+                }
+            }
+
+            $scope.removeCondition = function(conditionItem){
+                var sortedConditionalFilter = [];
+                angular.forEach($scope.currentConditionalFilter, function(item){
+                    if(conditionItem !== item){
+                        sortedConditionalFilter.push(item);
+                    }
+                });
+
+                $scope.currentConditionalFilter = angular.copy(sortedConditionalFilter);
+            }
+
+            $scope.Reset = function() {
+                $scope.column.CustomFilter.FnReset();
+                $uibModalInstance.close($scope.column);
+            }
+
+            $scope.ok = function () {
+                $scope.column.CustomFilter.Selected = $scope.currentConditionalFilter;
+                /*
+                var selected = Object.keys($scope.column.CustomFilter.Selected);
+
+                for (var i = 0; i < selected.length; i++) {
+                    var key = selected[i];
+                    if (!$scope.column.CustomFilter.Selected[key]) {
+                        delete $scope.column.CustomFilter.Selected[key];
                     }
                 }
-            }
-            return distincts;
-	    }
 
-	    $scope.Distincts = $scope.column.Distincts || [];
-        //since we know it will be sorted we can check element at pos 0
-	    $scope.HasEmpty = $scope.Distincts.length > 0 && $scope.Distincts[0] === "";
-	    
+                //The selected items in the modal
+                selected = Object.keys($scope.column.CustomFilter.Selected);
+                if (selected.length === 0) {
+                    $scope.column.CustomFilter.FnReset();
+                } else {
+                    $scope.column.CustomFilter.Text = selected.length + " " + filterTable.Translations.FilterTable_0_Selected;
+                    $scope.column.CustomFilter.Tooltip = selected.join(', ');
+                }*/
 
-        $scope.ModelOptions = {
-            debounce: {
-                default: 500,
-                blur: 0
-            }
-        };
+                $uibModalInstance.close($scope.column);
+            };
 
-        $scope.Reset = function() {
-            $scope.column.CustomFilter.FnReset();
-            $uibModalInstance.close($scope.column);
-        }
-
-        $scope.All = function () {
-            updateFiltered(true);
-        }
-        $scope.None = function () {
-            updateFiltered(false);
-        }
-        function updateFiltered(setTo) {
-            var currents = $filter('filter')($scope.Distincts, $scope.Search);
-            for (var i = 0; i < currents.length; i++) {
-                var x = currents[i];
-                $scope.column.CustomFilter.Selected[x] = setTo;
-            }
-
-        }
-        $scope.ok = function () {
-            var selected = Object.keys($scope.column.CustomFilter.Selected);
-            for (var i = 0; i < selected.length; i++) {
-                var key = selected[i];
-                if (!$scope.column.CustomFilter.Selected[key]) {
-                    delete $scope.column.CustomFilter.Selected[key];
-                }
-            }
-            selected = Object.keys($scope.column.CustomFilter.Selected);
-            if (selected.length === 0) {
-                $scope.column.CustomFilter.FnReset();
-            } else {
-                $scope.column.CustomFilter.Text = selected.length + " " + filterTable.Translations.FilterTable_0_Selected;
-                $scope.column.CustomFilter.Tooltip = selected.join(', ');
-            }
-            $uibModalInstance.close($scope.column);
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss('cancel');
+            };
 
 }]);
 
@@ -2916,21 +2936,66 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                         Text: " ... ",
                         TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterConditional.html",
                         Controller: "FilterTableModalConditionalSelectCtrl",
-                        Tooltip: ft.Translations.FilterTable_Click_To_Select,
+                        Tooltip: ft.Translations.FilterTable_Conditional_Filter,
                         Selected: {},
                         FnFilter: function (item, col) {
-                            if (Object.keys(this.Selected).length === 0) {
+                            if (this.Selected.length === 0) {
                                 return true;
                             }
+
                             var val = item[c.Key];
                             val = (val === null || angular.isUndefined(val)) ? "" : val; //null and undefined -> ""
-                            val = val.toString(); // TrustedValueHolder --> back to strings
-                            return angular.isDefined(this.Selected[val]);
+                            val = $sce.valueOf(val);
+
+                            //Removing no number characters (this was added due to the display)
+                            val = val.replace(",", "");
+                            val.replace(new RegExp(',', 'g'), '');
+
+                            //Convert it to a number
+                            val = parseFloat(val);
+
+                            //When its not number, than this item will be sorted out
+                            if(isNaN(val)){
+                                return false;
+                            }
+
+                            var conditionIsTruthy = true;
+
+                            //Conditions are checked here
+                            angular.forEach(this.Selected, function(conditionItem){
+                                if(conditionIsTruthy) {
+                                    //This is a conjunction of AND therefore we can cancel the loop as soon as we've a false condition
+                                    switch (conditionItem.condition) {
+                                        case '==':
+                                            //console.log("(val == conditionItem.value)", (val == conditionItem.value));
+                                            return conditionIsTruthy = (val == conditionItem.value);
+                                            break;
+                                        case '>':
+                                            //console.log("(val > conditionItem.value)", (val > conditionItem.value));
+                                            return conditionIsTruthy = (val > conditionItem.value);
+                                            break;
+                                        case '>=':
+                                            //console.log("(val >= conditionItem.value)", (val >= conditionItem.value));
+                                            return conditionIsTruthy = (val >= conditionItem.value);
+                                            break;
+                                        case '<':
+                                            //console.log("(val = conditionItem.value)", (val = conditionItem.value));
+                                            return conditionIsTruthy = (val < conditionItem.value);
+                                            break;
+                                        case '<=':
+                                            //console.log("(val <= conditionItem.value)", (val <= conditionItem.value));
+                                            return conditionIsTruthy = (val <= conditionItem.value);
+                                            break;
+                                    }
+                                }
+                            });
+
+                            return conditionIsTruthy;
                         },
                         FnReset: function() {
                             this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
                                 this.Text = " ... " ,
-                                this.Selected = {};
+                                this.Selected = [];
                         },
                         FnUpdateText: function() {
                             var selected = Object.keys(this.Selected);

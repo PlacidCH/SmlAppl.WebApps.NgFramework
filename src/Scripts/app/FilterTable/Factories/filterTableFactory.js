@@ -1047,21 +1047,66 @@
                         Text: " ... ",
                         TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterConditional.html",
                         Controller: "FilterTableModalConditionalSelectCtrl",
-                        Tooltip: ft.Translations.FilterTable_Click_To_Select,
+                        Tooltip: ft.Translations.FilterTable_Conditional_Filter,
                         Selected: {},
                         FnFilter: function (item, col) {
-                            if (Object.keys(this.Selected).length === 0) {
+                            if (this.Selected.length === 0) {
                                 return true;
                             }
+
                             var val = item[c.Key];
                             val = (val === null || angular.isUndefined(val)) ? "" : val; //null and undefined -> ""
-                            val = val.toString(); // TrustedValueHolder --> back to strings
-                            return angular.isDefined(this.Selected[val]);
+                            val = $sce.valueOf(val);
+
+                            //Removing no number characters (this was added due to the display)
+                            val = val.replace(",", "");
+                            val.replace(new RegExp(',', 'g'), '');
+
+                            //Convert it to a number
+                            val = parseFloat(val);
+
+                            //When its not number, than this item will be sorted out
+                            if(isNaN(val)){
+                                return false;
+                            }
+
+                            var conditionIsTruthy = true;
+
+                            //Conditions are checked here
+                            angular.forEach(this.Selected, function(conditionItem){
+                                if(conditionIsTruthy) {
+                                    //This is a conjunction of AND therefore we can cancel the loop as soon as we've a false condition
+                                    switch (conditionItem.condition) {
+                                        case '==':
+                                            //console.log("(val == conditionItem.value)", (val == conditionItem.value));
+                                            return conditionIsTruthy = (val == conditionItem.value);
+                                            break;
+                                        case '>':
+                                            //console.log("(val > conditionItem.value)", (val > conditionItem.value));
+                                            return conditionIsTruthy = (val > conditionItem.value);
+                                            break;
+                                        case '>=':
+                                            //console.log("(val >= conditionItem.value)", (val >= conditionItem.value));
+                                            return conditionIsTruthy = (val >= conditionItem.value);
+                                            break;
+                                        case '<':
+                                            //console.log("(val = conditionItem.value)", (val = conditionItem.value));
+                                            return conditionIsTruthy = (val < conditionItem.value);
+                                            break;
+                                        case '<=':
+                                            //console.log("(val <= conditionItem.value)", (val <= conditionItem.value));
+                                            return conditionIsTruthy = (val <= conditionItem.value);
+                                            break;
+                                    }
+                                }
+                            });
+
+                            return conditionIsTruthy;
                         },
                         FnReset: function() {
                             this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
                                 this.Text = " ... " ,
-                                this.Selected = {};
+                                this.Selected = [];
                         },
                         FnUpdateText: function() {
                             var selected = Object.keys(this.Selected);
