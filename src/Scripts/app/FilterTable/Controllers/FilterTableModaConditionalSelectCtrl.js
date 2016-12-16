@@ -10,8 +10,6 @@
             $scope.FilterTable = filterTable;
             $scope.column = angular.copy(column);
 
-            console.log("Selected",$scope.column.CustomFilter.Selected);
-
             if( Object.prototype.toString.call( $scope.column.CustomFilter.Selected ) !== '[object Array]' ) {
                 $scope.column.CustomFilter.Selected = [];
             }
