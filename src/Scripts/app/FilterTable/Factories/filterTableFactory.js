@@ -1059,8 +1059,7 @@
                             val = $sce.valueOf(val);
 
                             //Removing no number characters (this was added due to the display)
-                            val = val.replace(",", "");
-                            val.replace(new RegExp(',', 'g'), '');
+                            val = val.split(",").join("");
 
                             //Convert it to a number
                             val = parseFloat(val);
@@ -1104,20 +1103,11 @@
                             return conditionIsTruthy;
                         },
                         FnReset: function() {
-                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
-                                this.Text = " ... " ,
+//                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
                                 this.Selected = [];
                         },
                         FnUpdateText: function() {
-                            var selected = Object.keys(this.Selected);
-                            var l = selected.length;
-                            if (l > 0) {
-                                this.Tooltip = selected.join(', ');
-                                this.Text = " ... "
-                            } else {
-                                this.Tooltip = ft.Translations.FilterTable_Click_To_Select;
-                                this.Text = " ... "
-                            }
+
                         }
                     }
                 }

@@ -14,13 +14,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "        <div class=\"col-md-2\">\r" +
+    "        <div class=\"col-md-3\">\r" +
     "\n" +
     "            {{conditionItem.condition}}\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-6\">\r" +
+    "        <div class=\"col-md-5\">\r" +
     "\n" +
     "            {{conditionItem.value}}\r" +
     "\n" +
@@ -79,6 +79,16 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "            <div class=\"form-group\">\r" +
     "\n" +
     "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <p>{{formulaText}}</p>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +

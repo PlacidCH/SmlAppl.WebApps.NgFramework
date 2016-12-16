@@ -775,13 +775,13 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "        <div class=\"col-md-2\">\r" +
+    "        <div class=\"col-md-3\">\r" +
     "\n" +
     "            {{conditionItem.condition}}\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-6\">\r" +
+    "        <div class=\"col-md-5\">\r" +
     "\n" +
     "            {{conditionItem.value}}\r" +
     "\n" +
@@ -840,6 +840,16 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "            <div class=\"form-group\">\r" +
     "\n" +
     "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <p>{{formulaText}}</p>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
@@ -1349,6 +1359,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 	angular.module("smlAppl.webApps.framework.filterTable.directives")
         .controller('FilterTableModalConditionalSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", "$translate", function ($scope, $uibModalInstance, $filter, filterTable, column, $translate) {
 
+            $scope.formulaText = "";
             $scope.conditionalFilterItem = {
                 condition: null,
                 value: null
@@ -1358,7 +1369,12 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             $scope.column = angular.copy(column);
 
             console.log("Selected",$scope.column.CustomFilter.Selected);
-            $scope.currentConditionalFilter = $scope.column.CustomFilter.Selected;
+
+            if( Object.prototype.toString.call( $scope.column.CustomFilter.Selected ) !== '[object Array]' ) {
+                $scope.column.CustomFilter.Selected = [];
+            }
+
+            $scope.currentConditionalFilter = $scope.column.CustomFilter.Selected || [];
             $scope.Search = '';
             $scope.ResetSearch = function() {
                 $scope.Search = '';
@@ -1370,7 +1386,6 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                  ]
                  * @type {Array}
                  */
-
 
             $scope.ModelOptions = {
                 debounce: {
@@ -1385,6 +1400,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                     condition: null,
                     value: null
                 }
+
+                updateFilterFormulaText();
             }
 
             $scope.removeCondition = function(conditionItem){
@@ -1396,34 +1413,18 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                 });
 
                 $scope.currentConditionalFilter = angular.copy(sortedConditionalFilter);
+                updateFilterFormulaText();
             }
 
             $scope.Reset = function() {
-                $scope.column.CustomFilter.FnReset();
+                $scope.column.CustomFilter.Selected = [];
+                updateFilterFormulaText();
                 $uibModalInstance.close($scope.column);
             }
 
             $scope.ok = function () {
                 $scope.column.CustomFilter.Selected = $scope.currentConditionalFilter;
-                /*
-                var selected = Object.keys($scope.column.CustomFilter.Selected);
-
-                for (var i = 0; i < selected.length; i++) {
-                    var key = selected[i];
-                    if (!$scope.column.CustomFilter.Selected[key]) {
-                        delete $scope.column.CustomFilter.Selected[key];
-                    }
-                }
-
-                //The selected items in the modal
-                selected = Object.keys($scope.column.CustomFilter.Selected);
-                if (selected.length === 0) {
-                    $scope.column.CustomFilter.FnReset();
-                } else {
-                    $scope.column.CustomFilter.Text = selected.length + " " + filterTable.Translations.FilterTable_0_Selected;
-                    $scope.column.CustomFilter.Tooltip = selected.join(', ');
-                }*/
-
+                updateFilterFormulaText();
                 $uibModalInstance.close($scope.column);
             };
 
@@ -1431,6 +1432,24 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                 $uibModalInstance.dismiss('cancel');
             };
 
+            function updateFilterFormulaText(){
+                var formulaText = "";
+
+                angular.forEach($scope.currentConditionalFilter, function(filter){
+                    if(formulaText != ""){
+                        formulaText += " && ";
+                    }
+
+                    formulaText = formulaText+ "("+$scope.column.Display + " "+filter.condition+" "+filter.value+")";
+
+                });
+
+                $scope.formulaText = formulaText;
+                $scope.column.CustomFilter.Tooltip = formulaText;
+                $scope.column.CustomFilter.Text = formulaText;
+            }
+
+            updateFilterFormulaText();
 }]);
 
 /* #### File: ./src/Scripts/app/FilterTable/Controllers/FilterTableModalInstanceCtrl.js */ 
@@ -2948,8 +2967,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                             val = $sce.valueOf(val);
 
                             //Removing no number characters (this was added due to the display)
-                            val = val.replace(",", "");
-                            val.replace(new RegExp(',', 'g'), '');
+                            val = val.split(",").join("");
 
                             //Convert it to a number
                             val = parseFloat(val);
@@ -2993,20 +3011,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                             return conditionIsTruthy;
                         },
                         FnReset: function() {
-                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
-                                this.Text = " ... " ,
+//                            this.Tooltip = ft.Translations.FilterTable_Click_To_Select,
                                 this.Selected = [];
                         },
                         FnUpdateText: function() {
-                            var selected = Object.keys(this.Selected);
-                            var l = selected.length;
-                            if (l > 0) {
-                                this.Tooltip = selected.join(', ');
-                                this.Text = " ... "
-                            } else {
-                                this.Tooltip = ft.Translations.FilterTable_Click_To_Select;
-                                this.Text = " ... "
-                            }
+
                         }
                     }
                 }

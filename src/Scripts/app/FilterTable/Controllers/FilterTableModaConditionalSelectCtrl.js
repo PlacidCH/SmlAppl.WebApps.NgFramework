@@ -1,6 +1,7 @@
 ﻿	angular.module("smlAppl.webApps.framework.filterTable.directives")
         .controller('FilterTableModalConditionalSelectCtrl', ["$scope", "$uibModalInstance", "$filter", "filterTable", "column", "$translate", function ($scope, $uibModalInstance, $filter, filterTable, column, $translate) {
 
+            $scope.formulaText = "";
             $scope.conditionalFilterItem = {
                 condition: null,
                 value: null
@@ -10,7 +11,12 @@
             $scope.column = angular.copy(column);
 
             console.log("Selected",$scope.column.CustomFilter.Selected);
-            $scope.currentConditionalFilter = $scope.column.CustomFilter.Selected;
+
+            if( Object.prototype.toString.call( $scope.column.CustomFilter.Selected ) !== '[object Array]' ) {
+                $scope.column.CustomFilter.Selected = [];
+            }
+
+            $scope.currentConditionalFilter = $scope.column.CustomFilter.Selected || [];
             $scope.Search = '';
             $scope.ResetSearch = function() {
                 $scope.Search = '';
@@ -22,7 +28,6 @@
                  ]
                  * @type {Array}
                  */
-
 
             $scope.ModelOptions = {
                 debounce: {
@@ -37,6 +42,8 @@
                     condition: null,
                     value: null
                 }
+
+                updateFilterFormulaText();
             }
 
             $scope.removeCondition = function(conditionItem){
@@ -48,34 +55,18 @@
                 });
 
                 $scope.currentConditionalFilter = angular.copy(sortedConditionalFilter);
+                updateFilterFormulaText();
             }
 
             $scope.Reset = function() {
-                $scope.column.CustomFilter.FnReset();
+                $scope.column.CustomFilter.Selected = [];
+                updateFilterFormulaText();
                 $uibModalInstance.close($scope.column);
             }
 
             $scope.ok = function () {
                 $scope.column.CustomFilter.Selected = $scope.currentConditionalFilter;
-                /*
-                var selected = Object.keys($scope.column.CustomFilter.Selected);
-
-                for (var i = 0; i < selected.length; i++) {
-                    var key = selected[i];
-                    if (!$scope.column.CustomFilter.Selected[key]) {
-                        delete $scope.column.CustomFilter.Selected[key];
-                    }
-                }
-
-                //The selected items in the modal
-                selected = Object.keys($scope.column.CustomFilter.Selected);
-                if (selected.length === 0) {
-                    $scope.column.CustomFilter.FnReset();
-                } else {
-                    $scope.column.CustomFilter.Text = selected.length + " " + filterTable.Translations.FilterTable_0_Selected;
-                    $scope.column.CustomFilter.Tooltip = selected.join(', ');
-                }*/
-
+                updateFilterFormulaText();
                 $uibModalInstance.close($scope.column);
             };
 
@@ -83,4 +74,22 @@
                 $uibModalInstance.dismiss('cancel');
             };
 
+            function updateFilterFormulaText(){
+                var formulaText = "";
+
+                angular.forEach($scope.currentConditionalFilter, function(filter){
+                    if(formulaText != ""){
+                        formulaText += " && ";
+                    }
+
+                    formulaText = formulaText+ "("+$scope.column.Display + " "+filter.condition+" "+filter.value+")";
+
+                });
+
+                $scope.formulaText = formulaText;
+                $scope.column.CustomFilter.Tooltip = formulaText;
+                $scope.column.CustomFilter.Text = formulaText;
+            }
+
+            updateFilterFormulaText();
 }]);

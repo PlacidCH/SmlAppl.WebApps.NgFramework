@@ -4,10 +4,10 @@
 <div class="modal-body">
     <div class="row" ng-repeat="conditionItem in currentConditionalFilter">
         <div class="col-md-2">{{column.Display}}</div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             {{conditionItem.condition}}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             {{conditionItem.value}}
         </div>
         <div class="col-md-2">
@@ -37,6 +37,11 @@
         <div class="col-md-2">
             <div class="form-group">
                 <button class="btn btn-primary" ng-click="addCondition()">Add</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <p>{{formulaText}}</p>
             </div>
         </div>
     </div>
