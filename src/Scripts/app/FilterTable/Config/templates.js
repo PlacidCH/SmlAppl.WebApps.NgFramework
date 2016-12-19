@@ -1,7 +1,115 @@
 angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterConditional.html',
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterConditionalDate.html',
+    "<div class=\"modal-header\">\r" +
+    "\n" +
+    "    <h3 class=\"modal-title\">Conditional filter: {{column.Display}}</h3>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div class=\"modal-body\">\r" +
+    "\n" +
+    "    <div class=\"row\" ng-repeat=\"conditionItem in currentConditionalFilter\">\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            {{conditionItem.condition}}\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-5\">\r" +
+    "\n" +
+    "            {{conditionItem.value}}\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\">X</button>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"row\">\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
+    "\n" +
+    "                    <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                    <option value=\">\">></option>\r" +
+    "\n" +
+    "                    <option value=\">=\">>=</option>\r" +
+    "\n" +
+    "                    <option value=\"<\"><</option>\r" +
+    "\n" +
+    "                    <option value=\"<=\"><=</option>\r" +
+    "\n" +
+    "                </select>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-6\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <input type=\"text\" class=\"form-control\" ng-model=\"conditionalFilterItem.value\" placeholder=\"dd.MM.yyyy\">\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <div class=\"form-group\">\r" +
+    "\n" +
+    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-12 text-center\">\r" +
+    "\n" +
+    "            <p>{{formulaText}}</p>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div class=\"modal-footer\">\r" +
+    "\n" +
+    "    <button class=\"btn btn-default\" type=\"button\" ng-click=\"Reset()\">{{FilterTable.Translations.FilterTable_Reset_Filter}}</button>\r" +
+    "\n" +
+    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"ok()\">{{FilterTable.Translations.FilterTable_Accept}}</button>\r" +
+    "\n" +
+    "    <button class=\"btn btn-warning\" type=\"button\" ng-click=\"cancel()\">{{FilterTable.Translations.FilterTable_Cancel}}</button>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "\r" +
+    "\n"
+  );
+
+
+  $templateCache.put('./src/Scripts/app/FilterTable/Views/FilterConditionalNumber.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
     "    <h3 class=\"modal-title\">Conditional filter: {{column.Display}}</h3>\r" +
@@ -84,13 +192,9 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-12\">\r" +
+    "        <div class=\"col-md-12 text-center\">\r" +
     "\n" +
-    "            <div class=\"form-group\">\r" +
-    "\n" +
-    "                <p>{{formulaText}}</p>\r" +
-    "\n" +
-    "            </div>\r" +
+    "            <p>{{formulaText}}</p>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +

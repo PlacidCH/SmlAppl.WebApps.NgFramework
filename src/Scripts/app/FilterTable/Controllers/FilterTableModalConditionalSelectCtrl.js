@@ -15,10 +15,7 @@
             }
 
             $scope.currentConditionalFilter = $scope.column.CustomFilter.Selected || [];
-            $scope.Search = '';
-            $scope.ResetSearch = function() {
-                $scope.Search = '';
-            }
+
                 /**
                  * [
                  {condition: '<=', value: 100}
