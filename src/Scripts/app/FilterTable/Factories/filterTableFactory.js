@@ -1066,16 +1066,11 @@
                                 val = parseFloat(val);
 
                                 //When its not number, than this item will be sorted out
-
                                 if(isNaN(val)){
                                     return false;
                                 }
 
                                 var conditionIsTruthy = true;
-
-                                //Conditions are checked here
-                                //console.log(this.Selected);
-
                                 angular.forEach(this.Selected, function(conditionItem){
                                     if(conditionIsTruthy) {
                                         conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
@@ -1117,7 +1112,7 @@
                                 val = $sce.valueOf(val);
 
                                 val = stringToDate(val);
-                                console.log("filteriunt");
+
                                 var conditionIsTruthy = true;
                                 //Conditions are checked here
                                 angular.forEach(this.Selected, function(conditionItem){
