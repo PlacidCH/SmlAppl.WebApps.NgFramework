@@ -1039,7 +1039,7 @@
                         }
                     }
 
-                    if (c.CustomFilter === "ConditionalNumberSelect") {
+                    if (c.CustomFilter === "ConditionalNumberFilter") {
                         //TODO: localisation
                         c.CanBuildSelect = true;
                         c.BuildSelect = true;
@@ -1091,7 +1091,7 @@
                     }
 
 
-                    if (c.CustomFilter === "ConditionalDateSelect") {
+                    if (c.CustomFilter === "ConditionalDateFilter") {
                         //TODO: localisation
                         c.CanBuildSelect = true;
                         c.BuildSelect = true;
