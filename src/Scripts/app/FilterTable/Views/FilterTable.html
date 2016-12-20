@@ -17,7 +17,7 @@
                             <th>
                                 <span type="button" class="btn btn-default btn-sm" ng-click="open()" ng-show="filterTable.CanCustomize"><span class="glyphicon glyphicon-cog"></span></span>
                             </th>
-                            <th ng-repeat="col in filterTable.VisibleCols" style="padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;" ng-click="filterTable.UpdateOrderBy(col, $event)">
+                            <th ng-repeat="col in filterTable.VisibleCols" ng-style="col._style" style="padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;"  ng-click="filterTable.UpdateOrderBy(col, $event)">
                                 <span class="pull-left">{{::col.Display}}</span>
                                 <span style="margin-right: -30px; opacity: 0.5;" class="pull-right {{col.OrderIndicator}}"></span>
                             </th>
@@ -27,12 +27,12 @@
                                 <span type="button" class="btn btn-default btn-sm" ng-click="filterTable.ClearFilter()"><span class="glyphicon glyphicon-remove"></span></span>
                             </td>
 
-                            <td ng-repeat="col in filterTable.VisibleCols" ng-switch="col.FilterType">
+                            <td ng-repeat="col in filterTable.VisibleCols" ng-switch="col.FilterType" ng-style="col._style" >
                                 <div ng-switch-when="CustomHtml" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; min-height: 28px;" ng-click="defineFilter(col)">
                                     <span ng-bind-html="col.CustomFilter.InputHtml"></span>
                                 </div>
                                 <div class="input-group" ng-switch-when="Custom" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; width: 1px;" ng-click="defineFilter(col)">
-                                    <input type="text" class="form-control" style="cursor: pointer; width: auto;" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions"/>
+                                    <input type="text" class="form-control" style="cursor: pointer;" ng-style="{'width': col._style.width ? col._style.width : 'auto'}" value="{{col.CustomFilter.Text}}" readonly="readonly" disabled="disabled" ng-model-options="ModelOptions"/>
                                     <span class="input-group-addon">...</span>
                                 </div>
                                 <!--<div class="input-group" ng-switch-when="Custom" title="{{col.CustomFilter.Tooltip}}" style="cursor: pointer; width: 1px;" ng-click="defineFilter(col)">
@@ -45,7 +45,7 @@
                                 <select ng-switch-when="Select" class="select2" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]">
                                     <option ng-repeat="item in col.GetDistincts(filterTable.ReduceSelects, true)">{{::item}}</option>
                                 </select>
-                                <input ng-switch-when="Input" type="text" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]" ng-model-options="ModelOptions"/>
+                                <input ng-switch-when="Input" type="text" name="filterTable.TableFilter[col.Key]" ng-model="filterTable.TableFilter[col.Key]" ng-model-options="ModelOptions" ng-style="{'width': col._width}"/>
 
                             </td>
                         </tr>
@@ -53,7 +53,7 @@
 							<th>
 								<span ng-bind-html="::headerRow.Title"></span>
 							</th>
-							<th ng-repeat="col in filterTable.VisibleCols">
+							<th ng-repeat="col in filterTable.VisibleCols" ng-style="col._style" >
 								<span ng-bind-html="headerRow.GetValue(col)"></span>
 							</th>
 						</tr>
@@ -63,7 +63,7 @@
                             <td class="text-center" ng-class="::{'filtertable-cell-clickable' : filterTable.ActionCol.HasClickAction}" ng-click="filterTable.ActionCol.HasClickAction && filterTable.ExecuteClickAction(filterTable.ActionCol, item)">
                                 <span ng-bind-html="::item[filterTable.ActionCol.Key]" compile-template compile-scope="ParentScope"></span>
                             </td>
-                            <td ng-repeat="col in filterTable.VisibleCols" ng-class="::{'filtertable-cell-clickable' : col.HasClickAction}" ng-click="col.HasClickAction && filterTable.ExecuteClickAction(col, item)">
+                            <td ng-style="col._style"  ng-repeat="col in filterTable.VisibleCols" ng-class="::{'filtertable-cell-clickable' : col.HasClickAction}" ng-click="col.HasClickAction && filterTable.ExecuteClickAction(col, item)">
                                 <span ng-bind-html="::item[col.Key]" compile-template compile-scope="ParentScope"></span>
                             </td>
                         </tr>

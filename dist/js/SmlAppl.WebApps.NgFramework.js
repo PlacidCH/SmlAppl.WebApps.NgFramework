@@ -1017,7 +1017,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            </th>\r" +
     "\n" +
-    "                            <th ng-repeat=\"col in filterTable.VisibleCols\" style=\"padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;\" ng-click=\"filterTable.UpdateOrderBy(col, $event)\">\r" +
+    "                            <th ng-repeat=\"col in filterTable.VisibleCols\" ng-style=\"col._style\" style=\"padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;\"  ng-click=\"filterTable.UpdateOrderBy(col, $event)\">\r" +
     "\n" +
     "                                <span class=\"pull-left\">{{::col.Display}}</span>\r" +
     "\n" +
@@ -1037,7 +1037,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.FilterType\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.FilterType\" ng-style=\"col._style\" >\r" +
     "\n" +
     "                                <div ng-switch-when=\"CustomHtml\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; min-height: 28px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
@@ -1047,7 +1047,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
-    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer;\" ng-style=\"{'width': col._style.width ? col._style.width : 'auto'}\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
     "\n" +
     "                                    <span class=\"input-group-addon\">...</span>\r" +
     "\n" +
@@ -1073,7 +1073,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                </select>\r" +
     "\n" +
-    "                                <input ng-switch-when=\"Input\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\"/>\r" +
+    "                                <input ng-switch-when=\"Input\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\" ng-style=\"{'width': col._width}\"/>\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -1089,7 +1089,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "							</th>\r" +
     "\n" +
-    "							<th ng-repeat=\"col in filterTable.VisibleCols\">\r" +
+    "							<th ng-repeat=\"col in filterTable.VisibleCols\" ng-style=\"col._style\" >\r" +
     "\n" +
     "								<span ng-bind-html=\"headerRow.GetValue(col)\"></span>\r" +
     "\n" +
@@ -1109,7 +1109,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            </td>\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"col.HasClickAction && filterTable.ExecuteClickAction(col, item)\">\r" +
+    "                            <td ng-style=\"col._style\"  ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"col.HasClickAction && filterTable.ExecuteClickAction(col, item)\">\r" +
     "\n" +
     "                                <span ng-bind-html=\"::item[col.Key]\" compile-template compile-scope=\"ParentScope\"></span>\r" +
     "\n" +
@@ -2114,6 +2114,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             this._calculateColumn = null;
             this._applyFilter = null;
             this.CustomFilter = null;
+            this._style = null;
         }
 
         ColumnDef.prototype = {
@@ -2992,6 +2993,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             c.AlternateSortCol = getDefined(basedOn.alternateSortCol, basedOn.AlternateSortCol,  null);
             c.CustomFilter = getDefined(basedOn.customFilter, basedOn.CustomFilter, null);
 
+            c._style = getDefined(basedOn.style, basedOn.Style, null);
+
             var isDate = getDefined(basedOn.isDate, basedOn.IsDate, false);
             if (isDate && c.AlternateSortCol === null) {
                 c.AlternateSortCol = c.Key + "_Order_Col";
@@ -3046,7 +3049,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                         }
                     }
 
-                    if (c.CustomFilter === "ConditionalNumberSelect") {
+                    if (c.CustomFilter === "ConditionalNumberFilter") {
                         //TODO: localisation
                         c.CanBuildSelect = true;
                         c.BuildSelect = true;
@@ -3073,16 +3076,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                                 val = parseFloat(val);
 
                                 //When its not number, than this item will be sorted out
-
                                 if(isNaN(val)){
                                     return false;
                                 }
 
                                 var conditionIsTruthy = true;
-
-                                //Conditions are checked here
-                                //console.log(this.Selected);
-
                                 angular.forEach(this.Selected, function(conditionItem){
                                     if(conditionIsTruthy) {
                                         conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
@@ -3103,7 +3101,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                     }
 
 
-                    if (c.CustomFilter === "ConditionalDateSelect") {
+                    if (c.CustomFilter === "ConditionalDateFilter") {
                         //TODO: localisation
                         c.CanBuildSelect = true;
                         c.BuildSelect = true;
@@ -3124,7 +3122,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                                 val = $sce.valueOf(val);
 
                                 val = stringToDate(val);
-                                console.log("filteriunt");
+
                                 var conditionIsTruthy = true;
                                 //Conditions are checked here
                                 angular.forEach(this.Selected, function(conditionItem){

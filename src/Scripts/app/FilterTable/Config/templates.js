@@ -256,7 +256,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            </th>\r" +
     "\n" +
-    "                            <th ng-repeat=\"col in filterTable.VisibleCols\" style=\"padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;\" ng-click=\"filterTable.UpdateOrderBy(col, $event)\">\r" +
+    "                            <th ng-repeat=\"col in filterTable.VisibleCols\" ng-style=\"col._style\" style=\"padding-left: 10px; padding-right: 40px; vertical-align: middle; cursor: pointer;\"  ng-click=\"filterTable.UpdateOrderBy(col, $event)\">\r" +
     "\n" +
     "                                <span class=\"pull-left\">{{::col.Display}}</span>\r" +
     "\n" +
@@ -276,7 +276,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.FilterType\">\r" +
+    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-switch=\"col.FilterType\" ng-style=\"col._style\" >\r" +
     "\n" +
     "                                <div ng-switch-when=\"CustomHtml\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; min-height: 28px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
@@ -286,7 +286,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                <div class=\"input-group\" ng-switch-when=\"Custom\" title=\"{{col.CustomFilter.Tooltip}}\" style=\"cursor: pointer; width: 1px;\" ng-click=\"defineFilter(col)\">\r" +
     "\n" +
-    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer; width: auto;\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
+    "                                    <input type=\"text\" class=\"form-control\" style=\"cursor: pointer;\" ng-style=\"{'width': col._style.width ? col._style.width : 'auto'}\" value=\"{{col.CustomFilter.Text}}\" readonly=\"readonly\" disabled=\"disabled\" ng-model-options=\"ModelOptions\"/>\r" +
     "\n" +
     "                                    <span class=\"input-group-addon\">...</span>\r" +
     "\n" +
@@ -312,7 +312,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                                </select>\r" +
     "\n" +
-    "                                <input ng-switch-when=\"Input\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\"/>\r" +
+    "                                <input ng-switch-when=\"Input\" type=\"text\" name=\"filterTable.TableFilter[col.Key]\" ng-model=\"filterTable.TableFilter[col.Key]\" ng-model-options=\"ModelOptions\" ng-style=\"{'width': col._width}\"/>\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -328,7 +328,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "							</th>\r" +
     "\n" +
-    "							<th ng-repeat=\"col in filterTable.VisibleCols\">\r" +
+    "							<th ng-repeat=\"col in filterTable.VisibleCols\" ng-style=\"col._style\" >\r" +
     "\n" +
     "								<span ng-bind-html=\"headerRow.GetValue(col)\"></span>\r" +
     "\n" +
@@ -348,7 +348,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            </td>\r" +
     "\n" +
-    "                            <td ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"col.HasClickAction && filterTable.ExecuteClickAction(col, item)\">\r" +
+    "                            <td ng-style=\"col._style\"  ng-repeat=\"col in filterTable.VisibleCols\" ng-class=\"::{'filtertable-cell-clickable' : col.HasClickAction}\" ng-click=\"col.HasClickAction && filterTable.ExecuteClickAction(col, item)\">\r" +
     "\n" +
     "                                <span ng-bind-html=\"::item[col.Key]\" compile-template compile-scope=\"ParentScope\"></span>\r" +
     "\n" +

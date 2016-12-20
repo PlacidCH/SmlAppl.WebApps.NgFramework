@@ -107,6 +107,7 @@
             this._calculateColumn = null;
             this._applyFilter = null;
             this.CustomFilter = null;
+            this._style = null;
         }
 
         ColumnDef.prototype = {
@@ -984,6 +985,8 @@
             c.Filter = getDefined(basedOn.filter, basedOn.Filter);
             c.AlternateSortCol = getDefined(basedOn.alternateSortCol, basedOn.AlternateSortCol,  null);
             c.CustomFilter = getDefined(basedOn.customFilter, basedOn.CustomFilter, null);
+
+            c._style = getDefined(basedOn.style, basedOn.Style, null);
 
             var isDate = getDefined(basedOn.isDate, basedOn.IsDate, false);
             if (isDate && c.AlternateSortCol === null) {
