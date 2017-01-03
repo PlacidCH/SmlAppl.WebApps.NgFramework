@@ -781,7 +781,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-5\">\r" +
+    "        <div class=\"col-md-4\">\r" +
     "\n" +
     "            {{conditionItem.value}}\r" +
     "\n" +
@@ -791,7 +791,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
-    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\">X</button>\r" +
+    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
@@ -825,7 +825,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-6\">\r" +
+    "        <div class=\"col-md-4\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
@@ -835,11 +835,11 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-2\">\r" +
+    "        <div class=\"col-md-1\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
-    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
+    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
@@ -879,33 +879,65 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "<div class=\"modal-body\">\r" +
     "\n" +
+    "    <!-- current filter condition list -->\r" +
+    "\n" +
     "    <div class=\"row\" ng-repeat=\"conditionItem in currentConditionalFilter\">\r" +
     "\n" +
     "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <select class=\"form-control\" ng-model=\"conditionItem.condition\">\r" +
+    "\n" +
+    "                <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                <option value=\"!=\">!=</option>\r" +
+    "\n" +
+    "                <option value=\">\">></option>\r" +
+    "\n" +
+    "                <option value=\">=\">>=</option>\r" +
+    "\n" +
+    "                <option value=\"<\"><</option>\r" +
+    "\n" +
+    "                <option value=\"<=\"><=</option>\r" +
+    "\n" +
+    "            </select>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-4\">\r" +
+    "\n" +
+    "            <input type=\"text\" class=\"form-control\" ng-model=\"conditionItem.value\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
     "        <div class=\"col-md-3\">\r" +
     "\n" +
-    "            {{conditionItem.condition}}\r" +
+    "            <select class=\"form-control\" ng-model=\"conditionItem.conjunction\">\r" +
+    "\n" +
+    "                <option value=\"\">--</option>\r" +
+    "\n" +
+    "                <option value=\"AND\">AND</option>\r" +
+    "\n" +
+    "                <option value=\"OR\">OR</option>\r" +
+    "\n" +
+    "            </select>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-5\">\r" +
-    "\n" +
-    "            {{conditionItem.value}}\r" +
-    "\n" +
-    "        </div>\r" +
-    "\n" +
-    "        <div class=\"col-md-2\">\r" +
+    "        <div class=\"col-md-1\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
-    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\">X</button>\r" +
+    "                <button class=\"btn btn-xs btn-danger\" ng-click=\"removeCondition(conditionItem)\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
     "    </div>\r" +
+    "\n" +
+    "    <!-- input for a new condition -->\r" +
     "\n" +
     "    <div class=\"row\">\r" +
     "\n" +
@@ -918,6 +950,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
     "\n" +
     "                    <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                    <option value=\"!=\">!=</option>\r" +
     "\n" +
     "                    <option value=\">\">></option>\r" +
     "\n" +
@@ -933,7 +967,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-6\">\r" +
+    "        <div class=\"col-md-4\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
@@ -943,17 +977,45 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-2\">\r" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <select class=\"form-control\" ng-model=\"conditionItem.conjunction\">\r" +
+    "\n" +
+    "                <option value=\"\">--</option>\r" +
+    "\n" +
+    "                <option value=\"AND\">AND</option>\r" +
+    "\n" +
+    "                <option value=\"OR\">OR</option>\r" +
+    "\n" +
+    "            </select>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-1\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
-    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\">Add</button>\r" +
+    "                <button class=\"btn btn-xs btn-primary\" ng-click=\"addCondition()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-12 text-center\">\r" +
+    "    </div>\r" +
+    "\n" +
+    "    <!-- formal overview -->\r" +
+    "\n" +
+    "    <div class=\"row\" ng-if=\"formulaText != ''\">\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <hr />\r" +
+    "\n" +
+    "            <h4>Bedingungen als Formel</h4>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
     "\n" +
     "            <p>{{formulaText}}</p>\r" +
     "\n" +
@@ -1480,7 +1542,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
 
                 /**
                  * [
-                 {condition: '<=', value: 100}
+                 {condition: '<=', value: 100, conjunction: 'AND'}
 
                  ]
                  * @type {Array}
@@ -1494,6 +1556,10 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             };
 
             $scope.addCondition = function(){
+                if($scope.conditionalFilterItem.condition == null || $scope.conditionalFilterItem.value == null){
+                    return false;
+                }
+
                 $scope.currentConditionalFilter.push(angular.copy($scope.conditionalFilterItem));
                 $scope.conditionalFilterItem = {
                     condition: null,
@@ -1534,13 +1600,34 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             function updateFilterFormulaText(){
                 var formulaText = "";
 
-                angular.forEach($scope.currentConditionalFilter, function(filter){
-                    if(formulaText != ""){
-                        formulaText += " && ";
+                //Grouping each statement into and groups for easier processing
+                var groupByAnd = new Array();
+                var groupIndex = 0;
+                angular.forEach($scope.column.CustomFilter.Selected, function(conditionItem){
+                    if( Object.prototype.toString.call( groupByAnd[groupIndex] ) !== '[object Array]' ) {
+                        groupByAnd[groupIndex] = new Array();
                     }
+                    groupByAnd[groupIndex].push(conditionItem);
 
-                    formulaText = formulaText+ "("+$scope.column.Display + " "+filter.condition+" "+filter.value+")";
+                    //If the AND statement is closed, a new group will be created
+                    if(conditionItem.conjunction == 'AND'){
+                        groupIndex++;
+                    }
+                });
 
+                angular.forEach(groupByAnd, function(groupedConditions, j){
+                    formulaText += "(";
+                    angular.forEach(groupedConditions, function(filter, i){
+                        formulaText = formulaText+ ""+$scope.column.Display + " "+filter.condition+" "+filter.value+"";
+                        if(groupedConditions[i+1]){
+                            formulaText += " OR ";
+                        }
+                    });
+                    formulaText += ")";
+
+                    if(groupByAnd[j+1]){
+                        formulaText += " AND ";
+                    }
                 });
 
                 $scope.formulaText = formulaText;
@@ -2897,7 +2984,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                         var nextFilter = dataFiltered.filter(function (item) { return cfCol.CustomFilter.FnFilter.call(cfCol.CustomFilter, item, cfCol); });
                         dataFiltered = nextFilter;
                     } catch (ex) {
-                        console.log("Filter didn't compute.");
+                        console.log("Filter didn't compute.", ex);
                     }
                 }
                 this.DataFiltered = dataFiltered;
@@ -3080,13 +3167,42 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                                     return false;
                                 }
 
-                                var conditionIsTruthy = true;
+                                //Grouping each statement into and groups for easier processing
+                                var groupByAnd = new Array();
+                                var groupIndex = 0;
                                 angular.forEach(this.Selected, function(conditionItem){
-                                    if(conditionIsTruthy) {
-                                        conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
+                                    if( Object.prototype.toString.call( groupByAnd[groupIndex] ) !== '[object Array]' ) {
+                                        groupByAnd[groupIndex] = new Array();
+                                    }
+                                    groupByAnd[groupIndex].push(conditionItem);
+
+                                    //If the AND statement is closed, a new group will be created
+                                    if(conditionItem.conjunction == 'AND'){
+                                        groupIndex++;
                                     }
                                 });
 
+                                var conditionIsTruthy = true;
+                                angular.forEach(groupByAnd, function(groupedConditions){
+                                    if(conditionIsTruthy){
+                                        var loopOr = true;
+                                        angular.forEach(groupedConditions, function(conditionItem){
+                                            if(loopOr){
+                                                conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
+                                                if(conditionIsTruthy){
+                                                    loopOr = false;
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+
+                                /*
+                                angular.forEach(this.Selected, function(conditionItem){
+
+
+                                });
+*/
                                 return conditionIsTruthy;
                             },
                             FnReset: function() {
@@ -3203,6 +3319,9 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
                     break;
                 case '<=':
                     return (value <= checkedValue);
+                    break;
+                case '!=':
+                    return (value != checkedValue);
                     break;
             }
 

@@ -890,7 +890,7 @@
                         var nextFilter = dataFiltered.filter(function (item) { return cfCol.CustomFilter.FnFilter.call(cfCol.CustomFilter, item, cfCol); });
                         dataFiltered = nextFilter;
                     } catch (ex) {
-                        console.log("Filter didn't compute.");
+                        console.log("Filter didn't compute.", ex);
                     }
                 }
                 this.DataFiltered = dataFiltered;
@@ -1073,13 +1073,42 @@
                                     return false;
                                 }
 
-                                var conditionIsTruthy = true;
+                                //Grouping each statement into and groups for easier processing
+                                var groupByAnd = new Array();
+                                var groupIndex = 0;
                                 angular.forEach(this.Selected, function(conditionItem){
-                                    if(conditionIsTruthy) {
-                                        conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
+                                    if( Object.prototype.toString.call( groupByAnd[groupIndex] ) !== '[object Array]' ) {
+                                        groupByAnd[groupIndex] = new Array();
+                                    }
+                                    groupByAnd[groupIndex].push(conditionItem);
+
+                                    //If the AND statement is closed, a new group will be created
+                                    if(conditionItem.conjunction == 'AND'){
+                                        groupIndex++;
                                     }
                                 });
 
+                                var conditionIsTruthy = true;
+                                angular.forEach(groupByAnd, function(groupedConditions){
+                                    if(conditionIsTruthy){
+                                        var loopOr = true;
+                                        angular.forEach(groupedConditions, function(conditionItem){
+                                            if(loopOr){
+                                                conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
+                                                if(conditionIsTruthy){
+                                                    loopOr = false;
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+
+                                /*
+                                angular.forEach(this.Selected, function(conditionItem){
+
+
+                                });
+*/
                                 return conditionIsTruthy;
                             },
                             FnReset: function() {
@@ -1196,6 +1225,9 @@
                     break;
                 case '<=':
                     return (value <= checkedValue);
+                    break;
+                case '!=':
+                    return (value != checkedValue);
                     break;
             }
 

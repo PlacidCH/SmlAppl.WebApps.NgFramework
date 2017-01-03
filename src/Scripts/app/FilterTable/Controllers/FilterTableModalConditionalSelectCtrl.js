@@ -18,7 +18,7 @@
 
                 /**
                  * [
-                 {condition: '<=', value: 100}
+                 {condition: '<=', value: 100, conjunction: 'AND'}
 
                  ]
                  * @type {Array}
@@ -32,6 +32,10 @@
             };
 
             $scope.addCondition = function(){
+                if($scope.conditionalFilterItem.condition == null || $scope.conditionalFilterItem.value == null){
+                    return false;
+                }
+
                 $scope.currentConditionalFilter.push(angular.copy($scope.conditionalFilterItem));
                 $scope.conditionalFilterItem = {
                     condition: null,
@@ -72,13 +76,34 @@
             function updateFilterFormulaText(){
                 var formulaText = "";
 
-                angular.forEach($scope.currentConditionalFilter, function(filter){
-                    if(formulaText != ""){
-                        formulaText += " && ";
+                //Grouping each statement into and groups for easier processing
+                var groupByAnd = new Array();
+                var groupIndex = 0;
+                angular.forEach($scope.column.CustomFilter.Selected, function(conditionItem){
+                    if( Object.prototype.toString.call( groupByAnd[groupIndex] ) !== '[object Array]' ) {
+                        groupByAnd[groupIndex] = new Array();
                     }
+                    groupByAnd[groupIndex].push(conditionItem);
 
-                    formulaText = formulaText+ "("+$scope.column.Display + " "+filter.condition+" "+filter.value+")";
+                    //If the AND statement is closed, a new group will be created
+                    if(conditionItem.conjunction == 'AND'){
+                        groupIndex++;
+                    }
+                });
 
+                angular.forEach(groupByAnd, function(groupedConditions, j){
+                    formulaText += "(";
+                    angular.forEach(groupedConditions, function(filter, i){
+                        formulaText = formulaText+ ""+$scope.column.Display + " "+filter.condition+" "+filter.value+"";
+                        if(groupedConditions[i+1]){
+                            formulaText += " OR ";
+                        }
+                    });
+                    formulaText += ")";
+
+                    if(groupByAnd[j+1]){
+                        formulaText += " AND ";
+                    }
                 });
 
                 $scope.formulaText = formulaText;

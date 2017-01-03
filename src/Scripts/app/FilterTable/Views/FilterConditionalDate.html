@@ -7,12 +7,12 @@
         <div class="col-md-3">
             {{conditionItem.condition}}
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             {{conditionItem.value}}
         </div>
         <div class="col-md-2">
             <div class="form-group">
-                <button class="btn btn-danger" ng-click="removeCondition(conditionItem)">X</button>
+                <button class="btn btn-danger" ng-click="removeCondition(conditionItem)"><i class="fa fa-trash" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
@@ -29,14 +29,14 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <input type="text" class="form-control" ng-model="conditionalFilterItem.value" placeholder="dd.MM.yyyy">
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             <div class="form-group">
-                <button class="btn btn-primary" ng-click="addCondition()">Add</button>
+                <button class="btn btn-primary" ng-click="addCondition()"><i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
         </div>
         <div class="col-md-12 text-center">

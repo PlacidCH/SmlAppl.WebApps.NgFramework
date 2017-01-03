@@ -2,26 +2,43 @@
     <h3 class="modal-title">Conditional filter: {{column.Display}}</h3>
 </div>
 <div class="modal-body">
+    <!-- current filter condition list -->
     <div class="row" ng-repeat="conditionItem in currentConditionalFilter">
         <div class="col-md-2">{{column.Display}}</div>
-        <div class="col-md-3">
-            {{conditionItem.condition}}
-        </div>
-        <div class="col-md-5">
-            {{conditionItem.value}}
-        </div>
         <div class="col-md-2">
+            <select class="form-control" ng-model="conditionItem.condition">
+                <option value="==">==</option>
+                <option value="!=">!=</option>
+                <option value=">">></option>
+                <option value=">=">>=</option>
+                <option value="<"><</option>
+                <option value="<="><=</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" ng-model="conditionItem.value">
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" ng-model="conditionItem.conjunction">
+                <option value="">--</option>
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+        </div>
+        <div class="col-md-1">
             <div class="form-group">
-                <button class="btn btn-danger" ng-click="removeCondition(conditionItem)">X</button>
+                <button class="btn btn-xs btn-danger" ng-click="removeCondition(conditionItem)"><i class="fa fa-trash" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
+    <!-- input for a new condition -->
     <div class="row">
         <div class="col-md-2">{{column.Display}}</div>
         <div class="col-md-2">
             <div class="form-group">
                 <select class="form-control" ng-model="conditionalFilterItem.condition">
                     <option value="==">==</option>
+                    <option value="!=">!=</option>
                     <option value=">">></option>
                     <option value=">=">>=</option>
                     <option value="<"><</option>
@@ -29,17 +46,31 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <input type="text" class="form-control" ng-model="conditionalFilterItem.value">
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
+            <select class="form-control" ng-model="conditionItem.conjunction">
+                <option value="">--</option>
+                <option value="AND">AND</option>
+                <option value="OR">OR</option>
+            </select>
+        </div>
+        <div class="col-md-1">
             <div class="form-group">
-                <button class="btn btn-primary" ng-click="addCondition()">Add</button>
+                <button class="btn btn-xs btn-primary" ng-click="addCondition()"><i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
         </div>
-        <div class="col-md-12 text-center">
+    </div>
+    <!-- formal overview -->
+    <div class="row" ng-if="formulaText != ''">
+        <div class="col-md-12">
+            <hr />
+            <h4>Bedingungen als Formel</h4>
+        </div>
+        <div class="col-md-12">
             <p>{{formulaText}}</p>
         </div>
     </div>
