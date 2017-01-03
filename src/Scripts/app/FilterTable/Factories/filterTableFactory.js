@@ -1160,7 +1160,8 @@
                                         var loopOr = true;
                                         angular.forEach(groupedConditions, function(conditionItem){
                                             if(loopOr){
-                                                conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
+                                                var conditionItemValue = stringToDate(conditionItem.value);
+                                                conditionIsTruthy = conditionIsTrue(conditionItem.condition, conditionItemValue.getTime(), val.getTime());
                                                 if(conditionIsTruthy){
                                                     loopOr = false;
                                                 }
@@ -1168,7 +1169,6 @@
                                         });
                                     }
                                 });
-
 
                                 return conditionIsTruthy;
                             },
