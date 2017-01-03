@@ -247,3 +247,4 @@ src/Scripts/app/superAdmin/Config/templates.js
 src/Scripts/app/FilterTable/Config/templates.js
 src/Scripts/app/Config/templates.js
 src/SmlAppl.WebApps.NgFramework.Web/project.lock.json
+copy_script.bat
