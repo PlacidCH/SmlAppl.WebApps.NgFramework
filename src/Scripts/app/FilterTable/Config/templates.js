@@ -14,29 +14,59 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-2\">{{column.Display}}</div>\r" +
     "\n" +
-    "        <div class=\"col-md-3\">\r" +
+    "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "            {{conditionItem.condition}}\r" +
+    "            <select class=\"form-control\" ng-model=\"conditionItem.condition\">\r" +
+    "\n" +
+    "                <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                <option value=\"!=\">!=</option>\r" +
+    "\n" +
+    "                <option value=\">\">></option>\r" +
+    "\n" +
+    "                <option value=\">=\">>=</option>\r" +
+    "\n" +
+    "                <option value=\"<\"><</option>\r" +
+    "\n" +
+    "                <option value=\"<=\"><=</option>\r" +
+    "\n" +
+    "            </select>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
     "        <div class=\"col-md-4\">\r" +
     "\n" +
-    "            {{conditionItem.value}}\r" +
+    "            <input type=\"text\" class=\"form-control\" ng-model=\"conditionItem.value\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-2\">\r" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <select class=\"form-control\" ng-model=\"conditionItem.conjunction\">\r" +
+    "\n" +
+    "                <option value=\"\">--</option>\r" +
+    "\n" +
+    "                <option value=\"AND\">AND</option>\r" +
+    "\n" +
+    "                <option value=\"OR\">OR</option>\r" +
+    "\n" +
+    "            </select>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-1\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
-    "                <button class=\"btn btn-danger\" ng-click=\"removeCondition(conditionItem)\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></button>\r" +
+    "                <button class=\"btn btn-xs btn-danger\" ng-click=\"removeCondition(conditionItem)\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
     "    </div>\r" +
+    "\n" +
+    "    <!-- input for a new condition -->\r" +
     "\n" +
     "    <div class=\"row\">\r" +
     "\n" +
@@ -49,6 +79,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
     "\n" +
     "                    <option value=\"==\">==</option>\r" +
+    "\n" +
+    "                    <option value=\"!=\">!=</option>\r" +
     "\n" +
     "                    <option value=\">\">></option>\r" +
     "\n" +
@@ -74,17 +106,45 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        </div>\r" +
     "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <select class=\"form-control\" ng-model=\"conditionItem.conjunction\">\r" +
+    "\n" +
+    "                <option value=\"\">--</option>\r" +
+    "\n" +
+    "                <option value=\"AND\">AND</option>\r" +
+    "\n" +
+    "                <option value=\"OR\">OR</option>\r" +
+    "\n" +
+    "            </select>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
     "        <div class=\"col-md-1\">\r" +
     "\n" +
     "            <div class=\"form-group\">\r" +
     "\n" +
-    "                <button class=\"btn btn-primary\" ng-click=\"addCondition()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\r" +
+    "                <button class=\"btn btn-xs btn-primary\" ng-click=\"addCondition()\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <div class=\"col-md-12 text-center\">\r" +
+    "    </div>\r" +
+    "\n" +
+    "    <!-- formal overview -->\r" +
+    "\n" +
+    "    <div class=\"row\" ng-if=\"formulaText != ''\">\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <hr />\r" +
+    "\n" +
+    "            <h4>Bedingungen als Formel</h4>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
     "\n" +
     "            <p>{{formulaText}}</p>\r" +
     "\n" +

@@ -1103,12 +1103,6 @@
                                     }
                                 });
 
-                                /*
-                                angular.forEach(this.Selected, function(conditionItem){
-
-
-                                });
-*/
                                 return conditionIsTruthy;
                             },
                             FnReset: function() {
@@ -1145,13 +1139,33 @@
 
                                 val = stringToDate(val);
 
-                                var conditionIsTruthy = true;
-                                //Conditions are checked here
+                                //Grouping each statement into and groups for easier processing
+                                var groupByAnd = new Array();
+                                var groupIndex = 0;
                                 angular.forEach(this.Selected, function(conditionItem){
-                                    //This is a conjunction of AND therefore we can cancel the loop as soon as we've a false condition
-                                    if(conditionIsTruthy) {
-                                        var conditionItemValue = stringToDate(conditionItem.value);
-                                        conditionIsTruthy = conditionIsTrue(conditionItem.condition, conditionItemValue.getTime(), val.getTime());
+                                    if( Object.prototype.toString.call( groupByAnd[groupIndex] ) !== '[object Array]' ) {
+                                        groupByAnd[groupIndex] = new Array();
+                                    }
+                                    groupByAnd[groupIndex].push(conditionItem);
+
+                                    //If the AND statement is closed, a new group will be created
+                                    if(conditionItem.conjunction == 'AND'){
+                                        groupIndex++;
+                                    }
+                                });
+
+                                var conditionIsTruthy = true;
+                                angular.forEach(groupByAnd, function(groupedConditions){
+                                    if(conditionIsTruthy){
+                                        var loopOr = true;
+                                        angular.forEach(groupedConditions, function(conditionItem){
+                                            if(loopOr){
+                                                conditionIsTruthy = conditionIsTrue(conditionItem.condition, parseFloat(conditionItem.value), val);
+                                                if(conditionIsTruthy){
+                                                    loopOr = false;
+                                                }
+                                            }
+                                        });
                                     }
                                 });
 
