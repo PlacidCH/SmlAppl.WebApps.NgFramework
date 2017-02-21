@@ -18,7 +18,6 @@ module.exports = function (grunt) {
 	var rootGitFolder = "./";
 
 	grunt.initConfig({
-
 		// javascript
 		concat: {
 			options: {
@@ -135,6 +134,22 @@ module.exports = function (grunt) {
 					dest: rootGitFolder + 'localization/'
 				}]
 			},
+            fontawesomeFonts: {
+                files: [{
+                    expand: true,
+                    cwd: "bower_components/font-awesome/fonts",
+                    src: ["*"],
+                    dest: "dist/fonts/font-awesome"
+                }]
+            },
+            bootstrapFonts: {
+                files: [{
+                    expand: true,
+                    cwd: "bower_components/bootstrap/fonts",
+                    src: ["*"],
+                    dest: "dist/fonts/bootstrap"
+                }]
+            }
 			//less: {
 			//	files: [{
 			//		expand: true,
