@@ -3942,15 +3942,13 @@ function InfoButton(viewUri) {
 
 					var deferred = $q.defer();
 
-					$http.post(serviceBase + "token", data, { headers: { 'Content-Type': "application/x-www-form-urlencoded" } }).success(function(response) {
+					$http.post(serviceBase + "token", data, { headers: { 'Content-Type': "application/x-www-form-urlencoded" } }).then(function(successResponse) {
+						Principal.authenticate(successResponse.data.access_token);
+						deferred.resolve(successResponse.data);
 
-						Principal.authenticate(response.access_token);
-
-						deferred.resolve(response);
-
-					}).error(function(response) {
+					}, function(errorResponse) {
 						self.logOut();
-						deferred.reject(response);
+						deferred.reject(errorResponse.data);
 					});
 
 					return deferred.promise;
