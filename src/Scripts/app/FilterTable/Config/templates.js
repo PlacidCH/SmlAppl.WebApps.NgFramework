@@ -392,7 +392,21 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                            <td>\r" +
     "\n" +
-    "                                <span type=\"button\" class=\"btn btn-default btn-sm\" ng-click=\"filterTable.ClearFilter()\"><span class=\"glyphicon glyphicon-remove\"></span></span>\r" +
+    "\r" +
+    "\n" +
+    "                                <span type=\"button\" class=\"btn btn-default btn-sm\" style=\"padding: 4px 10px;\" ng-click=\"filterTable.ClearFilter()\">\r" +
+    "\n" +
+    "                                    <span class=\"fa-stack\">\r" +
+    "\n" +
+    "                                        <i class=\"fa fa-filter fa-stack-2x\" style=\"color: #000000;\"></i>\r" +
+    "\n" +
+    "                                        <i class=\"fa fa-times fa-stack-2x warning\" style=\"font-size: 15px;color: red;opacity: 1.6;margin-left: 6px;margin-top: 9px;\"></i>\r" +
+    "\n" +
+    "                                    </span>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "                                </span>\r" +
     "\n" +
     "                            </td>\r" +
     "\n" +

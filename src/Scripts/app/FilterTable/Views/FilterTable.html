@@ -24,7 +24,14 @@
                         </tr>
                         <tr ng-show="filterTable.SearchActive">
                             <td>
-                                <span type="button" class="btn btn-default btn-sm" ng-click="filterTable.ClearFilter()"><span class="glyphicon glyphicon-remove"></span></span>
+
+                                <span type="button" class="btn btn-default btn-sm" style="padding: 4px 10px;" ng-click="filterTable.ClearFilter()">
+                                    <span class="fa-stack">
+                                        <i class="fa fa-filter fa-stack-2x" style="color: #000000;"></i>
+                                        <i class="fa fa-times fa-stack-2x warning" style="font-size: 15px;color: red;opacity: 1.6;margin-left: 6px;margin-top: 9px;"></i>
+                                    </span>
+
+                                </span>
                             </td>
 
                             <td ng-repeat="col in filterTable.VisibleCols" ng-switch="col.FilterType" ng-style="col._style" >
