@@ -248,7 +248,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
     "\n" +
-    "                    <option value=\"==\">==</option>\r" +
+    "                    <option value=\"==\">=</option>\r" +
     "\n" +
     "                    <option value=\"!=\">!=</option>\r" +
     "\n" +

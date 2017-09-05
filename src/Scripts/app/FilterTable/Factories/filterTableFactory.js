@@ -1052,7 +1052,7 @@
                             TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterConditionalNumber.html",
                             Controller: "FilterTableModalConditionalSelectCtrl",
                             Tooltip: ft.Translations.FilterTable_Conditional_Filter,
-                            Selected: {},
+                            Selected: [],
                             FnFilter: function (item, col) {
                                 if (this.Selected.length === 0) {
                                     return true;
@@ -1127,7 +1127,7 @@
                             TemplateUrl: "./src/Scripts/app/FilterTable/Views/FilterConditionalDate.html",
                             Controller: "FilterTableModalConditionalSelectCtrl",
                             Tooltip: ft.Translations.FilterTable_Conditional_Filter,
-                            Selected: {},
+                            Selected: [],
                             FnFilter: function (item, col) {
                                 if (this.Selected.length === 0) {
                                     return true;
