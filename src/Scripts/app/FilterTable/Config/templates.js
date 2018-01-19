@@ -364,7 +364,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-12\">\r" +
     "\n" +
-    "            <div style=\"overflow: auto;\">\r" +
+    "            <div>\r" +
     "\n" +
     "                <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover filtertable-table\">\r" +
     "\n" +

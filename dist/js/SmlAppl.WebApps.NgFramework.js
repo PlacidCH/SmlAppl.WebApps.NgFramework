@@ -863,7 +863,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "                <select class=\"form-control\" ng-model=\"conditionalFilterItem.condition\">\r" +
     "\n" +
-    "                    <option value=\"==\">==</option>\r" +
+    "                    <option value=\"==\">=</option>\r" +
     "\n" +
     "                    <option value=\"!=\">!=</option>\r" +
     "\n" +
@@ -979,7 +979,7 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
     "\n" +
     "        <div class=\"col-md-12\">\r" +
     "\n" +
-    "            <div style=\"overflow: auto;\">\r" +
+    "            <div>\r" +
     "\n" +
     "                <table class=\"table table-bordered table-condensed table-responsive table-striped table-hover filtertable-table\">\r" +
     "\n" +
@@ -1516,6 +1516,8 @@ angular.module('smlAppl.webApps.framework.filterTable').run(['$templateCache', f
             }
 
             $scope.ok = function () {
+                $scope.addCondition(); // We just add the current condition. That's because for just 1 condition it's not obvious for the user that he needs to click add
+
                 $scope.column.CustomFilter.Selected = $scope.currentConditionalFilter;
                 updateFilterFormulaText();
                 $uibModalInstance.close($scope.column);

@@ -64,6 +64,8 @@
             }
 
             $scope.ok = function () {
+                $scope.addCondition(); // We just add the current condition. That's because for just 1 condition it's not obvious for the user that he needs to click add
+
                 $scope.column.CustomFilter.Selected = $scope.currentConditionalFilter;
                 updateFilterFormulaText();
                 $uibModalInstance.close($scope.column);
